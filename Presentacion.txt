@@ -1,0 +1,4 @@
+Estos son los acuerdos que se llevaron a cabo en la Reunión que tuvimos con Alexandra:
+
+Eddy: testar github y conseguir los videos y muckaps
+Ale y Juan José.: Se encargarán de revisar doxigen,  y data store de Google
