@@ -2,12 +2,14 @@ from flask import Flask, request, Response, jsonify
 import json
 from bson import json_util
 from pymongo import MongoClient
+from mongo import mongo
 
 app = Flask(__name__)
 app.config.from_pyfile('flaskapp.cfg')
 
 @app.route('/')
 def home():
+    m=mongo()
     return 'All OKAY!'
 
 @app.errorhandler(404)

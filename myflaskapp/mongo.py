@@ -52,7 +52,7 @@ class mongo:
 
 
 
-if __name__ == "__main__":
+#if __name__ == "__main__":
     #connection = MongoClient("mongodb://juanjo:1234@ds015713.mlab.com:15713/prueba")
     #db = connection.prueba.docs101
     '''filename = "C:\Users\Juanjo\Desktop\casa.png"
@@ -67,7 +67,7 @@ if __name__ == "__main__":
     output= open(outfilename,"w")     
     output.write(outputdata)
     output.close()#imagen'''
-    mongo1=mongo()
+    #mongo1=mongo()
     #mongo1.insert_cuarto('1',['123','12'],['1','0','1','1','0'],'Seoa','70','3')
     #mongo1.insert_cuarto('1',['123','12'],['1','0','1','1','0'],'Seoa','50','3')
     #print mongo1.mas_baratos('70',100)
