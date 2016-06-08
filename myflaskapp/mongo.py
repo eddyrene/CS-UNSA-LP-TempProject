@@ -4,8 +4,8 @@ import io
 from pymongo import MongoClient
 import gridfs
 
-bd_url="mongodb://alexandra:alexandra@ds015953.mlab.com:15953/code101"
-
+#bd_url="mongodb://alexandra:alexandra@ds015953.mlab.com:15953/code101"
+bd_url="mongodb://juanjo:1234@ds015713.mlab.com:15713/prueba"
 class mongo:
     db=0
     connection=0
@@ -17,7 +17,6 @@ class mongo:
             print ('conexion sin problemas')
         except ValueError:
             print ('error en la conexion')
-
     def insert_cuarto(self,ID,Distrito,coord,servicios,nombre,precio,genero):
         vivienda ={
                 "ID":ID,
