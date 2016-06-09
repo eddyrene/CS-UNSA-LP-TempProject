@@ -1,5 +1,6 @@
 package com.example.alquiler.alquilercom;
 
+import com.example.alquiler.alquilercom.data.JsonHttpHandler;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -20,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,6 +32,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -308,15 +315,43 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
+            JSONObject json = null;
+            String s = "";
 
             try {
                 // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
+                //Thread.sleep(2000);
+                json = new JsonHttpHandler().getJSONfromUrl("http://myflaskapp-alquiler.rhcloud.com/user/"+this.mEmail);
+                //Log.d("url", "sent: " + params[0]);
+                if (json == null){return false;}
+
+                // Getting top key
+                JSONArray users = json.getJSONArray("users");
+                if (users.length()==0)
+                    return false;
+                return true;
+//                Decoding
+                /*for (int i = 0; i < users.length(); i++) {
+                    JSONObject user;
+                    user = users.getJSONObject(i);
+                    s += user.getString("name") + " " + user.getString("handle") + "\n";
+                }*/
+            }
+            catch (IllegalStateException e) {
+                e.printStackTrace();
+                Log.e("find", "State excep");
+                return false;
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Log.e("find", "JSON excep");
+                return false;
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e("find", "IO excep");
                 return false;
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
+            /*for (String credential : DUMMY_CREDENTIALS) {
                 String[] pieces = credential.split(":");
                 if (pieces[0].equals(mEmail)) {
                     // Account exists, return true if the password matches.
@@ -325,7 +360,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
 
             // TODO: register the new account here.
-            return true;
+            return true;*/
         }
 
         @Override
