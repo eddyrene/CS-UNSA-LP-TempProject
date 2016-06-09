@@ -329,6 +329,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 JSONArray users = json.getJSONArray("users");
                 if (users.length()==0)
                     return false;
+                JSONObject row = users.getJSONObject(0);
+                String pass = row.getString("handle");
+                if (pass != this.mPassword)
+                    return false;
                 return true;
 //                Decoding
                 /*for (int i = 0; i < users.length(); i++) {
