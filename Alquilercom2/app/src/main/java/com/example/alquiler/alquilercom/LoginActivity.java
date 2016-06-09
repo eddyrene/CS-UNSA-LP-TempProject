@@ -321,25 +321,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             try {
                 // Simulate network access.
                 //Thread.sleep(2000);
-                json = new JsonHttpHandler().getJSONfromUrl("http://myflaskapp-alquiler.rhcloud.com/user/"+this.mEmail);
+                json = new JsonHttpHandler().getJSONfromUrl("http://myflaskapp-alquiler.rhcloud.com/user/"+this.mEmail+"/"+this.mPassword);
                 //Log.d("url", "sent: " + params[0]);
                 if (json == null){return false;}
 
                 // Getting top key
-                JSONArray users = json.getJSONArray("users");
-                if (users.length()==0)
+                //JSONObject stat = json.getJSONObject("status");
+                if (json.getString("status") =="error")
                     return false;
-                JSONObject row = users.getJSONObject(0);
-                String pass = row.getString("handle");
-                if (pass != this.mPassword)
-                    return false;
-                return true;
-//                Decoding
-                /*for (int i = 0; i < users.length(); i++) {
-                    JSONObject user;
-                    user = users.getJSONObject(i);
-                    s += user.getString("name") + " " + user.getString("handle") + "\n";
-                }*/
+                //if (stat.get("status")=="successful")
+                else
+                    return true;
             }
             catch (IllegalStateException e) {
                 e.printStackTrace();
