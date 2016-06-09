@@ -325,13 +325,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 //Log.d("url", "sent: " + params[0]);
                 if (json == null){return false;}
 
-                // Getting top key
-                //JSONObject stat = json.getJSONObject("status");
-                if (json.getString("status") =="error")
-                    return false;
+                
+                if ((json.getString("status")).equals("error"))
+                {
+
+                    return false;}
                 //if (stat.get("status")=="successful")
-                else
-                    return true;
+                else{
+                    return true;}
             }
             catch (IllegalStateException e) {
                 e.printStackTrace();
