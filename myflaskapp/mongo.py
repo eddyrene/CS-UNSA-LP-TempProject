@@ -21,21 +21,32 @@ class mongo:
             print ('conexion sin problemas')
         except ValueError:
             print ('error en la conexion')
-    def insert_cuarto(self,ID,Distrito,coord,servicios,nombre,precio,genero):
+    def insert_cuarto(self,Distrito,coord,servicios,nombre,precio,genero,img):
+        ID=self.siguiente_valor('casa')#no existes el indixe incremental en mongo db esta es la forma de hacerlo
         vivienda ={
-                "ID":ID,
+                "_id":ID,
                 "Distrito":Distrito,
                 "Coord":{'coord1':coord[0],'coord2':coord[1]},#dos coordenadas posicion en el mapa
                 "Nombre":nombre,
                 "Servicios":{'baño':servicios[0] ,'tv':servicios[1] ,'ducha':servicios[2],'wifi':servicios[3]},#baño,tv,ducha,mascota con 0 y 1
                 "Precio":precio,
-                "Genero":genero# 1 es solo hombres 2 es solo chicas y tres es los dos
+                "Genero":genero,# 1 es solo hombres 2 es solo chicas y tres es los dos
+                "Img":{'img1':img[0],'img2':img[1]}#por el momento dejaremos q sean 2 imagenes para cada cuarto
                    }
         try:
             self.db.insert_one(vivienda).inserted_id
         except ValueError:
             print ('No se pudo insertear')
-            
+    def siguiente_valor(self,name):#funcion nos retorna el id q corresponde a cada vivienda q es insertada
+        id_sig=str(self.db.find_and_modify(
+        query={'_id':name},
+        update={'$inc':{'sequence_value':1}},
+        new=True,
+        ).get('sequence_value'))
+        print id_sig
+        return id_sig
+           
+        
     def mostrar(self):
         results=self.db.find()
         for record in results:
@@ -60,7 +71,7 @@ class mongo:
         thedata = datafile.read()
         self.fs.put(thedata, filename=nombre)
         datafile.close()
-    def sacar_imagen(self,nombre,path,nuevo_nombre):#el nombre con el q se guardo en la BD
+    def sacar_imagen(self,nombre,path,nuevo_nombre):#el nombre con el q se guardo en la BD 
         path=path+"\ "+nuevo_nombre
         outputdata =self.fs.get_last_version(nombre).read()
         outfilename = path#donde se guardara la imagen ejemplo "C:\Users\Juanjo\Desktop\casa.png"
@@ -71,25 +82,18 @@ class mongo:
 if __name__ == "__main__":
     #connection = MongoClient("mongodb://juanjo:1234@ds015713.mlab.com:15713/prueba")
     #db = connection.prueba.docs101
-    '''filename = "C:\Users\Juanjo\Desktop\casa.png"
-    datafile = open(filename,"r");
-    thedata = datafile.read()
-    connection = MongoClient("mongodb://juanjo:1234@ds015713.mlab.com:15713/prueba")
-    db =connection.prueba
-    fs = gridfs.GridFS(db)
-    stored = fs.put(thedata, filename="testimage") 
-    outputdata =fs.get(stored).read()
-    outfilename = "C:\Users\Juanjo\Desktop\casa_2.png"
-    output= open(outfilename,"w")     
-    output.write(outputdata)
-    output.close()#imagen'''
+    
     mongo1=mongo()
+    #mongo1.db.insert({"_id":"casa","sequence_value": 0})
+    mongo1.insert_cuarto('Cayma',['123','12'],['1','0','1','1'],'Seoa','300','3',['casa1','casa2'])
+    mongo1.insert_cuarto('Avelino',['123','12'],['1','1','1','1'],'Seoa','100','3',['casa2_1','casa3_1'])
+
     #mongo1.mas_baratos('Avelino','3',['1','0','1','0'],'100','130')#distrito,genero(1 o 2 o 3),servicios(baño,tv,ducha,wifi),precio min ,precio max)
     #mongo1.desconectar()
     #mongo1.insertar_imagen("C:\Users\Juanjo\Desktop\casa.png",'casa')
-    mongo1.sacar_imagen('casa','C:\Users\Juanjo\Desktop','casa_5.png')
-    '''mongo1.insert_cuarto('1','Cayma',['123','12'],['1','0','1','1'],'Seoa','300','3')
-    mongo1.insert_cuarto('2','Cayma',['123','12'],['1','1','1','1'],'Seoa','70','1')
+    #mongo1.sacar_imagen('casa','C:\Users\Juanjo\Desktop','casa_5.png')
+    #mongo1.insert_cuarto('1','Cayma',['123','12'],['1','0','1','1'],'Seoa','300','3',['casa1','casa2'])
+    '''mongo1.insert_cuarto('2','Cayma',['123','12'],['1','1','1','1'],'Seoa','70','1')
     mongo1.insert_cuarto('3','Avelino',['123','12'],['1','0','1','0'],'Seoa','120','3')
     mongo1.insert_cuarto('4','Avelino',['123','12'],['1','1','1','1'],'Seoa','100','3')
     mongo1.insert_cuarto('5','Avelino',['123','12'],['1','0','1','0'],'Seoa','180','3')'''
