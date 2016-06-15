@@ -9,163 +9,157 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.alquiler.alquilercom.Filtros">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
+    <ScrollView
+        android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:weightSum="1"
+        android:id="@+id/scrollView"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Distrito:"
-            android:id="@+id/textView7" />
-
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/spinner"
-            android:entries="@array/distritos"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Precio:"
-            android:id="@+id/textView8" />
-
-        <SeekBar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/seekBar_precio"
-            android:max="500"
-            android:progress="10"
-            android:indeterminate="false"
-            android:visibility="visible" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="S/."
-            android:id="@+id/textView6" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Servicios"
-            android:id="@+id/textView3"
-            android:textSize="15dp" />
-
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.24"
-            android:weightSum="1">
+            android:layout_height="match_parent"
+            android:weightSum="1"
+            android:layout_alignParentStart="true">
 
-            <ImageButton
-                android:layout_width="59dp"
-                android:layout_height="79dp"
-                android:id="@+id/imageButton"
-                android:src="@mipmap/wifi" />
-
-            <ImageButton
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/imageButton2"
-                android:src="@mipmap/animales" />
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Distrito:"
+                android:id="@+id/textView7" />
 
-            <ImageButton
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinner"
+                android:entries="@array/distritos"/>
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/imageButton3"
-                android:src="@mipmap/television" />
-                //android:src="@drawable/televisi" />
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Precio:"
+                android:id="@+id/textView8" />
 
-            <ImageButton
+            <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/seekBar_precio"
+                android:max="500"
+                android:progress="10"
+                android:indeterminate="false"
+                android:visibility="visible" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="S/."
+                    android:id="@+id/textView6" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:id="@+id/textView_precio"
+                    android:textSize="15dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/imageButton6"
-                android:src="@mipmap/agua" />
+                android:layout_weight="0.24"
+                android:weightSum="1"
+                android:layout_gravity="center_horizontal">
 
-            <ImageButton
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageButton"
+                    android:src="@mipmap/wifi"
+                    android:adjustViewBounds="false"
+                    android:baselineAlignBottom="false" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageButton2"
+                    android:src="@mipmap/animales" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageButton3"
+                    android:src="@mipmap/television" /><![CDATA[
+                    //android:src="@drawable/televisi" />
+
+
+
+                ]]>
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/imageButton4"
-                android:src="@mipmap/toilet" />
+                android:weightSum="1"
+                android:layout_gravity="center_horizontal">
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageButton6"
+                    android:src="@mipmap/agua" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageButton4"
+                    android:src="@mipmap/toilet" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Restriccion:"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/textView5" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageButton5"
+                    android:src="@mipmap/woman" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageButton7"
+                    android:src="@mipmap/men" />
+            </LinearLayout>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="APLICAR"
+                android:id="@+id/button"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true" />
 
         </LinearLayout>
+    </ScrollView>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Superficie"
-            android:id="@+id/textView4" />
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:weightSum="1">
-
-            <EditText
-                android:layout_width="72dp"
-                android:layout_height="wrap_content"
-                android:inputType="numberSigned"
-                android:ems="10"
-                android:id="@+id/editText"
-                android:text="de" />
-
-            <EditText
-                android:layout_width="59dp"
-                android:layout_height="wrap_content"
-                android:inputType="numberSigned"
-                android:ems="10"
-                android:id="@+id/editText3"
-                android:layout_weight="0.09" />
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Restriccion"
-            android:id="@+id/textView5" />
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/imageButton5"
-                android:src="@mipmap/woman" />
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/imageButton7"
-                android:src="@mipmap/men" />
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="APLICAR"
-        android:id="@+id/button"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true" />
-
-    <HorizontalScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/horizontalScrollView"
-        android:layout_below="@+id/button"
-        android:layout_centerHorizontal="true" />
 </RelativeLayout>
