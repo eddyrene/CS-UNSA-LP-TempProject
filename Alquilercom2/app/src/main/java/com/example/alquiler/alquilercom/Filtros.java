@@ -1,5 +1,6 @@
 package com.example.alquiler.alquilercom;
 
+import com.example.alquiler.alquilercom.data.JsonHttpHandler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;

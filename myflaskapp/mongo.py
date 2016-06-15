@@ -22,7 +22,7 @@ class mongo:
         except ValueError:
             print ('error en la conexion')
     def insert_cuarto(self,Distrito,coord,servicios,nombre,precio,genero,img):
-        ID=self.siguiente_valor('casa')#no existes el indixe incremental en mongo db esta es la forma de hacerlo
+        ID=self.siguiente_valor('casa')#no existe el indixe incremental en mongo db esta es la forma de hacerlo
         vivienda ={
                 "_id":ID,
                 "Distrito":Distrito,
