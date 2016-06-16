@@ -1,6 +1,7 @@
 #-*- coding: utf-8 -*-
 import re
 import io
+import pymongo
 from pymongo import MongoClient
 import gridfs
 
@@ -18,6 +19,7 @@ class mongo:
             self.db = self.connection.prueba.Cuartos
             self.db_img=self.connection.prueba
             self.fs = gridfs.GridFS(self.db_img)
+           # self.db.ensureIndex({'Precio':1}, {'sparse':True})#indice en precio funcionan como B-tree
             print ('conexion sin problemas')
         except ValueError:
             print ('error en la conexion')
@@ -62,8 +64,9 @@ class mongo:
         
     def mas_baratos(self,distrito,genero,servicios,precio_min,precio_max):#podemos modificarlo para una solo universidad
         result=self.db.find({'Distrito':distrito,'Genero':genero,'Servicios.baño':servicios[0],'Servicios.tv':servicios[1],'Servicios.ducha':servicios[2],'Servicios.wifi':servicios[3],'$and': [{'Precio':{'$gte':precio_min}},{'Precio':{'$lte':precio_max}}]})
+        print result.explain()
         for record in result:
-           print record['ID']
+           print record['_id']
     def insertar_imagen(self,path,nombre):
         
         filename = path #este un ejemplo "C:\Users\Juanjo\Desktop\casa.png"
@@ -85,10 +88,16 @@ if __name__ == "__main__":
     
     mongo1=mongo()
     #mongo1.db.insert({"_id":"casa","sequence_value": 0})
-    mongo1.insert_cuarto('Cayma',['123','12'],['1','0','1','1'],'Seoa','300','3',['casa1','casa2'])
-    mongo1.insert_cuarto('Avelino',['123','12'],['1','1','1','1'],'Seoa','100','3',['casa2_1','casa3_1'])
+    #mongo1.insert_cuarto('Cayma',['123','12'],['1','0','1','1'],'Seoa','300','3',['casa1','casa2'])
+    #mongo1.insert_cuarto('Avelino',['123','12'],['1','1','1','1'],'Seoa','100','3',['casa2_1','casa3_1'])
+    #connection = MongoClient(bd_url)
+    #db = connection.prueba.Cuartos
+    #db.ensureIndex({'Precio':1},{'sparse':True})#indice en precio funcionan como B-tree
+    #db.ensure_index([("_id", pymongo.ASCENDING)])
+    #db.ensure_index([("Precio", pymongo.ASCENDING)])
 
-    #mongo1.mas_baratos('Avelino','3',['1','0','1','0'],'100','130')#distrito,genero(1 o 2 o 3),servicios(baño,tv,ducha,wifi),precio min ,precio max)
+    #print db.find().explain()
+    mongo1.mas_baratos('Avelino','3',['1','0','1','0'],'100','130')#distrito,genero(1 o 2 o 3),servicios(baño,tv,ducha,wifi),precio min ,precio max)
     #mongo1.desconectar()
     #mongo1.insertar_imagen("C:\Users\Juanjo\Desktop\casa.png",'casa')
     #mongo1.sacar_imagen('casa','C:\Users\Juanjo\Desktop','casa_5.png')
