@@ -80,30 +80,30 @@
                 android:weightSum="1"
                 android:layout_gravity="center_horizontal">
 
-                <ImageButton
+                <ToggleButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/imageButton"
-                    android:src="@mipmap/wifi"
-                    android:adjustViewBounds="false"
-                    android:baselineAlignBottom="false" />
+                    android:id="@+id/imageButton_wifi"
+                    android:textOn=""
+                    android:textOff=""
+                    android:background="@drawable/pressbutton_wifi"/>
 
-                <ImageButton
+                <ToggleButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/imageButton2"
-                    android:src="@mipmap/animales" />
+                    android:id="@+id/imageButton_animales"
+                    android:textOn=""
+                    android:textOff=""
+                    android:background="@drawable/pressbutton_animales"/>
 
-                <ImageButton
+                <ToggleButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/imageButton3"
-                    android:src="@mipmap/television" /><![CDATA[
-                    //android:src="@drawable/televisi" />
+                    android:id="@+id/imageButton_tv"
+                    android:textOn=""
+                    android:textOff=""
+                    android:background="@drawable/pressbutton_tv"/>
 
-
-
-                ]]>
             </LinearLayout>
 
             <LinearLayout
@@ -113,17 +113,22 @@
                 android:weightSum="1"
                 android:layout_gravity="center_horizontal">
 
-                <ImageButton
+                <ToggleButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/imageButton6"
-                    android:src="@mipmap/agua" />
+                    android:id="@+id/imageButton_agua"
+                    android:textOn=""
+                    android:textOff=""
+                    android:background="@drawable/pressbutton_agua" />
 
-                <ImageButton
+                <ToggleButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/imageButton4"
-                    android:src="@mipmap/toilet" />
+                    android:id="@+id/imageButton_toilet"
+                    android:textOn=""
+                    android:textOff=""
+                    android:background="@drawable/pressbutton_toilet" />
+
             </LinearLayout>
 
             <TextView
@@ -138,17 +143,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageButton
+                <ToggleButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/imageButton5"
-                    android:src="@mipmap/woman" />
+                    android:id="@+id/imageButton_woman"
+                    android:textOn=""
+                    android:textOff=""
+                    android:background="@drawable/pressbutton_woman" />
 
-                <ImageButton
+                <ToggleButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/imageButton7"
-                    android:src="@mipmap/men" />
+                    android:id="@+id/imageButton_men"
+                    android:textOn=""
+                    android:textOff=""
+                    android:background="@drawable/pressbutton_men" />
             </LinearLayout>
 
             <Button
