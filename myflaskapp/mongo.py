@@ -2,6 +2,8 @@
 import re
 import io
 import pymongo
+import PIL
+from PIL import Image#libreria para reducir
 from pymongo import MongoClient
 import gridfs
 
@@ -64,15 +66,26 @@ class mongo:
         
     def mas_baratos(self,distrito,genero,servicios,precio_min,precio_max):#podemos modificarlo para una solo universidad
         result=self.db.find({'Distrito':distrito,'Genero':genero,'Servicios.baño':servicios[0],'Servicios.tv':servicios[1],'Servicios.ducha':servicios[2],'Servicios.wifi':servicios[3],'$and': [{'Precio':{'$gte':precio_min}},{'Precio':{'$lte':precio_max}}]})
-        print result.explain()
-        for record in result:
-           print record['_id']
+        print result[0]
+        #print result.explain()
+        #for record in result:
+         #  print record['_id']
     def insertar_imagen(self,path,nombre):
-        
-        filename = path #este un ejemplo "C:\Users\Juanjo\Desktop\casa.png"
+        #reducimos la  img
+        basewidth = 300#300 pixeles
+        img = Image.open(path)
+        wpercent = (basewidth / float(img.size[0]))
+        hsize = int((float(img.size[1]) * float(wpercent)))
+        img = img.resize((basewidth, hsize), PIL.Image.ANTIALIAS)
+        nombre_1=nombre+'.JPG'
+        img.save(nombre_1)
+        #aqui terminamos el procedimiento de reduccion
+        path_2='C:\Users\Juanjo\Documents\GitHub\CS-UNSA-LP-TempProject\myflaskapp\\'+nombre_1 #nose como funcione en la nube eso del path
+        filename = path_2 #este un ejemplo "C:\Users\Juanjo\Desktop\casa.png"
         datafile = open(filename,"rb");
         thedata = datafile.read()
         self.fs.put(thedata, filename=nombre)
+        print 'inserto_imagen'
         datafile.close()
     def sacar_imagen(self,nombre,path,nuevo_nombre):#el nombre con el q se guardo en la BD 
         path=path+"\ "+nuevo_nombre
@@ -80,6 +93,7 @@ class mongo:
         outfilename = path#donde se guardara la imagen ejemplo "C:\Users\Juanjo\Desktop\casa.png"
         output= open(outfilename,"wb")     
         output.write(outputdata)
+        print 'termino'
         output.close()
     #baño,tv,ducha,wifi
 if __name__ == "__main__":
@@ -97,10 +111,10 @@ if __name__ == "__main__":
     #db.ensure_index([("Precio", pymongo.ASCENDING)])
 
     #print db.find().explain()
-    mongo1.mas_baratos('Avelino','3',['1','0','1','0'],'100','130')#distrito,genero(1 o 2 o 3),servicios(baño,tv,ducha,wifi),precio min ,precio max)
+    #mongo1.mas_baratos('Avelino','3',['1','0','1','0'],'100','130')#distrito,genero(1 o 2 o 3),servicios(baño,tv,ducha,wifi),precio min ,precio max)
     #mongo1.desconectar()
-    #mongo1.insertar_imagen("C:\Users\Juanjo\Desktop\casa.png",'casa')
-    #mongo1.sacar_imagen('casa','C:\Users\Juanjo\Desktop','casa_5.png')
+    mongo1.insertar_imagen("C:\Users\Juanjo\Desktop\img.JPG",'casa2')
+    mongo1.sacar_imagen('casa2','C:\Users\Juanjo\Desktop','casa3.jpg')
     #mongo1.insert_cuarto('1','Cayma',['123','12'],['1','0','1','1'],'Seoa','300','3',['casa1','casa2'])
     '''mongo1.insert_cuarto('2','Cayma',['123','12'],['1','1','1','1'],'Seoa','70','1')
     mongo1.insert_cuarto('3','Avelino',['123','12'],['1','0','1','0'],'Seoa','120','3')
