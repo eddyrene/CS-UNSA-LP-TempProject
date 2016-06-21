@@ -145,7 +145,7 @@ public class JsonHttpHandler {
         return jObj;
     }
 
-    public JSONObject postJSONfromUrl(String url, JSONObject data) {
+    public JSONObject postJSONfromUrl(String url, JSONObject data) throws JSONException, IllegalStateException, IOException{
 
 
             // request method is POST

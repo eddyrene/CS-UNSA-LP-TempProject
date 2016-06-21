@@ -3,6 +3,7 @@ package com.example.alquiler.alquilercom;
 import com.example.alquiler.alquilercom.data.JsonHttpHandler;
 
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -11,21 +12,31 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 
 public class Filtros extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
 
     private SeekBar seekBar;
     private TextView textViewSeekBar;
     ToggleButton btn_agua, btn_animales, btn_men, btn_toilet, btn_tv, btn_wifi, btn_woman;
+    private Spinner distrito;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filtros);
 
+        distrito=(Spinner) findViewById(R.id.spinner);
         //Parte del scroll!!!!*****************************************************
         seekBar = (SeekBar) findViewById(R.id.seekBar_precio);
         textViewSeekBar= (TextView) findViewById(R.id.textView_precio);
@@ -76,6 +87,9 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
         btn_wifi.setOnCheckedChangeListener(this);
         btn_woman.setOnCheckedChangeListener(this);
 
+        btn_woman.setChecked(true);
+        btn_men.setChecked(true);
+
         //******************************************FIN*******************************************
 
 
@@ -91,7 +105,32 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
     }
 
     private void AplicarCambios(){
-        return;
+        String dist=distrito.getSelectedItem().toString();
+        String gen="";
+        String p_min="0";
+        String p_max=textViewSeekBar.getText().toString();
+        String[] servicios={"0","0","0","0","0"};
+        boolean men=btn_men.isChecked();
+        boolean women=btn_woman.isChecked();
+        if (men && women){
+            gen="3";
+        } else if (men && !women){
+            gen="1";
+        } else {
+            gen="2";
+        }
+        if (btn_wifi.isChecked())
+            servicios[0]="1";
+        if (btn_animales.isChecked())
+            servicios[1]="1";
+        if (btn_tv.isChecked())
+            servicios[2]="1";
+        if (btn_agua.isChecked())
+            servicios[3]="1";
+        if (btn_toilet.isChecked())
+            servicios[4]="1";
+        //Toast.makeText(Filtros.this,dist+","+gen+","+p_min+","+p_max+","+servicios[0]+servicios[1]+servicios[2]+servicios[3]+servicios[4], Toast.LENGTH_SHORT).show();
+        new BuscarTask().execute(dist,gen,p_min,p_max,servicios[0],servicios[1],servicios[2],servicios[3],servicios[4]);
     }
 
 
@@ -99,12 +138,74 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
     // *********aqui hacer sus funciones!!!!!!
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if(btn_agua.isChecked())
-            Toast.makeText(Filtros.this,
-                    "Activo-aguacaliente", Toast.LENGTH_SHORT).show();
-        else
-            Toast.makeText(Filtros.this,
-                    "Inactivo-aguacaliente", Toast.LENGTH_SHORT).show();
+        if(!buttonView.isChecked() && (buttonView.getId()==btn_men.getId() || buttonView.getId()==btn_woman.getId()) )
+            //Toast.makeText(Filtros.this,"Inactivo", Toast.LENGTH_SHORT).show();
+            if (buttonView.getId()==btn_men.getId()){
+                btn_woman.setChecked(true);
+            }
+            else if (buttonView.getId()==btn_woman.getId()){
+                btn_men.setChecked(true);
+            }
 
     }
+
+    /*
+    Clase para buscar un cuarto
+    */
+    private class BuscarTask extends AsyncTask<String, Void, JSONArray> {
+
+
+        public BuscarTask() {
+
+        }
+        @Override
+        protected JSONArray doInBackground(String... params) {
+
+            JSONObject jsonr = null;
+            try {
+
+                //distrito,genero,precio_min,precio_max,servicios
+
+                jsonr=new JsonHttpHandler().getJSONfromUrl("http://myflaskapp-alquiler.rhcloud.com/buscar/"+params[0]+"/"+params[1]+"/"+params[2]+"/"+params[3]+"/"+params[4]+"/"+params[5]+"/"+params[6]+"/"+params[7]+"/"+params[8]);
+
+                if (jsonr == null){return null;}
+
+                JSONArray rooms = jsonr.getJSONArray("rooms");
+
+                return rooms;
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(JSONArray rooms) {
+            //super.onPostExecute(result);
+            //set a null el objeto de esta clase
+            //crear=null;
+            if (rooms==null){
+                Toast.makeText(Filtros.this, "Se ha producido un error. Vuelva a intentarlo", Toast.LENGTH_SHORT).show();
+            } else if (rooms.length()==0) {
+                Toast.makeText(Filtros.this, "No se han encontrado resultados", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                Toast.makeText(Filtros.this, "exito", Toast.LENGTH_SHORT).show();
+                finish();
+                //iniciar activity de resultados y pasar los resultados
+            }
+        }
+
+    }
+    /*
+    Fin de la clase para buscar un cuarto
+     */
+
 }

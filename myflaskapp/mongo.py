@@ -22,8 +22,10 @@ class mongo:
             self.db_img=self.connection.prueba
             self.fs = gridfs.GridFS(self.db_img)
            # self.db.ensureIndex({'Precio':1}, {'sparse':True})#indice en precio funcionan como B-tree
+            
             print ('conexion sin problemas')
         except ValueError:
+            #return False
             print ('error en la conexion')
     def insert_cuarto(self,Distrito,coord,servicios,nombre,precio,genero,img):
         ID=self.siguiente_valor('casa')#no existe el indixe incremental en mongo db esta es la forma de hacerlo
@@ -32,14 +34,16 @@ class mongo:
                 "Distrito":Distrito,
                 "Coord":{'coord1':coord[0],'coord2':coord[1]},#dos coordenadas posicion en el mapa
                 "Nombre":nombre,
-                "Servicios":{'baño':servicios[0] ,'tv':servicios[1] ,'ducha':servicios[2],'wifi':servicios[3]},#baño,tv,ducha,mascota con 0 y 1
+                "Servicios":{'baño':servicios[0] ,'tv':servicios[1] ,'ducha':servicios[2],'wifi':servicios[3],'mascota':servicios[4]},#baño,tv,ducha,mascota con 0 y 1
                 "Precio":precio,
                 "Genero":genero,# 1 es solo hombres 2 es solo chicas y tres es los dos
                 "Img":{'img1':img[0],'img2':img[1]}#por el momento dejaremos q sean 2 imagenes para cada cuarto
                    }
         try:
             self.db.insert_one(vivienda).inserted_id
+            return True
         except ValueError:
+            return False
             print ('No se pudo insertear')
     def siguiente_valor(self,name):#funcion nos retorna el id q corresponde a cada vivienda q es insertada
         id_sig=str(self.db.find_and_modify(
@@ -65,8 +69,13 @@ class mongo:
         self.connection.close()
         
     def mas_baratos(self,distrito,genero,servicios,precio_min,precio_max):#podemos modificarlo para una solo universidad
-        result=self.db.find({'Distrito':distrito,'Genero':genero,'Servicios.baño':servicios[0],'Servicios.tv':servicios[1],'Servicios.ducha':servicios[2],'Servicios.wifi':servicios[3],'$and': [{'Precio':{'$gte':precio_min}},{'Precio':{'$lte':precio_max}}]})
-        print result[0]
+        try:
+            result=self.db.find({'Distrito':distrito,'Genero':genero,'Servicios.baño':servicios[0],'Servicios.tv':servicios[1],'Servicios.ducha':servicios[2],'Servicios.wifi':servicios[3],'Servicios.mascota':servicios[4],'$and': [{'Precio':{'$gte':precio_min}},{'Precio':{'$lte':precio_max}}]})
+            #print result[0]
+            return result
+        except ValueError:
+            return False
+
         #print result.explain()
         #for record in result:
          #  print record['_id']
@@ -96,35 +105,4 @@ class mongo:
         print 'termino'
         output.close()
     #baño,tv,ducha,wifi
-if __name__ == "__main__":
-    #connection = MongoClient("mongodb://juanjo:1234@ds015713.mlab.com:15713/prueba")
-    #db = connection.prueba.docs101
-    
-    mongo1=mongo()
-    #mongo1.db.insert({"_id":"casa","sequence_value": 0})
-    #mongo1.insert_cuarto('Cayma',['123','12'],['1','0','1','1'],'Seoa','300','3',['casa1','casa2'])
-    #mongo1.insert_cuarto('Avelino',['123','12'],['1','1','1','1'],'Seoa','100','3',['casa2_1','casa3_1'])
-    #connection = MongoClient(bd_url)
-    #db = connection.prueba.Cuartos
-    #db.ensureIndex({'Precio':1},{'sparse':True})#indice en precio funcionan como B-tree
-    #db.ensure_index([("_id", pymongo.ASCENDING)])
-    #db.ensure_index([("Precio", pymongo.ASCENDING)])
 
-    #print db.find().explain()
-    #mongo1.mas_baratos('Avelino','3',['1','0','1','0'],'100','130')#distrito,genero(1 o 2 o 3),servicios(baño,tv,ducha,wifi),precio min ,precio max)
-    #mongo1.desconectar()
-    mongo1.insertar_imagen("C:\Users\Juanjo\Desktop\img.JPG",'casa2')
-    mongo1.sacar_imagen('casa2','C:\Users\Juanjo\Desktop','casa3.jpg')
-    #mongo1.insert_cuarto('1','Cayma',['123','12'],['1','0','1','1'],'Seoa','300','3',['casa1','casa2'])
-    '''mongo1.insert_cuarto('2','Cayma',['123','12'],['1','1','1','1'],'Seoa','70','1')
-    mongo1.insert_cuarto('3','Avelino',['123','12'],['1','0','1','0'],'Seoa','120','3')
-    mongo1.insert_cuarto('4','Avelino',['123','12'],['1','1','1','1'],'Seoa','100','3')
-    mongo1.insert_cuarto('5','Avelino',['123','12'],['1','0','1','0'],'Seoa','180','3')'''
-    #mongo1.mas_baratos('70','100')
-    #mongo1.mostrar()
-    #mongo1.desconectar()
-    #mongo1.mostrar
-    #conexion(db)
-    #insert_vivienda('12','43','acari','pueblo_lindo','100')
-    #mostrar(db)
-    #connection.close()
