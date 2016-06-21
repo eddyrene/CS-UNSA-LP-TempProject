@@ -10,7 +10,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
+import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -207,5 +207,25 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
     /*
     Fin de la clase para buscar un cuarto
      */
+
+    //************************/ Funcion de radio buton**************************************
+
+
+    public void onRadioButtonClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.radio_yes:
+                if (checked)
+                    //rules
+                    break;
+            case R.id.radio_no:
+                if (checked)
+                    // Ninjas rule
+                    break;
+        }
+    }
 
 }
