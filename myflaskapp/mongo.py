@@ -21,6 +21,9 @@ class mongo:
             self.db = self.connection.prueba.Cuartos
             self.db_img=self.connection.prueba
             self.fs = gridfs.GridFS(self.db_img)
+            self.db.ensure_index( [( 'Coord',pymongo.GEOSPHERE )] )
+            self.db.ensure_index([("Precio", pymongo.ASCENDING)])
+
            # self.db.ensureIndex({'Precio':1}, {'sparse':True})#indice en precio funcionan como B-tree
             
             print ('conexion sin problemas')
@@ -28,11 +31,11 @@ class mongo:
             #return False
             print ('error en la conexion')
     def insert_cuarto(self,Distrito,coord,servicios,nombre,precio,genero,img):
-        ID=self.siguiente_valor('casa')#no existe el indixe incremental en mongo db esta es la forma de hacerlo
+        #ID=self.siguiente_valor('casa')#no existe el indixe incremental en mongo db esta es la forma de hacerlo
         vivienda ={
-                "_id":ID,
+                "ID":'78',#para probar
                 "Distrito":Distrito,
-                "Coord":{'coord1':coord[0],'coord2':coord[1]},#dos coordenadas posicion en el mapa
+                "Coord":{'type':"Point",'coordinates': [coord[0],coord[1]]},#es la forma de declara un tipo punto para la el indice 2dsphere
                 "Nombre":nombre,
                 "Servicios":{'baño':servicios[0] ,'tv':servicios[1] ,'ducha':servicios[2],'wifi':servicios[3],'mascota':servicios[4]},#baño,tv,ducha,mascota con 0 y 1
                 "Precio":precio,
@@ -68,13 +71,13 @@ class mongo:
     def desconectar(self):
         self.connection.close()
         
-    def mas_baratos(self,distrito,genero,servicios,precio_min,precio_max):#podemos modificarlo para una solo universidad
-        try:
-            result=self.db.find({'Distrito':distrito,'Genero':genero,'Servicios.baño':servicios[0],'Servicios.tv':servicios[1],'Servicios.ducha':servicios[2],'Servicios.wifi':servicios[3],'Servicios.mascota':servicios[4],'$and': [{'Precio':{'$gte':precio_min}},{'Precio':{'$lte':precio_max}}]})
-            #print result[0]
-            return result
-        except ValueError:
-            return False
+    def mas_baratos(self,longitud,latitud,radio,distrito,genero,servicios,precio_min,precio_max):#podemos modificarlo para una solo universidad
+        result=self.db.find({ 'Coord': { '$geoWithin': { '$center': [ [longitud, latitud], radio ] } },'Distrito':distrito,'Genero':genero,'Servicios.baño':servicios[0],'Servicios.tv':servicios[1],'Servicios.ducha':servicios[2],'Servicios.wifi':servicios[3],'Servicios.mascota':servicios[4],'$and': [{'Precio':{'$gte':precio_min}},{'Precio':{'$lte':precio_max}}]})
+        if result.count()==0:
+            return false
+        else:
+            for record in result:
+                print record['Nombre']
 
         #print result.explain()
         #for record in result:
@@ -105,4 +108,16 @@ class mongo:
         print 'termino'
         output.close()
     #baño,tv,ducha,wifi
+if __name__ == "__main__":
+    mongo1=mongo()
+    '''mongo1.insert_cuarto('Avelino',[-90.97, 40.77],['1','1','1','1','1'],'park','300','3','sadas')
+    mongo1.insert_cuarto('Avelino',[-40.97, 40.77],['1','1','1','1','1'],'unsa','140','3','dasda')
+    mongo1.insert_cuarto('Avelino',[-64.97, 40.77],['1','1','1','1','1'],'sanpa','120','3','adasd')
+    mongo1.insert_cuarto('Avelino',[-72.97, 40.77],['1','1','1','1','1'],'menu','100','3','fasda')
+    mongo1.insert_cuarto('Avelino',[-79.97, 40.77],['1','1','1','1','1'],'jose','110','3','dasdsa')'''
+    mongo1.mas_baratos(-60.97, 39.77,13,'Avelino','3',['1','1','1','1','1'],'100','140')#distrito,genero(1 o 2 o 3),servicios(baño,tv,ducha,wifi),precio min ,precio max)
+    mongo1.desconectar()
+
+    
+
 
