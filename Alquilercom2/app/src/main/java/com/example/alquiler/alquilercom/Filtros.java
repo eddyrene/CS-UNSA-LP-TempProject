@@ -28,8 +28,8 @@ import java.io.IOException;
 
 public class Filtros extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
 
-    private SeekBar seekBar;
-    private TextView textViewSeekBar;
+    private SeekBar seekBarprecio, seekBardistancia;
+    private TextView textViewSeekBar_precio, textViewSeekBar_distancia;
     ToggleButton btn_agua, btn_animales, btn_men, btn_toilet, btn_tv, btn_wifi, btn_woman;
     private Spinner distrito;
 
@@ -41,31 +41,52 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
 
 
         //Parte del scroll!!!!*****************************************************
-        seekBar = (SeekBar) findViewById(R.id.seekBar_precio);
-        textViewSeekBar= (TextView) findViewById(R.id.textView_precio);
-        textViewSeekBar.setText("80");
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+        seekBarprecio = (SeekBar) findViewById(R.id.seekBar_precio);
+        seekBardistancia = (SeekBar) findViewById(R.id.seekBar_distancia);
+        textViewSeekBar_precio= (TextView) findViewById(R.id.textView_precio);
+        textViewSeekBar_distancia= (TextView) findViewById(R.id.textView_distancia);
+        textViewSeekBar_precio.setText("80");
+        textViewSeekBar_distancia.setText("20");
+        seekBarprecio.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
             {
-                //la Seekbar siempre empieza en cero, si queremos que el valor mínimo sea otro podemos modificarlo
-                textViewSeekBar.setText(progress + 80 + "");
+                //la Seekbar siempre empieza en cero, si queremos que el valor mÃ­nimo sea otro podemos modificarlo
+                textViewSeekBar_precio.setText(progress + 80 + "");
             }
 
             /**
-             * El usuario inicia la interacción con la Seekbar.
+             * El usuario inicia la interacciÃ³n con la Seekbar.
              */
             @Override
             public void onStartTrackingTouch(SeekBar arg0)
             {
             }
             /**
-             * El usuario finaliza la interacción con la Seekbar.
+             * El usuario finaliza la interacciÃ³n con la Seekbar.
              */
             @Override
             public void onStopTrackingTouch(SeekBar arg0)
             {
+            }
+        });
+
+
+        seekBardistancia.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                textViewSeekBar_distancia.setText(progress+20+"");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
 
@@ -111,7 +132,7 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
 
         String gen="";
         String p_min="0";
-        String p_max=textViewSeekBar.getText().toString();
+        String p_max=textViewSeekBar_precio.getText().toString();
         String[] servicios={"0","0","0","0","0"};
         boolean men=btn_men.isChecked();
         boolean women=btn_woman.isChecked();

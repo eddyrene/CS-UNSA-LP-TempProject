@@ -14,7 +14,8 @@
         android:layout_height="match_parent"
         android:id="@+id/scrollView"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_gravity="bottom">
 
         <LinearLayout
             android:orientation="vertical"
@@ -30,11 +31,38 @@
                 android:text="Distrito:"
                 android:id="@+id/textView7" />
 
-            <Spinner
+            <SeekBar
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/spinner"
-                android:entries="@array/distritos"/>
+                android:id="@+id/seekBar_distancia"
+                android:max="500"
+                android:progress="10"
+                android:indeterminate="false"
+                android:visibility="visible"
+                />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="10"
+                    android:id="@+id/textView_distancia"
+                    android:layout_gravity="center_horizontal" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text=" mts"
+                    android:id="@+id/textView13"
+                    android:layout_gravity="center_horizontal" />
+            </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -54,8 +82,9 @@
 
             <LinearLayout
                 android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -67,10 +96,17 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="0"
-                    android:id="@+id/textView_precio"
-                    android:textSize="15dp" />
+                    android:id="@+id/textView_precio" />
             </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Servicios:"
+                android:id="@+id/textView14" />
 
             <LinearLayout
                 android:orientation="horizontal"
