@@ -94,7 +94,7 @@ public class JsonHttpHandler {
     JSONObject jObj = null;
     //static JSONObject jObj = new JSONObject();
 
-    public JSONObject getJSONfromUrl(String url) throws JSONException, IllegalStateException, IOException {
+    public JSONObject getJSONfromUrl(String url) throws JSONException, IllegalStateException, IOException, NullPointerException {
             // request method is GET
 
             try {
@@ -139,6 +139,8 @@ public class JsonHttpHandler {
             jObj = new JSONObject(result.toString());
         } catch (JSONException e) {
             Log.e("JSON Parser", "Error parsing data " + e.toString());
+        } catch (NullPointerException e) {
+            Log.e("JSON Parser", "Puntero nulo " + e.toString());
         }
 
         // return JSON Object

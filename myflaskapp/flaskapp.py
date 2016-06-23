@@ -89,14 +89,14 @@ def new_cuarto():
 
             return jsonify({'status': 'error'})
 
-@app.route('/buscar/<string:dist>/<string:gen>/<string:p_min>/<string:p_max>/<string:wifi>/<string:pet>/<string:tv>/<string:agua>/<string:toilet>', methods=['GET'])
-def buscar_cuarto(dist,gen,p_min,p_max,wifi,pet,tv,agua,toilet):
+@app.route('/buscar/<string:lon>/<string:lat>/<string:rad>/<string:gen>/<string:p_min>/<string:p_max>/<string:wifi>/<string:pet>/<string:tv>/<string:agua>/<string:toilet>', methods=['GET'])
+def buscar_cuarto(lon,lat,rad,gen,p_min,p_max,wifi,pet,tv,agua,toilet):
 
             #client = MongoClient('mongodb://alexandra:alexandra@ds015953.mlab.com:15953/code101')
             #collection=client.code101.docs101
             client=mongo()
 
-            res=client.mas_baratos(dist,gen,[toilet,tv,agua,wifi,pet],p_min,p_max)
+            res=client.mas_baratos(lon,lat,rad,gen,[toilet,tv,agua,wifi,pet],p_min,p_max)
             
             ret = json_util.dumps({'rooms':  res}, default=json_util.default)            
             return Response(response=ret,

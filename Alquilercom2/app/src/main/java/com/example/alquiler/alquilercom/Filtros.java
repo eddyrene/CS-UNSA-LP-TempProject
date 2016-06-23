@@ -1,12 +1,13 @@
 package com.example.alquiler.alquilercom;
 
 import com.example.alquiler.alquilercom.data.JsonHttpHandler;
+import com.example.alquiler.alquilercom.data.mapa;
 
-import android.graphics.Color;
 import android.os.AsyncTask;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Gravity;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -23,6 +24,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+
+
 public class Filtros extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
 
     private SeekBar seekBar;
@@ -36,7 +39,7 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filtros);
 
-        distrito=(Spinner) findViewById(R.id.spinner);
+
         //Parte del scroll!!!!*****************************************************
         seekBar = (SeekBar) findViewById(R.id.seekBar_precio);
         textViewSeekBar= (TextView) findViewById(R.id.textView_precio);
@@ -105,7 +108,7 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
     }
 
     private void AplicarCambios(){
-        String dist=distrito.getSelectedItem().toString();
+
         String gen="";
         String p_min="0";
         String p_max=textViewSeekBar.getText().toString();
@@ -129,8 +132,13 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
             servicios[3]="1";
         if (btn_toilet.isChecked())
             servicios[4]="1";
+
+        mapa map=new mapa();
+        map.setPosicion();
+        String radio="";
+        String[] latlong =  map.pos.toString().split(",");
         //Toast.makeText(Filtros.this,dist+","+gen+","+p_min+","+p_max+","+servicios[0]+servicios[1]+servicios[2]+servicios[3]+servicios[4], Toast.LENGTH_SHORT).show();
-        new BuscarTask().execute(dist,gen,p_min,p_max,servicios[0],servicios[1],servicios[2],servicios[3],servicios[4]);
+        new BuscarTask().execute(latlong[1],latlong[0],radio,gen,p_min,p_max,servicios[0],servicios[1],servicios[2],servicios[3],servicios[4]);
     }
 
 
@@ -164,9 +172,9 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
             JSONObject jsonr = null;
             try {
 
-                //distrito,genero,precio_min,precio_max,servicios
+                //lon,lat,rad,genero,precio_min,precio_max,servicios
 
-                jsonr=new JsonHttpHandler().getJSONfromUrl("http://myflaskapp-alquiler.rhcloud.com/buscar/"+params[0]+"/"+params[1]+"/"+params[2]+"/"+params[3]+"/"+params[4]+"/"+params[5]+"/"+params[6]+"/"+params[7]+"/"+params[8]);
+                jsonr=new JsonHttpHandler().getJSONfromUrl("http://myflaskapp-alquiler.rhcloud.com/buscar/"+params[0]+"/"+params[1]+"/"+params[2]+"/"+params[3]+"/"+params[4]+"/"+params[5]+"/"+params[6]+"/"+params[7]+"/"+params[8]+"/"+params[9]+"/"+params[10]);
 
                 if (jsonr == null){return null;}
 
@@ -181,6 +189,9 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
                 e.printStackTrace();
                 return null;
             } catch (IllegalStateException e) {
+                e.printStackTrace();
+                return null;
+            } catch (NullPointerException e) {
                 e.printStackTrace();
                 return null;
             }
