@@ -28,15 +28,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Distrito:"
+                android:text="Radio:"
                 android:id="@+id/textView7" />
 
             <SeekBar
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/seekBar_distancia"
-                android:max="500"
-                android:progress="10"
+                android:max="80"
+                android:progress="2"
                 android:indeterminate="false"
                 android:visibility="visible"
                 />
@@ -51,7 +51,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="10"
+                    android:text="0"
                     android:id="@+id/textView_distancia"
                     android:layout_gravity="center_horizontal" />
 
@@ -59,7 +59,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text=" mts"
+                    android:text=" km"
                     android:id="@+id/textView13"
                     android:layout_gravity="center_horizontal" />
             </LinearLayout>
@@ -194,7 +194,16 @@
                     android:textOn=""
                     android:textOff=""
                     android:background="@drawable/pressbutton_men" />
+
             </LinearLayout>
+
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Resultados sin filtros"
+                android:id="@+id/checkBox"
+                android:layout_gravity="center_horizontal" />
 
             <Button
                 android:layout_width="match_parent"

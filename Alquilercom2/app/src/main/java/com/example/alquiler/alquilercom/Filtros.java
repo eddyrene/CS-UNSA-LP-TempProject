@@ -1,15 +1,34 @@
 package com.example.alquiler.alquilercom;
 
 import com.example.alquiler.alquilercom.data.JsonHttpHandler;
-import com.example.alquiler.alquilercom.data.mapa;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+
+
+import com.google.android.gms.maps.model.LatLng;
+
+
+import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Criteria;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
@@ -23,6 +42,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+
+import android.location.Location;
 
 
 
@@ -31,13 +57,30 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
     private SeekBar seekBarprecio, seekBardistancia;
     private TextView textViewSeekBar_precio, textViewSeekBar_distancia;
     ToggleButton btn_agua, btn_animales, btn_men, btn_toilet, btn_tv, btn_wifi, btn_woman;
-    private Spinner distrito;
-
+    private CheckBox filtros;
+    Location pos=null;
+    LocationManager mlocManager=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filtros);
+
+        filtros=(CheckBox) findViewById(R.id.checkBox);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+
+        }
+        else{
+            Toast.makeText(Filtros.this, "No permission granted", Toast.LENGTH_SHORT).show();
+        }
+
+        mlocManager=(LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Localizacion Local = new  Localizacion();
+        Local.setMainActivity(this);
+        mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0,Local);
+
 
 
         //Parte del scroll!!!!*****************************************************
@@ -47,7 +90,7 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
         textViewSeekBar_precio= (TextView) findViewById(R.id.textView_precio);
         textViewSeekBar_distancia= (TextView) findViewById(R.id.textView_distancia);
         textViewSeekBar_precio.setText("80");
-        textViewSeekBar_distancia.setText("20");
+        textViewSeekBar_distancia.setText("1");
         seekBarprecio.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
@@ -77,7 +120,7 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
         seekBardistancia.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                textViewSeekBar_distancia.setText(progress+20+"");
+                textViewSeekBar_distancia.setText(progress+1+"");
             }
 
             @Override
@@ -93,7 +136,7 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
         //*******************************************FIN *****************************************
         //********************Propiedad Seleccionados de Botones-Servicio*************************
 
-
+        filtros.setOnCheckedChangeListener(this);
 
         btn_agua= (ToggleButton) findViewById(R.id.imageButton_agua);
         btn_animales= (ToggleButton) findViewById(R.id.imageButton_animales);
@@ -128,55 +171,117 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
         });
     }
 
-    private void AplicarCambios(){
+    private void setLocation(Location loc) {
+        //Obtener la direccion de la calle a partir de la latitud y la longitud
+        if (loc.getLatitude() != 0.0 && loc.getLongitude() != 0.0) {
+            try {
+                Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+                List<Address> list = geocoder.getFromLocation(
+                        loc.getLatitude(), loc.getLongitude(), 1);
+                if (!list.isEmpty()) {
+                    Address DirCalle = list.get(0);
 
-        String gen="";
-        String p_min="0";
-        String p_max=textViewSeekBar_precio.getText().toString();
-        String[] servicios={"0","0","0","0","0"};
-        boolean men=btn_men.isChecked();
-        boolean women=btn_woman.isChecked();
-        if (men && women){
-            gen="3";
-        } else if (men && !women){
-            gen="1";
-        } else {
-            gen="2";
+                    //Toast.makeText(Filtros.this, "Mi direccion es: \n"+ DirCalle.getAddressLine(0), Toast.LENGTH_SHORT).show();
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        if (btn_wifi.isChecked())
-            servicios[0]="1";
-        if (btn_animales.isChecked())
-            servicios[1]="1";
-        if (btn_tv.isChecked())
-            servicios[2]="1";
-        if (btn_agua.isChecked())
-            servicios[3]="1";
-        if (btn_toilet.isChecked())
-            servicios[4]="1";
-
-        mapa map=new mapa();
-        map.setPosicion();
-        String radio="";
-        String[] latlong =  map.pos.toString().split(",");
-        //Toast.makeText(Filtros.this,dist+","+gen+","+p_min+","+p_max+","+servicios[0]+servicios[1]+servicios[2]+servicios[3]+servicios[4], Toast.LENGTH_SHORT).show();
-        new BuscarTask().execute(latlong[1],latlong[0],radio,gen,p_min,p_max,servicios[0],servicios[1],servicios[2],servicios[3],servicios[4]);
     }
 
+    private void AplicarCambios() {
+
+        String radio1 = textViewSeekBar_distancia.getText().toString();
+        float r = Float.parseFloat(radio1) * (float) (0.0009);
+        String radio = String.valueOf(r);
+
+        String lon, lat;
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            lon=String.valueOf(mlocManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER).getLongitude());
+            lat=String.valueOf(mlocManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER).getLatitude());
+        }
+        else{
+            lat="-16.406437";
+            lon="-71.5245201";
+        }
+
+
+        if (filtros.isChecked()) {
+            new BuscarTask().execute("sinfiltros",lat, lon, radio);
+        } else {
+            String gen = "";
+            String p_min = "0";
+            String p_max = textViewSeekBar_precio.getText().toString();
+            String[] servicios = {"0", "0", "0", "0", "0"};
+            boolean men = btn_men.isChecked();
+            boolean women = btn_woman.isChecked();
+            if (men && women) {
+                gen = "3";
+            } else if (men && !women) {
+                gen = "1";
+            } else {
+                gen = "2";
+            }
+            if (btn_wifi.isChecked())
+                servicios[0] = "1";
+            if (btn_animales.isChecked())
+                servicios[1] = "1";
+            if (btn_tv.isChecked())
+                servicios[2] = "1";
+            if (btn_agua.isChecked())
+                servicios[3] = "1";
+            if (btn_toilet.isChecked())
+                servicios[4] = "1";
+
+            //Toast.makeText(Filtros.this,lon+lat+","+gen+","+p_min+","+p_max+","+servicios[0]+servicios[1]+servicios[2]+servicios[3]+servicios[4], Toast.LENGTH_SHORT).show();
+            new BuscarTask().execute(lat, lon, radio, gen, servicios[4], servicios[2], servicios[3], servicios[0], servicios[1], p_min, p_max);
+        }
+    }
 
     //////////////////////////////////////actividad de botones///////////////////////////////
     // *********aqui hacer sus funciones!!!!!!
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if(!buttonView.isChecked() && (buttonView.getId()==btn_men.getId() || buttonView.getId()==btn_woman.getId()) )
+        if(!buttonView.isChecked() && (buttonView.getId()==btn_men.getId() || buttonView.getId()==btn_woman.getId() || (buttonView.getId()==filtros.getId())) )
             //Toast.makeText(Filtros.this,"Inactivo", Toast.LENGTH_SHORT).show();
             if (buttonView.getId()==btn_men.getId()){
                 btn_woman.setChecked(true);
             }
             else if (buttonView.getId()==btn_woman.getId()){
                 btn_men.setChecked(true);
+            } else if(buttonView.getId()==filtros.getId()){
+                btn_men.setEnabled(true);
+                btn_woman.setEnabled(true);
+                btn_animales.setEnabled(true);
+                btn_agua.setEnabled(true);
+                btn_toilet.setEnabled(true);
+                btn_tv.setEnabled(true);
+                btn_wifi.setEnabled(true);
+                seekBarprecio.setEnabled(true);
+                textViewSeekBar_precio.setEnabled(true);
             }
-
+        else if (buttonView.isChecked() && buttonView.getId()==filtros.getId()){
+                btn_men.setEnabled(false);
+                btn_men.setChecked(false);
+                btn_woman.setEnabled(false);
+                btn_woman.setChecked(false);
+                btn_animales.setEnabled(false);
+                btn_animales.setChecked(false);
+                btn_agua.setEnabled(false);
+                btn_agua.setChecked(false);
+                btn_toilet.setEnabled(false);
+                btn_toilet.setChecked(false);
+                btn_tv.setEnabled(false);
+                btn_tv.setChecked(false);
+                btn_wifi.setEnabled(false);
+                btn_wifi.setChecked(false);
+                seekBarprecio.setEnabled(false);
+                textViewSeekBar_precio.setEnabled(false);
+            }
     }
+
 
     /*
     Clase para buscar un cuarto
@@ -193,11 +298,19 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
             JSONObject jsonr = null;
             try {
 
-                //lon,lat,rad,genero,precio_min,precio_max,servicios
+                if(params[0].equals("sinfiltros")){
+                    jsonr = new JsonHttpHandler().getJSONfromUrl("http://myflaskapp-alquiler.rhcloud.com/buscar/" + params[1] + "/" + params[2] + "/" + params[3]);
+                }
+                else {
+                    //lon,lat,rad,genero,precio_min,precio_max,servicios
 
-                jsonr=new JsonHttpHandler().getJSONfromUrl("http://myflaskapp-alquiler.rhcloud.com/buscar/"+params[0]+"/"+params[1]+"/"+params[2]+"/"+params[3]+"/"+params[4]+"/"+params[5]+"/"+params[6]+"/"+params[7]+"/"+params[8]+"/"+params[9]+"/"+params[10]);
-
-                if (jsonr == null){return null;}
+                    jsonr = new JsonHttpHandler().getJSONfromUrl("http://myflaskapp-alquiler.rhcloud.com/buscar/" + params[0] + "/" + params[1] + "/" + params[2] + "/" + params[3] + "/" + params[4] + "/" + params[5] + "/" + params[6] + "/" + params[7] + "/" + params[8] + "/" + params[9] + "/" + params[10]);
+                    Log.d("WARNING", "http://myflaskapp-alquiler.rhcloud.com/buscar/" + params[0] + "/" + params[1] + "/" + params[2] + "/" + params[3] + "/" + params[4] + "/" + params[5] + "/" + params[6] + "/" + params[7] + "/" + params[8] + "/" + params[9] + "/" + params[10]);
+                }
+//                Log.d("WARNING", "http://myflaskapp-alquiler.rhcloud.com/buscar/" + params[0] + "/" + params[1] + "/" + params[2] + "/" + params[3] + "/" + params[4] + "/" + params[5] + "/" + params[6] + "/" + params[7] + "/" + params[8] + "/" + params[9] + "/" + params[10]);
+                if (jsonr == null) {
+                    return null;
+                }
 
                 JSONArray rooms = jsonr.getJSONArray("rooms");
 
@@ -229,9 +342,28 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
                 Toast.makeText(Filtros.this, "No se han encontrado resultados", Toast.LENGTH_SHORT).show();
             }
             else{
-                Toast.makeText(Filtros.this, "exito", Toast.LENGTH_SHORT).show();
-                finish();
+                Toast.makeText(Filtros.this, String.valueOf(rooms.length())+"resultado(s)", Toast.LENGTH_SHORT).show();
+                //finish();
                 //iniciar activity de resultados y pasar los resultados
+                try{
+                    JSONObject n=(JSONObject)rooms.get(0);
+                    String co=n.getJSONObject("Coord").getString("coordinates");
+                    //Intent i = new Intent (filtros.getContext(), MapsActivity.class);
+                    //Inicia la actividad
+                    //startActivity(i);
+                    String replace = co.replace("[","").replace("]","");
+                    Toast.makeText(Filtros.this, replace, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(Filtros.this, co, Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent (Filtros.this, MapsActivity.class);
+                    //Inicia la actividad
+                    i.putExtra("pos",replace);
+
+                    startActivity(i);
+                    //finish();
+                }
+                catch (JSONException e){
+                    Toast.makeText(Filtros.this, "No se pudo cargar el mapa", Toast.LENGTH_SHORT).show();
+                }
             }
         }
 
@@ -243,7 +375,7 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
     //************************/ Funcion de radio buton**************************************
 
 
-    public void onRadioButtonClicked(View view) {
+    /*public void onRadioButtonClicked(View view) {
         // Is the button now checked?
         boolean checked = ((RadioButton) view).isChecked();
 
@@ -258,6 +390,56 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
                     // Ninjas rule
                     break;
         }
-    }
+    }*/
+
+    /* Aqui empieza la Clase Localizacion */
+    public class Localizacion implements LocationListener {
+        Filtros mainActivity;
+        public Filtros getMainActivity() {
+            return mainActivity;
+        }
+
+        public void setMainActivity(Filtros mainActivity) {
+            this.mainActivity = mainActivity;
+        }
+
+        @Override
+        public void onLocationChanged(Location loc) {
+            // Este metodo se ejecuta cada vez que el GPS recibe nuevas coordenadas
+            // debido a la deteccion de un cambio de ubicacion
+
+            loc.getLatitude();
+            loc.getLongitude();
+            //String Text = "Mi ubicacion actual es: " + "\n Lat = "+ loc.getLatitude() + "\n Long = " + loc.getLongitude();
+            //Toast.makeText(Filtros.this, Text, Toast.LENGTH_SHORT).show();
+            this.mainActivity.setLocation(loc);
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+            // Este metodo se ejecuta cuando el GPS es desactivado
+            //mensaje1.setText("GPS Desactivado");
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+            // Este metodo se ejecuta cuando el GPS es activado
+            //mensaje1.setText("GPS Activado");
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+            // Este metodo se ejecuta cada vez que se detecta un cambio en el
+            // status del proveedor de localizacion (GPS)
+            // Los diferentes Status son:
+            // OUT_OF_SERVICE -> Si el proveedor esta fuera de servicio
+            // TEMPORARILY_UNAVAILABLE -> Temporalmente no disponible pero se
+            // espera que este disponible en breve
+            // AVAILABLE -> Disponible
+        }
+
+    }/* Fin de la clase localizacion */
 
 }
+
+

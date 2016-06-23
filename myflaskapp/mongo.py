@@ -72,20 +72,20 @@ class mongo:
         
     def mas_baratos(self,longitud,latitud,radio,genero,servicios,precio_min,precio_max):#podemos modificarlo para una solo universidad
         result=self.db.find({ 'Coord': { '$geoWithin': { '$center': [ [longitud, latitud], radio ] } },'Genero':genero,'Servicios.baño':servicios[0],'Servicios.tv':servicios[1],'Servicios.ducha':servicios[2],'Servicios.wifi':servicios[3],'Servicios.mascota':servicios[4],'$and': [{'Precio':{'$gte':precio_min}},{'Precio':{'$lte':precio_max}}]})
-        if result.count()==0:
-            return False
-        else:
+        #if result.count()==0:
+        return result
+        #else:
             #for record in result:
              #   print record['Nombre']
-            return result
+            #return result
     def mostrar_todos(self,longitud,latitud,radio):
         result=self.db.find({ 'Coord': { '$geoWithin': { '$center': [ [longitud, latitud], radio ]}}})
-        if result.count()==0:
-            return False
-        else:
+        #if result.count()==0:
+        return result
+        #else:
            # for record in result:
             #    print record['Nombre']
-            return result
+            #return result
     def insertar_imagen(self,path,nombre):
         #reducimos la  img
         basewidth = 300#300 pixeles

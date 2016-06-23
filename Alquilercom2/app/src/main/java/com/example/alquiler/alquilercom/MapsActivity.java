@@ -3,6 +3,7 @@ package com.example.alquiler.alquilercom;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.renderscript.Double2;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -18,13 +19,17 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener{
 
     private GoogleMap mMap;
-
+    String lat,lon;
 
 
     @Override
@@ -35,6 +40,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        String pos=getIntent().getExtras().getString("pos");
+        //String pos="-16.4636455,-71.501366";
+        List<String> myList = new ArrayList<String>(Arrays.asList(pos.split(",")));
+        lat=myList.get(0);
+        lon=myList.get(1);
     }
 
 
@@ -70,10 +80,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .build();
 
         Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        LatLng pos = new LatLng( currentLocation.getLatitude(), currentLocation.getLongitude());
+        //LatLng pos = new LatLng( currentLocation.getLatitude(), currentLocation.getLongitude());
+        LatLng r=new LatLng(Double.parseDouble(lat), Double.parseDouble(lon));
 
-        mMap.addMarker(new MarkerOptions().position(pos));//.title("Unsa"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos,15));
+        //mMap.addMarker(new MarkerOptions().position(pos));//.title("Unsa"));
+        mMap.addMarker(new MarkerOptions().position(r));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(r,15));
 
     }
     @Override
