@@ -21,8 +21,8 @@ class mongo:
             self.db = self.connection.prueba.Cuartos
             self.db_img=self.connection.prueba
             self.fs = gridfs.GridFS(self.db_img)
-            self.db.ensure_index( [( 'Coord',pymongo.GEOSPHERE )] )
-            self.db.ensure_index([("Precio", pymongo.ASCENDING)])
+            #self.db.ensure_index( [( 'Coord',pymongo.GEOSPHERE )] )
+            #self.db.ensure_index([("Precio", pymongo.ASCENDING)])
 
            # self.db.ensureIndex({'Precio':1}, {'sparse':True})#indice en precio funcionan como B-tree
             
@@ -73,14 +73,19 @@ class mongo:
     def mas_baratos(self,longitud,latitud,radio,genero,servicios,precio_min,precio_max):#podemos modificarlo para una solo universidad
         result=self.db.find({ 'Coord': { '$geoWithin': { '$center': [ [longitud, latitud], radio ] } },'Genero':genero,'Servicios.baño':servicios[0],'Servicios.tv':servicios[1],'Servicios.ducha':servicios[2],'Servicios.wifi':servicios[3],'Servicios.mascota':servicios[4],'$and': [{'Precio':{'$gte':precio_min}},{'Precio':{'$lte':precio_max}}]})
         if result.count()==0:
-            return false
+            return False
         else:
-            for record in result:
-                print record['Nombre']
-
-        #print result.explain()
-        #for record in result:
-         #  print record['_id']
+            #for record in result:
+             #   print record['Nombre']
+            return result
+    def mostrar_todos(self,longitud,latitud,radio):
+        result=self.db.find({ 'Coord': { '$geoWithin': { '$center': [ [longitud, latitud], radio ]}}})
+        if result.count()==0:
+            return False
+        else:
+           # for record in result:
+            #    print record['Nombre']
+            return result
     def insertar_imagen(self,path,nombre):
         #reducimos la  img
         basewidth = 300#300 pixeles
@@ -107,15 +112,7 @@ class mongo:
         print 'termino'
         output.close()
     #baño,tv,ducha,wifi
-if __name__ == "__main__":
-    mongo1=mongo()
-    mongo1.insert_cuarto([-90.97, 40.77],['1','1','1','1','1'],'park','300','3','sadas')
-    mongo1.insert_cuarto([-40.97, 40.77],['1','1','1','1','1'],'unsa','140','3','dasda')
-    mongo1.insert_cuarto([-64.97, 40.77],['1','1','1','1','1'],'sanpa','120','3','adasd')
-    mongo1.insert_cuarto([-72.97, 40.77],['1','1','1','1','1'],'menu','100','3','fasda')
-    mongo1.insert_cuarto([-79.97, 40.77],['1','1','1','1','1'],'jose','110','3','dasdsa')
-    mongo1.mas_baratos(-60.97, 39.77,13,'3',['1','1','1','1','1'],'100','140') #,genero(1 o 2 o 3),servicios(baño,tv,ducha,wifi,mascota),precio min ,precio max)
-    mongo1.desconectar()
+
 
     
 
