@@ -2,12 +2,14 @@ package com.example.alquiler.alquilercom;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.renderscript.Double2;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -17,6 +19,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -33,10 +37,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         GoogleApiClient.OnConnectionFailedListener{
 
     private GoogleMap mMap;
-    String lat,lon;
-    Double mylat,mylon;
+    LatLng r;
+
     List<LatLng> resultados;
     int radio;
+    Circle circle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +59,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         for (int i=0;i<myList.size();i=i+2){
             resultados.add(i/2,new LatLng(Double.parseDouble(myList.get(i)),Double.parseDouble(myList.get(i+1))));
         }
-        mylat=getIntent().getExtras().getDouble("lat");
-        mylon=getIntent().getExtras().getDouble("lon");
+        r=new LatLng(getIntent().getExtras().getDouble("lat"),getIntent().getExtras().getDouble("lon"));
         radio=getIntent().getExtras().getInt("radio");
     }
 
@@ -72,6 +76,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        circle = mMap.addCircle(new CircleOptions().center(r).radius(radio*100).strokeColor(Color.RED));
+        circle.setVisible(true);
 
         /*
         * Posición actual
@@ -99,14 +106,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         LatLng pos = new LatLng( currentLocation.getLatitude(), currentLocation.getLongitude());*/
-        LatLng r=new LatLng(mylat,mylon);
+
 
         //mMap.addMarker(new MarkerOptions().position(pos));//.title("Unsa"));
 
         for(int i=0;i<resultados.size();i++){
             mMap.addMarker(new MarkerOptions().position(resultados.get(i)));
         }
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(r,radio));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(r,zoomLevel(circle)));
 
 
     }
@@ -122,4 +129,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
     }
+    public float zoomLevel(Circle circle){
+        float zoomLevel = 15;
+        if (circle != null){
+            double radius = circle.getRadius();
+            double scale = radius / 500;
+            zoomLevel =(float) (16 - Math.log(scale) / Math.log(2));
+            //Log.i(TAG, "Zoom level = " + zoomLevel );
+        }
+        return zoomLevel - 0.5f ; }
 }

@@ -61,7 +61,7 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
     Location pos=null;
     LocationManager mlocManager=null;
     Double lon, lat;
-    int radio;
+    int radio_;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -195,7 +195,7 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
     private void AplicarCambios() {
 
         String radio1 = textViewSeekBar_distancia.getText().toString();
-        this.radio=Integer.parseInt(radio1);
+        this.radio_=Integer.parseInt(radio1);
         float r = Float.parseFloat(radio1) * (float) (0.0009);
         String radio = String.valueOf(r);
 
@@ -367,7 +367,7 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
                     i.putExtra("pos",aux);
                     i.putExtra("lon",lon);
                     i.putExtra("lat",lat);
-                    i.putExtra("radio",Filtros.this.radio);
+                    i.putExtra("radio",Filtros.this.radio_);
 
                     startActivity(i);
                     finish();
