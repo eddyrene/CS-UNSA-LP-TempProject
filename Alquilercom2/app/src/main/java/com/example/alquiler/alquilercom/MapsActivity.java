@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.renderscript.Double2;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -21,7 +22,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
@@ -30,7 +34,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     String lat,lon;
-
+    Double mylat,mylon;
+    List<LatLng> resultados;
+    int radio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +49,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String pos=getIntent().getExtras().getString("pos");
         //String pos="-16.4636455,-71.501366";
         List<String> myList = new ArrayList<String>(Arrays.asList(pos.split(",")));
-        lat=myList.get(0);
-        lon=myList.get(1);
+        //Toast.makeText(this, myList.toString()+"\n"+myList.size(), Toast.LENGTH_SHORT).show();
+        resultados=new ArrayList<LatLng>(myList.size()/2);
+        for (int i=0;i<myList.size();i=i+2){
+            resultados.add(i/2,new LatLng(Double.parseDouble(myList.get(i)),Double.parseDouble(myList.get(i+1))));
+        }
+        mylat=getIntent().getExtras().getDouble("lat");
+        mylon=getIntent().getExtras().getDouble("lon");
+        radio=getIntent().getExtras().getInt("radio");
     }
 
 
@@ -72,20 +84,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Toast.makeText(MapsActivity.this, "No permission granted", Toast.LENGTH_SHORT).show();
         }
 
-        GoogleApiClient mGoogleApiClient;
+        /*GoogleApiClient mGoogleApiClient;
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
-
+        if (mGoogleApiClient != null)
+            if (mGoogleApiClient.isConnected() || mGoogleApiClient.isConnecting()){
+                mGoogleApiClient.disconnect();
+                mGoogleApiClient.connect();
+            } else if (!mGoogleApiClient.isConnected()){
+                mGoogleApiClient.connect();
+            }
         Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        //LatLng pos = new LatLng( currentLocation.getLatitude(), currentLocation.getLongitude());
-        LatLng r=new LatLng(Double.parseDouble(lat), Double.parseDouble(lon));
+        LatLng pos = new LatLng( currentLocation.getLatitude(), currentLocation.getLongitude());*/
+        LatLng r=new LatLng(mylat,mylon);
 
         //mMap.addMarker(new MarkerOptions().position(pos));//.title("Unsa"));
-        mMap.addMarker(new MarkerOptions().position(r));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(r,15));
+
+        for(int i=0;i<resultados.size();i++){
+            mMap.addMarker(new MarkerOptions().position(resultados.get(i)));
+        }
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(r,radio));
+
 
     }
     @Override

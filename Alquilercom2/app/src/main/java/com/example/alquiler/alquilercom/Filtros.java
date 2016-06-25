@@ -60,6 +60,8 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
     private CheckBox filtros;
     Location pos=null;
     LocationManager mlocManager=null;
+    Double lon, lat;
+    int radio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,23 +195,24 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
     private void AplicarCambios() {
 
         String radio1 = textViewSeekBar_distancia.getText().toString();
+        this.radio=Integer.parseInt(radio1);
         float r = Float.parseFloat(radio1) * (float) (0.0009);
         String radio = String.valueOf(r);
 
-        String lon, lat;
+        //String lon, lat;
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            lon=String.valueOf(mlocManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER).getLongitude());
-            lat=String.valueOf(mlocManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER).getLatitude());
+            lon=mlocManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER).getLongitude();
+            lat=mlocManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER).getLatitude();
         }
         else{
-            lat="-16.406437";
-            lon="-71.5245201";
+            lat=-16.406437;
+            lon=-71.5245201;
         }
 
 
         if (filtros.isChecked()) {
-            new BuscarTask().execute("sinfiltros",lat, lon, radio);
+            new BuscarTask().execute("sinfiltros",String.valueOf(lat), String.valueOf(lon), radio);
         } else {
             String gen = "";
             String p_min = "0";
@@ -236,7 +239,7 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
                 servicios[4] = "1";
 
             //Toast.makeText(Filtros.this,lon+lat+","+gen+","+p_min+","+p_max+","+servicios[0]+servicios[1]+servicios[2]+servicios[3]+servicios[4], Toast.LENGTH_SHORT).show();
-            new BuscarTask().execute(lat, lon, radio, gen, servicios[4], servicios[2], servicios[3], servicios[0], servicios[1], p_min, p_max);
+            new BuscarTask().execute(String.valueOf(lat), String.valueOf(lon), radio, gen, servicios[4], servicios[2], servicios[3], servicios[0], servicios[1], p_min, p_max);
         }
     }
 
@@ -345,21 +348,29 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
                 Toast.makeText(Filtros.this, String.valueOf(rooms.length())+"resultado(s)", Toast.LENGTH_SHORT).show();
                 //finish();
                 //iniciar activity de resultados y pasar los resultados
+                String aux="";
                 try{
-                    JSONObject n=(JSONObject)rooms.get(0);
-                    String co=n.getJSONObject("Coord").getString("coordinates");
-                    //Intent i = new Intent (filtros.getContext(), MapsActivity.class);
-                    //Inicia la actividad
-                    //startActivity(i);
-                    String replace = co.replace("[","").replace("]","");
-                    Toast.makeText(Filtros.this, replace, Toast.LENGTH_SHORT).show();
-                    //Toast.makeText(Filtros.this, co, Toast.LENGTH_SHORT).show();
+                    for(int m=0;m<rooms.length();++m){
+                        JSONObject n=(JSONObject)rooms.get(m);
+                        String co=n.getJSONObject("Coord").getString("coordinates");
+                        String replace = co.replace("[","").replace("]","");
+                        if (m==0)
+                            aux+=replace;
+                        else
+                            aux+=","+replace;
+                    }
+
+                    //Toast.makeText(Filtros.this, aux, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Filtros.this, lat+" "+lon, Toast.LENGTH_SHORT).show();
                     Intent i = new Intent (Filtros.this, MapsActivity.class);
-                    //Inicia la actividad
-                    i.putExtra("pos",replace);
+
+                    i.putExtra("pos",aux);
+                    i.putExtra("lon",lon);
+                    i.putExtra("lat",lat);
+                    i.putExtra("radio",Filtros.this.radio);
 
                     startActivity(i);
-                    //finish();
+                    finish();
                 }
                 catch (JSONException e){
                     Toast.makeText(Filtros.this, "No se pudo cargar el mapa", Toast.LENGTH_SHORT).show();
@@ -371,26 +382,6 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
     /*
     Fin de la clase para buscar un cuarto
      */
-
-    //************************/ Funcion de radio buton**************************************
-
-
-    /*public void onRadioButtonClicked(View view) {
-        // Is the button now checked?
-        boolean checked = ((RadioButton) view).isChecked();
-
-        // Check which radio button was clicked
-        switch(view.getId()) {
-            case R.id.radio_yes:
-                if (checked)
-                    //rules
-                    break;
-            case R.id.radio_no:
-                if (checked)
-                    // Ninjas rule
-                    break;
-        }
-    }*/
 
     /* Aqui empieza la Clase Localizacion */
     public class Localizacion implements LocationListener {
@@ -413,6 +404,7 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
             //String Text = "Mi ubicacion actual es: " + "\n Lat = "+ loc.getLatitude() + "\n Long = " + loc.getLongitude();
             //Toast.makeText(Filtros.this, Text, Toast.LENGTH_SHORT).show();
             this.mainActivity.setLocation(loc);
+
         }
 
         @Override
