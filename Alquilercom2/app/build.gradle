@@ -8,7 +8,7 @@ android {
     defaultConfig {
         applicationId "com.example.alquiler.alquilercom"
         minSdkVersion 17
-        targetSdkVersion 23
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
     }
@@ -28,4 +28,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-appindexing:8.1.0'
     compile 'cz.msebera.android:httpclient:4.4.1.1'
     compile 'com.google.android.gms:play-services:8.4.0'
+    compile 'com.android.support:cardview-v7:23.0.+'
+    compile 'com.android.support:recyclerview-v7:23.0.+'
 }
