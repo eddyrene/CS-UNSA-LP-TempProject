@@ -10,6 +10,9 @@ import com.google.android.gms.maps.model.LatLng;
 
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -21,6 +24,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 
+import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -62,11 +66,16 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
     LocationManager mlocManager=null;
     Double lon, lat;
     int radio_;
+    private  View scroll;
+    private View spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filtros);
+
+        scroll=findViewById(R.id.scrollView);
+        spinner=findViewById(R.id.search_progress);
 
         filtros=(CheckBox) findViewById(R.id.checkBox);
 
@@ -196,7 +205,7 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
 
         String radio1 = textViewSeekBar_distancia.getText().toString();
         this.radio_=Integer.parseInt(radio1);
-        float r = Float.parseFloat(radio1) * (float) (0.0009);
+        float r = Float.parseFloat(radio1) * (0.0009f);
         String radio = String.valueOf(r);
 
         //String lon, lat;
@@ -212,6 +221,7 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
 
 
         if (filtros.isChecked()) {
+            showProgress(true);
             new BuscarTask().execute("sinfiltros",String.valueOf(lat), String.valueOf(lon), radio);
         } else {
             String gen = "";
@@ -238,6 +248,7 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
             if (btn_toilet.isChecked())
                 servicios[4] = "1";
 
+            showProgress(true);
             //Toast.makeText(Filtros.this,lon+lat+","+gen+","+p_min+","+p_max+","+servicios[0]+servicios[1]+servicios[2]+servicios[3]+servicios[4], Toast.LENGTH_SHORT).show();
             new BuscarTask().execute(String.valueOf(lat), String.valueOf(lon), radio, gen, servicios[4], servicios[2], servicios[3], servicios[0], servicios[1], p_min, p_max);
         }
@@ -247,56 +258,103 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
     // *********aqui hacer sus funciones!!!!!!
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if(!buttonView.isChecked() && (buttonView.getId()==btn_men.getId() || buttonView.getId()==btn_woman.getId() || (buttonView.getId()==filtros.getId())) )
+        if(!buttonView.isChecked() && (buttonView.getId()==btn_men.getId() || buttonView.getId()==btn_woman.getId() || (buttonView.getId()==filtros.getId())) ) {
             //Toast.makeText(Filtros.this,"Inactivo", Toast.LENGTH_SHORT).show();
-            if (buttonView.getId()==btn_men.getId()){
+            if (buttonView.getId() == btn_men.getId() && !filtros.isChecked()) {
                 btn_woman.setChecked(true);
-            }
-            else if (buttonView.getId()==btn_woman.getId()){
+            } else if (buttonView.getId() == btn_woman.getId() && !filtros.isChecked()) {
                 btn_men.setChecked(true);
-            } else if(buttonView.getId()==filtros.getId()){
+            } else if (buttonView.getId() == filtros.getId()) {
                 btn_men.setEnabled(true);
+                btn_men.setChecked(true);
+                btn_men.setAlpha(1f);
                 btn_woman.setEnabled(true);
+                btn_woman.setAlpha(1f);
                 btn_animales.setEnabled(true);
+                btn_animales.setAlpha(1f);
                 btn_agua.setEnabled(true);
+                btn_agua.setAlpha(1f);
                 btn_toilet.setEnabled(true);
+                btn_toilet.setAlpha(1f);
                 btn_tv.setEnabled(true);
+                btn_tv.setAlpha(1f);
                 btn_wifi.setEnabled(true);
+                btn_wifi.setAlpha(1f);
                 seekBarprecio.setEnabled(true);
                 textViewSeekBar_precio.setEnabled(true);
             }
+        }
         else if (buttonView.isChecked() && buttonView.getId()==filtros.getId()){
                 btn_men.setEnabled(false);
                 btn_men.setChecked(false);
+                btn_men.setAlpha(.5f);
                 btn_woman.setEnabled(false);
                 btn_woman.setChecked(false);
+                btn_woman.setAlpha(.5f);
                 btn_animales.setEnabled(false);
                 btn_animales.setChecked(false);
+                btn_animales.setAlpha(.5f);
                 btn_agua.setEnabled(false);
                 btn_agua.setChecked(false);
+                btn_agua.setAlpha(.5f);
                 btn_toilet.setEnabled(false);
                 btn_toilet.setChecked(false);
+                btn_toilet.setAlpha(.5f);
                 btn_tv.setEnabled(false);
                 btn_tv.setChecked(false);
+                btn_tv.setAlpha(.5f);
                 btn_wifi.setEnabled(false);
                 btn_wifi.setChecked(false);
+                btn_wifi.setAlpha(.5f);
                 seekBarprecio.setEnabled(false);
                 textViewSeekBar_precio.setEnabled(false);
             }
     }
 
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showProgress(final boolean show) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+            scroll.setVisibility(show ? View.GONE : View.VISIBLE);
+            scroll.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    scroll.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
+
+            spinner.setVisibility(show ? View.VISIBLE : View.GONE);
+            spinner.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    spinner.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } else {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            spinner.setVisibility(show ? View.VISIBLE : View.GONE);
+            scroll.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
+    }
     /*
     Clase para buscar un cuarto
     */
-    private class BuscarTask extends AsyncTask<String, Void, JSONArray> {
+    private class BuscarTask extends AsyncTask<String, Void, String[]> {
 
 
         public BuscarTask() {
 
         }
         @Override
-        protected JSONArray doInBackground(String... params) {
+        protected String[] doInBackground(String... params) {
 
             JSONObject jsonr = null;
             try {
@@ -316,8 +374,26 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
                 }
 
                 JSONArray rooms = jsonr.getJSONArray("rooms");
-
-                return rooms;
+                String[] aux={"",""};
+                if (rooms==null){
+                    aux=null;
+                }
+                else if (rooms.length()==0) {
+                    aux[0]= "0";
+                }
+                else{
+                    aux[0]=String.valueOf(rooms.length());
+                    for(int m=0;m<rooms.length();++m){
+                        JSONObject n=(JSONObject)rooms.get(m);
+                        String co=n.getJSONObject("Coord").getString("coordinates");
+                        String replace = co.replace("[","").replace("]","");
+                        if (m==0)
+                            aux[1]+=replace;
+                        else
+                            aux[1]+=","+replace;
+                    }
+                }
+                return aux;
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -335,47 +411,35 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
         }
 
         @Override
-        protected void onPostExecute(JSONArray rooms) {
+        protected void onPostExecute(String[] aux) {
             //super.onPostExecute(result);
             //set a null el objeto de esta clase
             //crear=null;
-            if (rooms==null){
+            showProgress(false);
+            if (aux==null){
                 Toast.makeText(Filtros.this, "Se ha producido un error. Vuelva a intentarlo", Toast.LENGTH_SHORT).show();
-            } else if (rooms.length()==0) {
+            } else if (aux[0].equals("0")) {
                 Toast.makeText(Filtros.this, "No se han encontrado resultados", Toast.LENGTH_SHORT).show();
             }
-            else{
-                Toast.makeText(Filtros.this, String.valueOf(rooms.length())+"resultado(s)", Toast.LENGTH_SHORT).show();
+            else {
+                Toast.makeText(Filtros.this, aux[0] + " resultado(s)", Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(Filtros.this, lat + " " + lon, Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(Filtros.this, MapsActivity.class);
+
+                i.putExtra("pos", aux[1]);
+                i.putExtra("lon", lon);
+                i.putExtra("lat", lat);
+                i.putExtra("radio", Filtros.this.radio_);
+
+                startActivity(i);
                 //finish();
-                //iniciar activity de resultados y pasar los resultados
-                String aux="";
-                try{
-                    for(int m=0;m<rooms.length();++m){
-                        JSONObject n=(JSONObject)rooms.get(m);
-                        String co=n.getJSONObject("Coord").getString("coordinates");
-                        String replace = co.replace("[","").replace("]","");
-                        if (m==0)
-                            aux+=replace;
-                        else
-                            aux+=","+replace;
-                    }
-
-                    //Toast.makeText(Filtros.this, aux, Toast.LENGTH_SHORT).show();
-                    Toast.makeText(Filtros.this, lat+" "+lon, Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent (Filtros.this, MapsActivity.class);
-
-                    i.putExtra("pos",aux);
-                    i.putExtra("lon",lon);
-                    i.putExtra("lat",lat);
-                    i.putExtra("radio",Filtros.this.radio_);
-
-                    startActivity(i);
-                    finish();
-                }
-                catch (JSONException e){
-                    Toast.makeText(Filtros.this, "No se pudo cargar el mapa", Toast.LENGTH_SHORT).show();
-                }
             }
+        }
+        @Override
+        protected void onCancelled() {
+
+            showProgress(false);
         }
 
     }

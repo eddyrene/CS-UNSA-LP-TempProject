@@ -22,6 +22,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
@@ -30,11 +31,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener{
+        GoogleApiClient.OnConnectionFailedListener,
+        GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap;
     LatLng r;
@@ -42,25 +45,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     List<LatLng> resultados;
     int radio;
     Circle circle;
+    private SlidingUpPanelLayout slidingLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
+        setContentView(R.layout.info);
+        slidingLayout=(SlidingUpPanelLayout)findViewById(R.id.sliding_layout);
+        slidingLayout.setAnchorPoint(0.25f);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         String pos=getIntent().getExtras().getString("pos");
-        //String pos="-16.4636455,-71.501366";
+
         List<String> myList = new ArrayList<String>(Arrays.asList(pos.split(",")));
-        //Toast.makeText(this, myList.toString()+"\n"+myList.size(), Toast.LENGTH_SHORT).show();
         resultados=new ArrayList<LatLng>(myList.size()/2);
         for (int i=0;i<myList.size();i=i+2){
             resultados.add(i/2,new LatLng(Double.parseDouble(myList.get(i)),Double.parseDouble(myList.get(i+1))));
         }
         r=new LatLng(getIntent().getExtras().getDouble("lat"),getIntent().getExtras().getDouble("lon"));
         radio=getIntent().getExtras().getInt("radio");
+
     }
 
 
@@ -79,6 +85,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         circle = mMap.addCircle(new CircleOptions().center(r).radius(radio*100).strokeColor(Color.RED));
         circle.setVisible(true);
+        googleMap.setOnMarkerClickListener(this);
 
         /*
         * Posición actual
@@ -128,6 +135,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
+    }
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        this.slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
+        return  true;
     }
     public float zoomLevel(Circle circle){
         float zoomLevel = 15;
