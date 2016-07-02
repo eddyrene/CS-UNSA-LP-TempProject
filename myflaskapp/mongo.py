@@ -71,24 +71,26 @@ class mongo:
         
     def desconectar(self):
         self.connection.close()
-        
-    def mas_baratos(self,punto1,punto2,punto3,punto4,genero,servicios,precio_min,precio_max):#podemos modificarlo para una solo universidad
-        result=self.db.find({ 'Coord': { '$geoWithin': { '$box': [ [punto1,punto2],[punto3,punto4]] } },'Genero':genero,'Servicios.baño':servicios[0],'Servicios.tv':servicios[1],'Servicios.ducha':servicios[2],'Servicios.wifi':servicios[3],'Servicios.mascota':servicios[4],'$and': [{'Precio':{'$gte':precio_min}},{'Precio':{'$lte':precio_max}}]})
-        #if result.count()==0:
-        print result.count()
-        #else:
-        #for record in result:
-             #   print record['Nombre']
-            #return result
-    def mostrar_todos(self,punto1,punto2,punto3,punto4):
+    def mas_baratos(self,punto1,punto2,radio,genero,servicios,precio_min,precio_max):
+    #def mas_baratos(self,punto1,punto2,punto3,punto4,genero,servicios,precio_min,precio_max):#podemos modificarlo para una solo universidad
+        #result=self.db.find({ 'Coord': { '$geoWithin': { '$box': [ [punto1,punto2],[punto3,punto4]] } },'Genero':genero,'Servicios.baño':servicios[0],'Servicios.tv':servicios[1],'Servicios.ducha':servicios[2],'Servicios.wifi':servicios[3],'Servicios.mascota':servicios[4],'$and': [{'Precio':{'$gte':precio_min}},{'Precio':{'$lte':precio_max}}]})
+        result=self.db.find({ 'Coord': { '$geoWithin': { '$center': [ [punto1, punto2], radio ]}},'Genero':genero,'Servicios.baño':servicios[0],'Servicios.tv':servicios[1],'Servicios.ducha':servicios[2],'Servicios.wifi':servicios[3],'Servicios.mascota':servicios[4],'$and': [{'Precio':{'$gte':precio_min}},{'Precio':{'$lte':precio_max}}]})
+
+        if result.count()==0:
+            return False
+        else:
+            return result
+             
+    #def mostrar_todos(self,punto1,punto2,punto3,punto4):#ESTA FUNCION ES CON UN RECTANGULO
+        #result=self.db.find({ 'Coord': { '$geoWithin': { '$box': [ [punto1,punto2],[punto3,punto4] ]}}}) 
+    def mostrar_todos(self,punto1,punto2,radio):#esta con un circulo
+        result=self.db.find({ 'Coord': { '$geoWithin': { '$center': [ [punto1, punto2], radio ]}}})
         #result=self.db.find({ 'Coord': { '$geoWithin': { '$center': [ [punto1, punto2], 0.045 ]}}})
         #result=self.db.find({ 'Coord': { '$geoWithin': { '$polygon': [ [punto1,punto2],[punto3,punto4],[punto5,punto6],[punto7,punto8]]}}})
-        result=self.db.find({ 'Coord': { '$geoWithin': { '$box': [ [punto1,punto2],[punto3,punto4] ]}}}) 
-        print result.count()#numero de resultados
-        #return result
-        #else:
-        print result
-            #return result
+        if result.count()==0:
+            return False
+        else:
+            return result
     def insertar_imagen(self,path,nombre):
         #reducimos la  img
         basewidth = 300#300 pixeles
@@ -98,6 +100,7 @@ class mongo:
         img = img.resize((basewidth, hsize), PIL.Image.ANTIALIAS)
         nombre_1=nombre+'.JPG'
         img.save(nombre_1)
+        
         #aqui terminamos el procedimiento de reduccion
         path_2='C:\Users\Juanjo\Documents\GitHub\CS-UNSA-LP-TempProject\myflaskapp\\'+nombre_1 #nose como funcione en la nube eso del path
         filename = path_2 #este un ejemplo "C:\Users\Juanjo\Desktop\casa.png"
@@ -133,20 +136,42 @@ class mongo:
         except ValueError:
             return False
             print ('No se pudo insertear')
-    def insert_cuarto_usuario(self,nombre,correo,telefono,coord):#en caso el usuario quiera insertar un cuarto sus datos seran acutalizados
-        self.db_usu.update(self.db_usu.find_one({'Correo':correo}),{'$set':{'Telefono':telefono,'Coord':{'type':"Point",'coordinates': [coord[0],coord[1]]}}})
-  
+    def insert_cuarto_usuario(self,nombre_vivienda,direccion,correo,telefono,coord,precio,genero,servicios):#,img,path):en caso el usuario quiera insertar un cuarto sus datos seran acutalizados
+        self.db_usu.update(self.db_usu.find_one({'Correo':correo}),{'$set':{'Telefono':telefono}})
+        vivienda ={
+                "Coord":{'type':"Point",'coordinates': [coord[0],coord[1]]},#es la forma de declara un tipo punto para la el indice 2dsphere
+                "Nombre":nombre_vivienda,
+                "Direccion":direccion,
+                "Servicios":{'baño':servicios[0] ,'tv':servicios[1] ,'ducha':servicios[2],'wifi':servicios[3],'mascota':servicios[4]},#baño,tv,ducha,mascota con 0 y 1
+                "Correo_usu":correo,
+                "Precio":precio,
+                "Genero":genero# 1 es solo hombres 2 es solo chicas y tres es los dos
+                #"Img":{'img1':img[0],'img2':img[1]}#por el momento dejaremos q sean 2 imagenes para cada cuarto
+                   }
+        
+        try:
+            #lo de imagen  esta pero aun no lo uses lo comentare
+            #insertar_imagen(path,img[0])
+            #insertar_imagen(path,img[1])
+            self.db.insert_one(vivienda).inserted_id
+            return True
+        except ValueError:
+            return False
+            print ('No se pudo insertear')
         
 if __name__ == "__main__":
     mongo1=mongo()
-    #mongo1.insertar_usuario('juanjo','juanjo27')
-    #mongo1.insert_cuarto_usuario('juanjo','juanjo28',1323123,[412312,1233,123123])
+
     #mongo1.mostrar_todos(-16.407098, -71.526373,-16.406437,-71.5245201,-16.409270, -71.524968,-16.408436, -71.522415)
-    mongo1.mas_baratos(-16.407098, -71.526373,-16.406437,-71.5245201,'3',['1','1','1','1','1'],'100','300') #,genero(1 o 2 o 3),servicios(baño,tv,ducha,wifi,mascota),precio min ,precio max)
+    #mongo1.mas_baratos(-16.407098, -71.526373,-16.406437,-71.5245201,'3',['1','1','1','1','1'],'100','300') #,genero(1 o 2 o 3),servicios(baño,tv,ducha,wifi,mascota),precio min ,precio max)
     #mongo1.mostrar_todos(-16.407098, -71.526373,-16.406437,-71.5245201)
+    #mongo1.insertar_usuario('juanjo','juanjo27')
+    #------ESTAS SON LAS NUEVAS FUNCIONES
+    #mongo1.insertar_usuario('juanjo','juanjo27')#nombre,correro
+    #mongo1.insert_cuarto_usuario('Don jose','AV.venezuela','juanjo27',999999,[-16.407098, -71.526373],300,'3',['1','1','1','1','1'])#el correro debe estar en laBD osea un usario q existe
+    mongo1.mas_baratos(-16.406437,-71.5245201,0.009,'3',['1','1','1','1','1'],'100','300') #coordenadas del centron, radio,genero(1 o 2 o 3),servicios(baño,tv,ducha,wifi,mascota),precio min ,precio max)
+    #mongo1.mostrar_todos(-16.406437,-71.5245201,0.009)#coordenadas del centron, radio
     mongo1.desconectar()
-
-
     
 
 
