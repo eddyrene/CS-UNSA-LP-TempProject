@@ -3,12 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
     tools:context="com.example.alquiler.alquilercom.register">
 
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/scrollView2" >
+        android:id="@+id/scrollView2"
+        android:layout_gravity="center">
 
         <LinearLayout
             android:orientation="vertical"
@@ -16,6 +21,24 @@
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Nombre:"
+                    android:id="@+id/textView15" />
+
+                <EditText
+                    android:layout_width="298dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/editText" />
+            </LinearLayout>
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -32,8 +55,11 @@
                 <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:inputType="numberSigned"
+                    android:ems="10"
                     android:id="@+id/editText_precio"
                     android:layout_weight="1" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -83,7 +109,8 @@
                 android:layout_gravity="center_horizontal">
 
                 <ToggleButton
-                    android:layout_width="wrap_content"
+                    android:layout_width="50dp"
+                    android:layout_margin="10dp"
                     android:layout_height="wrap_content"
                     android:text="New ToggleButton"
                     android:id="@+id/toggleButton_wifi"
@@ -93,16 +120,19 @@
                     android:background="@drawable/pressbutton_wifi"/>
 
                 <ToggleButton
-                    android:layout_width="wrap_content"
+                    android:layout_width="50dp"
+                    android:layout_margin="10dp"
                     android:layout_height="wrap_content"
                     android:text="New ToggleButton"
                     android:id="@+id/toggleButton_mascota"
                     android:textOn=""
                     android:textOff=""
-                    android:background="@drawable/pressbutton_animales"/>
+                    android:background="@drawable/pressbutton_animales"
+                    android:checked="false" />
 
                 <ToggleButton
-                    android:layout_width="wrap_content"
+                    android:layout_width="50dp"
+                    android:layout_margin="10dp"
                     android:layout_height="wrap_content"
                     android:text="New ToggleButton"
                     android:id="@+id/toggleButton_tv"
@@ -119,7 +149,8 @@
                 android:layout_gravity="center_horizontal">
 
                 <ToggleButton
-                    android:layout_width="wrap_content"
+                    android:layout_width="50dp"
+                    android:layout_margin="10dp"
                     android:layout_height="wrap_content"
                     android:text="New ToggleButton"
                     android:id="@+id/toggleButton_agua"
@@ -128,7 +159,8 @@
                     android:background="@drawable/pressbutton_agua"/>
 
                 <ToggleButton
-                    android:layout_width="wrap_content"
+                    android:layout_width="50dp"
+                    android:layout_margin="10dp"
                     android:layout_height="wrap_content"
                     android:text="New ToggleButton"
                     android:id="@+id/toggleButton_toilet"
@@ -150,7 +182,8 @@
                 android:layout_height="wrap_content">
 
                 <ToggleButton
-                    android:layout_width="wrap_content"
+                    android:layout_width="50dp"
+                    android:layout_margin="10dp"
                     android:layout_height="wrap_content"
                     android:text="New ToggleButton"
                     android:id="@+id/toggleButton_man"
@@ -159,7 +192,8 @@
                     android:background="@drawable/pressbutton_men"/>
 
                 <ToggleButton
-                    android:layout_width="wrap_content"
+                    android:layout_width="50dp"
+                    android:layout_margin="10dp"
                     android:layout_height="wrap_content"
                     android:text="New ToggleButton"
                     android:id="@+id/toggleButton_woman"
@@ -195,27 +229,28 @@
 
             </LinearLayout>
 
-            <TextView
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Importante:"
-                android:id="@+id/textView12" />
-            <RadioGroup
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <RadioButton android:id="@+id/radio_yes"
+                android:layout_height="match_parent" >
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="El costo de agua y luz estan incluidos en el precio fijado"
-                    android:onClick="onRadioButtonClicked"/>
-                <RadioButton android:id="@+id/radio_no"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Telefono:"
+                    android:id="@+id/textView12" />
+
+                <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="El costo de agua y luz se cobran aparte, dependiendo del consumo"
-                    android:onClick="onRadioButtonClicked"/>
-            </RadioGroup>
+                    android:inputType="phone"
+                    android:ems="10"
+                    android:id="@+id/editText2"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
