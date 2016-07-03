@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -22,7 +23,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-public class register extends AppCompatActivity {
+public class register extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener{
 
     ToggleButton btn_agua, btn_animales, btn_men, btn_toilet, btn_tv, btn_wifi, btn_woman;
     EditText nombre, precio, direc, fono;
@@ -50,6 +51,9 @@ public class register extends AppCompatActivity {
         btn_tv=(ToggleButton)findViewById(R.id.toggleButton_tv);
         btn_men=(ToggleButton)findViewById(R.id.toggleButton_man);
         btn_woman=(ToggleButton)findViewById(R.id.toggleButton_woman);
+
+        btn_men.setOnCheckedChangeListener(this);
+        btn_woman.setOnCheckedChangeListener(this);
 
         btn_woman.setChecked(true);
         btn_men.setChecked(true);
@@ -93,18 +97,27 @@ public class register extends AppCompatActivity {
                             serv[0],serv[1],serv[2],serv[3],serv[4]);
                 }
                 else
-                    Toast.makeText(register.this, "Debe llenar todos los campos", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(register.this, "Debe llenar todos los campos con información válida.", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     public Boolean ready(){
         if (nombre.getText().toString().trim().length()==0 || precio.getText().toString().trim().length()==0 ||
-                direc.getText().toString().trim().length()==0 || fono.getText().toString().trim().length()==0)
+                direc.getText().toString().trim().length()==0 || fono.getText().toString().trim().length()==0 ||
+                nombre.getText().toString().trim().length()<6 || precio.getText().toString().trim().length()==0 ||
+                direc.getText().toString().trim().length()<6 || fono.getText().toString().trim().length()<6)
             return false;
         return true;
     }
 
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if(!buttonView.isChecked() && buttonView.getId()==btn_men.getId())
+            btn_woman.setChecked(true);
+        else if(!buttonView.isChecked() && buttonView.getId()==btn_woman.getId())
+            btn_men.setChecked(true);
+    }
 
     /*
     Clase para insertar un cuarto
