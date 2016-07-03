@@ -2,13 +2,6 @@ package com.example.alquiler.alquilercom;
 
 import com.example.alquiler.alquilercom.data.JsonHttpHandler;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-
-
-import com.google.android.gms.maps.model.LatLng;
-
-
 import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -25,6 +18,7 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 
 import android.os.Build;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -34,9 +28,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.RadioButton;
 import android.widget.SeekBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -46,15 +38,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-
-import android.location.Location;
-
-
 
 public class Filtros extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
 
@@ -180,6 +165,21 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
                 AplicarCambios();
             }
         });
+
+        lon=mlocManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER).getLongitude();
+        lat=mlocManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER).getLatitude();
+        final String email=getIntent().getExtras().getString("email");
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i=new Intent(Filtros.this, register.class);
+                i.putExtra("email",email);
+                i.putExtra("lon",lon);
+                i.putExtra("lat",lat);
+                startActivity(i);
+            }
+        });
     }
 
     private void setLocation(Location loc) {
@@ -205,11 +205,10 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
 
         String radio1 = textViewSeekBar_distancia.getText().toString();
         this.radio_=Integer.parseInt(radio1);
-        float r = Float.parseFloat(radio1) * (0.0009f);
+        float r = Float.parseFloat(radio1) * (0.009f);
         String radio = String.valueOf(r);
 
-        //String lon, lat;
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        /*if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             lon=mlocManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER).getLongitude();
             lat=mlocManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER).getLatitude();
@@ -217,7 +216,7 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
         else{
             lat=-16.406437;
             lon=-71.5245201;
-        }
+        }*/
 
 
         if (filtros.isChecked()) {
@@ -360,15 +359,15 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
             try {
 
                 if(params[0].equals("sinfiltros")){
-                    jsonr = new JsonHttpHandler().getJSONfromUrl("http://myflaskapp-alquiler.rhcloud.com/buscar/" + params[1] + "/" + params[2] + "/" + params[3]);
+                    jsonr = new JsonHttpHandler().getJSONfromUrl("http://myflaskapp2-alquiler.rhcloud.com/buscar/" + params[1] + "/" + params[2] + "/" + params[3]);
                 }
                 else {
                     //lon,lat,rad,genero,precio_min,precio_max,servicios
 
-                    jsonr = new JsonHttpHandler().getJSONfromUrl("http://myflaskapp-alquiler.rhcloud.com/buscar/" + params[0] + "/" + params[1] + "/" + params[2] + "/" + params[3] + "/" + params[4] + "/" + params[5] + "/" + params[6] + "/" + params[7] + "/" + params[8] + "/" + params[9] + "/" + params[10]);
-                    Log.d("WARNING", "http://myflaskapp-alquiler.rhcloud.com/buscar/" + params[0] + "/" + params[1] + "/" + params[2] + "/" + params[3] + "/" + params[4] + "/" + params[5] + "/" + params[6] + "/" + params[7] + "/" + params[8] + "/" + params[9] + "/" + params[10]);
+                    jsonr = new JsonHttpHandler().getJSONfromUrl("http://myflaskapp2-alquiler.rhcloud.com/buscar/" + params[0] + "/" + params[1] + "/" + params[2] + "/" + params[3] + "/" + params[4] + "/" + params[5] + "/" + params[6] + "/" + params[7] + "/" + params[8] + "/" + params[9] + "/" + params[10]);
+                    Log.d("WARNING", "http://myflaskapp2-alquiler.rhcloud.com/buscar/" + params[0] + "/" + params[1] + "/" + params[2] + "/" + params[3] + "/" + params[4] + "/" + params[5] + "/" + params[6] + "/" + params[7] + "/" + params[8] + "/" + params[9] + "/" + params[10]);
                 }
-//                Log.d("WARNING", "http://myflaskapp-alquiler.rhcloud.com/buscar/" + params[0] + "/" + params[1] + "/" + params[2] + "/" + params[3] + "/" + params[4] + "/" + params[5] + "/" + params[6] + "/" + params[7] + "/" + params[8] + "/" + params[9] + "/" + params[10]);
+//                Log.d("WARNING", "http://myflaskapp2-alquiler.rhcloud.com/buscar/" + params[0] + "/" + params[1] + "/" + params[2] + "/" + params[3] + "/" + params[4] + "/" + params[5] + "/" + params[6] + "/" + params[7] + "/" + params[8] + "/" + params[9] + "/" + params[10]);
                 if (jsonr == null) {
                     return null;
                 }

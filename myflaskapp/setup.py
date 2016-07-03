@@ -6,5 +6,5 @@ setup(name='Alquiler',
       author='CS',
       author_email='al.h8500@gmail.com',
       url='http://www.python.org/sigs/distutils-sig/',
-      install_requires=['Flask>=0.10.1','pymongo'],
+      install_requires=['Flask>=0.10.1','pymongo','pillow'],
      )

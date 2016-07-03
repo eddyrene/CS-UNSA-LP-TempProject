@@ -83,7 +83,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        circle = mMap.addCircle(new CircleOptions().center(r).radius(radio*100).strokeColor(Color.RED));
+        circle = mMap.addCircle(new CircleOptions().center(r).radius(radio*1000).strokeColor(Color.RED));
         circle.setVisible(true);
         googleMap.setOnMarkerClickListener(this);
 

@@ -158,11 +158,11 @@ public class JsonHttpHandler {
 
                 conn.setDoOutput(true);
                 conn.setChunkedStreamingMode(0);
-                conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                conn.setRequestProperty("Content-Type", "application/json");
                 conn.setRequestProperty("Accept", "application/json");
                 conn.setRequestMethod("POST");
 
-                //conn.setRequestProperty("Accept-Charset", charset);
+                conn.setRequestProperty("Accept-Charset", charset);
 
                 conn.setReadTimeout(10000);
                 conn.setConnectTimeout(15000);
@@ -170,6 +170,7 @@ public class JsonHttpHandler {
                 conn.connect();
 
                 wr = new DataOutputStream(conn.getOutputStream());
+                Log.d("WARNINGGGGGGGGGG",data.toString());
                 wr.writeBytes(data.toString());
                 wr.flush();
                 wr.close();
@@ -193,6 +194,8 @@ public class JsonHttpHandler {
             Log.d("JSON Parser", "result: " + result.toString());
 
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (RuntimeException e){
             e.printStackTrace();
         }
 

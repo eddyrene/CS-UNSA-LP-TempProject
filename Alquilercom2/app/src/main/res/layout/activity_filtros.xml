@@ -18,6 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
+        android:layout_gravity="center_horizontal"
         android:visibility="gone" />
 
     <ScrollView
@@ -202,7 +203,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Restriccion:"
+                android:text="Restricción:"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/textView5"
                 android:layout_above="@+id/linearLayout"
@@ -235,6 +236,7 @@
                     android:textOff=""
                     android:background="@drawable/pressbutton_men" />
 
+
             </LinearLayout>
 
             <Button
@@ -245,8 +247,15 @@
                 android:layout_alignBottom="@+id/scrollView"
                 android:layout_alignParentStart="true" />
 
-
         </LinearLayout>
     </ScrollView>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:src="@android:drawable/ic_dialog_email" />
 
 </RelativeLayout>

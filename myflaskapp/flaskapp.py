@@ -75,7 +75,6 @@ def new_cuarto():
 
             try:
                 data = json.loads(request.data)
-                print data
 
             except (ValueError, KeyError, TypeError):
                 # Not valid information, bail out and return an error
@@ -83,11 +82,15 @@ def new_cuarto():
 
             #collection.insert({"name": data['name'], "handle": data['handle'] })
             #print collection.count()
-            if mongo.insert_cuarto(data['Distrito'],data['Coord'],data['Servicios'],data['Nombre'],data['Precio'],data['Genero'],data['Img'])==True:
+            if client.insert_cuarto_usuario(str(data['nombre']),str(data['direc']),str(data['email']),int(data['fono']),[float(data['coord0']),float(data['coord1'])],int(data['precio']),str(data['genero']),[int(data['serv0']),int(data['serv1']),int(data['serv2']),int(data['serv3']),int(data['serv4'])])==True:
 
                 return jsonify({'status': 'successful'})
 
             return jsonify({'status': 'error'})
+        else:
+            return jsonify({'status': 'error'})
+    else:
+        return jsonify({'status': 'error'})
 
 @app.route('/buscar/<string:lon>/<string:lat>/<string:rad>/<string:gen>/<string:toilet>/<string:tv>/<string:agua>/<string:wifi>/<string:pet>/<string:p_min>/<string:p_max>', methods=['GET'])
 def buscar_cuarto(lon,lat,rad,gen,p_min,p_max,wifi,pet,tv,agua,toilet):
@@ -120,6 +123,7 @@ def buscar(lon,lat,rad):
                     headers=None,
                     content_type='application/json',
                     direct_passthrough=False)
+
 
 if __name__ == '__main__':
     app.run()
