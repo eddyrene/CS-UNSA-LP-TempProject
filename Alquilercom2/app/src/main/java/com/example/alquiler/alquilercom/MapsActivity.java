@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.renderscript.Double2;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
@@ -12,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.alquiler.alquilercom.data.JsonHttpHandler;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -25,13 +27,20 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+
+import com.google.android.gms.maps.model.VisibleRegion;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
@@ -40,12 +49,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap;
-    LatLng r;
+    private LatLng r;
 
-    List<LatLng> resultados;
-    int radio;
-    Circle circle;
+    private List<LatLng> resultados;
+    private int radio;
+    private Circle circle;
     private SlidingUpPanelLayout slidingLayout;
+    private String param;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,19 +63,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.info);
         slidingLayout=(SlidingUpPanelLayout)findViewById(R.id.sliding_layout);
         slidingLayout.setAnchorPoint(0.25f);
+
+        String pos=getIntent().getExtras().getString("pos");
+
+        r=new LatLng(getIntent().getExtras().getDouble("lat"),getIntent().getExtras().getDouble("lon"));
+        radio=getIntent().getExtras().getInt("radio");
+        param=getIntent().getExtras().getString("param");
+
+        //new ProcessTask().execute(pos);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        String pos=getIntent().getExtras().getString("pos");
-
-        List<String> myList = new ArrayList<String>(Arrays.asList(pos.split(",")));
-        resultados=new ArrayList<LatLng>(myList.size()/2);
-        for (int i=0;i<myList.size();i=i+2){
-            resultados.add(i/2,new LatLng(Double.parseDouble(myList.get(i)),Double.parseDouble(myList.get(i+1))));
-        }
-        r=new LatLng(getIntent().getExtras().getDouble("lat"),getIntent().getExtras().getDouble("lon"));
-        radio=getIntent().getExtras().getInt("radio");
 
     }
 
@@ -82,9 +92,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        circle = mMap.addCircle(new CircleOptions().center(r).radius(radio*1000).strokeColor(Color.RED));
+        circle = mMap.addCircle(new CircleOptions().center(r).radius(radio*1000).strokeColor(Color.CYAN));
         circle.setVisible(true);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(r,zoomLevel(circle)));
+        VisibleRegion vr = mMap.getProjection().getVisibleRegion();
+        new QueryWindowTask(param).execute(vr.latLngBounds.southwest.latitude,vr.latLngBounds.southwest.longitude,vr.latLngBounds.northeast.latitude,vr.latLngBounds.northeast.longitude);
+
         googleMap.setOnMarkerClickListener(this);
 
         /*
@@ -117,12 +130,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //mMap.addMarker(new MarkerOptions().position(pos));//.title("Unsa"));
 
-        for(int i=0;i<resultados.size();i++){
-            mMap.addMarker(new MarkerOptions().position(resultados.get(i)));
-        }
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(r,zoomLevel(circle)));
-
-
     }
     @Override
     public void onConnectionSuspended(int i) {
@@ -150,4 +157,92 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             //Log.i(TAG, "Zoom level = " + zoomLevel );
         }
         return zoomLevel - 0.5f ; }
+
+    /*
+    Clase para procesar los resultados obtenidos con un radio
+     */
+
+    private class ProcessTask extends AsyncTask<String, Void, Void> {
+
+        public ProcessTask() {}
+        @Override
+        protected Void doInBackground(String... params) {
+            List<String> myList = new ArrayList<String>(Arrays.asList(params[0].split(",")));
+            resultados=new ArrayList<LatLng>(myList.size()/2);
+            for (int i=0;i<myList.size();i=i+2){
+                resultados.add(i/2,new LatLng(Double.parseDouble(myList.get(i)),Double.parseDouble(myList.get(i+1))));
+            }
+            return null;
+        }
+
+    }
+    /*
+    Clase para procesar los resultados obtenidos con un radio
+     */
+
+    private class QueryWindowTask extends AsyncTask<Double, Void,List<MarkerOptions> > {
+        String paramQ;
+
+        public QueryWindowTask(String param) {
+            paramQ=param;
+        }
+
+        @Override
+        protected List<MarkerOptions> doInBackground(Double... params) {
+            JSONObject jsonr;
+
+            try {
+                //- inf izq -- sup der- lat long
+                if (paramQ.equals("n")) {
+                    jsonr = new JsonHttpHandler().getJSONfromUrl("http://myflaskapp2-alquiler.rhcloud.com/buscar2/" + String.valueOf(params[0]) + "/" + String.valueOf(params[1]) + "/" + String.valueOf(params[2]) + "/" + String.valueOf(params[3]));
+                    Log.d("URLLLLLL","http://myflaskapp2-alquiler.rhcloud.com/buscar2/" + String.valueOf(params[0]) + "/" + String.valueOf(params[1]) + "/" + String.valueOf(params[2]) + "/" + String.valueOf(params[3]));
+                } else {
+                    jsonr = new JsonHttpHandler().getJSONfromUrl("http://myflaskapp2-alquiler.rhcloud.com/buscar2/" + String.valueOf(params[0]) + "/" + String.valueOf(params[1]) + "/" + String.valueOf(params[2]) + "/" + String.valueOf(params[3]) + paramQ);
+                }
+                if (jsonr == null) {
+                    return null;
+                }
+                JSONArray rooms = jsonr.getJSONArray("rooms");
+                if (rooms==null){
+                    return null;
+                }
+                else if (rooms.length()==0) {
+                    return null;
+                }
+                else {
+                    List<MarkerOptions> result=new ArrayList<MarkerOptions>();
+                    for (int m = 0; m < rooms.length(); ++m) {
+                        JSONObject n = (JSONObject) rooms.get(m);
+                        String co1 = n.getJSONObject("Coord").getJSONArray("coordinates").get(0).toString();
+                        String co2 = n.getJSONObject("Coord").getJSONArray("coordinates").get(1).toString();
+
+                        result.add(new MarkerOptions().position(new LatLng(Double.parseDouble(co1),Double.parseDouble(co2))));
+                    }
+                    return result;
+                }
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+                return null;
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(List<MarkerOptions> markers) {
+            if (markers!=null){
+                for (int i=0;i<markers.size();++i)
+                    mMap.addMarker(markers.get(i));
+            }
+        }
+
+    }
 }

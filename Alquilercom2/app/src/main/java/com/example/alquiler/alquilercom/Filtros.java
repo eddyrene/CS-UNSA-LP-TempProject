@@ -185,7 +185,10 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
     private void setLocation(Location loc) {
         //Obtener la direccion de la calle a partir de la latitud y la longitud
         if (loc.getLatitude() != 0.0 && loc.getLongitude() != 0.0) {
-            try {
+            this.lat=loc.getLatitude();
+            this.lon=loc.getLongitude();
+        }
+        /*    try {
                 Geocoder geocoder = new Geocoder(this, Locale.getDefault());
                 List<Address> list = geocoder.getFromLocation(
                         loc.getLatitude(), loc.getLongitude(), 1);
@@ -198,7 +201,7 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 
     private void AplicarCambios() {
@@ -348,7 +351,6 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
     */
     private class BuscarTask extends AsyncTask<String, Void, String[]> {
 
-
         public BuscarTask() {
 
         }
@@ -373,7 +375,7 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
                 }
 
                 JSONArray rooms = jsonr.getJSONArray("rooms");
-                String[] aux={"",""};
+                String[] aux={"","","n"};
                 if (rooms==null){
                     aux=null;
                 }
@@ -391,6 +393,9 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
                         else
                             aux[1]+=","+replace;
                     }
+                    if(!params[0].equals("sinfiltros"))
+                        aux[2]="/"+params[3] + "/" + params[4] + "/" + params[5] + "/" + params[6] + "/" + params[7] + "/" + params[8] + "/" + params[9] + "/" + params[10];
+
                 }
                 return aux;
 
@@ -424,8 +429,9 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
                 Toast.makeText(Filtros.this, aux[0] + " resultado(s)", Toast.LENGTH_SHORT).show();
 
                 Toast.makeText(Filtros.this, lat + " " + lon, Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(Filtros.this, MapsActivity.class);
 
+                Intent i = new Intent(Filtros.this, MapsActivity.class);
+                i.putExtra("param",aux[2]);
                 i.putExtra("pos", aux[1]);
                 i.putExtra("lon", lon);
                 i.putExtra("lat", lat);
@@ -462,8 +468,8 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
             // Este metodo se ejecuta cada vez que el GPS recibe nuevas coordenadas
             // debido a la deteccion de un cambio de ubicacion
 
-            loc.getLatitude();
-            loc.getLongitude();
+            //loc.getLatitude();
+            //loc.getLongitude();
             //String Text = "Mi ubicacion actual es: " + "\n Lat = "+ loc.getLatitude() + "\n Long = " + loc.getLongitude();
             //Toast.makeText(Filtros.this, Text, Toast.LENGTH_SHORT).show();
             this.mainActivity.setLocation(loc);

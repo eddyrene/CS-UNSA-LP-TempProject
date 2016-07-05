@@ -124,6 +124,38 @@ def buscar(lon,lat,rad):
                     content_type='application/json',
                     direct_passthrough=False)
 
+@app.route('/buscar2/<string:lon1>/<string:lat1>/<string:lon2>/<string:lat2>/<string:gen>/<string:toilet>/<string:tv>/<string:agua>/<string:wifi>/<string:pet>/<string:p_min>/<string:p_max>', methods=['GET'])
+def buscar_cuarto2(lon1,lat1,lon2,lat2,gen,p_min,p_max,wifi,pet,tv,agua,toilet):
+
+            #client = MongoClient('mongodb://alexandra:alexandra@ds015953.mlab.com:15953/code101')
+            #collection=client.code101.docs101
+            client=mongo()
+
+            res=client.mas_baratos2(float(lon1),float(lat1),float(lon2),float(lat2),gen,[toilet,tv,agua,wifi,pet],p_min,p_max)
+            
+            ret = json_util.dumps({'rooms':  res}, default=json_util.default)            
+            return Response(response=ret,
+                    status=200,
+                    headers=None,
+                    content_type='application/json',
+                    direct_passthrough=False)
+
+@app.route('/buscar2/<string:lon1>/<string:lat1>/<string:lon2>/<string:lat2>', methods=['GET'])
+def buscar2(lon1,lat1,lon2,lat2):
+
+            #client = MongoClient('mongodb://alexandra:alexandra@ds015953.mlab.com:15953/code101')
+            #collection=client.code101.docs101
+            client=mongo()
+
+            res=client.mostrar_todos2(float(lon1),float(lat1),float(lon2),float(lat2))
+            
+            ret = json_util.dumps({'rooms':  res}, default=json_util.default)            
+            return Response(response=ret,
+                    status=200,
+                    headers=None,
+                    content_type='application/json',
+                    direct_passthrough=False)
+
 
 if __name__ == '__main__':
     app.run()

@@ -79,6 +79,9 @@ class mongo:
         return result
         #else:
             #return result
+    def mas_baratos2(self,punto1,punto2,punto3,punto4,genero,servicios,precio_min,precio_max):
+        result=self.db.find({ 'Coord': { '$geoWithin': { '$box': [ [punto1,punto2],[punto3,punto4]] } },'Genero':genero,'Servicios.baño':servicios[0],'Servicios.tv':servicios[1],'Servicios.ducha':servicios[2],'Servicios.wifi':servicios[3],'Servicios.mascota':servicios[4],'$and': [{'Precio':{'$gte':precio_min}},{'Precio':{'$lte':precio_max}}]})
+        return result
              
     #def mostrar_todos(self,punto1,punto2,punto3,punto4):#ESTA FUNCION ES CON UN RECTANGULO
         #result=self.db.find({ 'Coord': { '$geoWithin': { '$box': [ [punto1,punto2],[punto3,punto4] ]}}}) 
@@ -86,6 +89,9 @@ class mongo:
         result=self.db.find({ 'Coord': { '$geoWithin': { '$center': [ [punto1, punto2], radio ]}}})
         #result=self.db.find({ 'Coord': { '$geoWithin': { '$center': [ [punto1, punto2], 0.045 ]}}})
         #result=self.db.find({ 'Coord': { '$geoWithin': { '$polygon': [ [punto1,punto2],[punto3,punto4],[punto5,punto6],[punto7,punto8]]}}})
+        return result
+    def mostrar_todos2(self,punto1,punto2,punto3,punto4):#esta con un circulo
+        result=self.db.find({ 'Coord': { '$geoWithin': { '$box': [ [punto1,punto2],[punto3,punto4]] } }})
         return result
     def insertar_imagen(self,path,nombre):
         #reducimos la  img
