@@ -35,7 +35,6 @@ class mongo:
     def insert_cuarto(self,coord,servicios,nombre,precio,genero,img):
         #ID=self.siguiente_valor('casa')#no existe el indixe incremental en mongo db esta es la forma de hacerlo
         vivienda ={
-                "ID":'78',#para probar
                 "Coord":{'type':"Point",'coordinates': [coord[0],coord[1]]},#es la forma de declara un tipo punto para la el indice 2dsphere
                 "Nombre":nombre,
                 "Servicios":{'baño':servicios[0] ,'tv':servicios[1] ,'ducha':servicios[2],'wifi':servicios[3],'mascota':servicios[4]},#baño,tv,ducha,mascota con 0 y 1
@@ -141,6 +140,7 @@ class mongo:
                 "Direccion":direccion,
                 "Servicios":{'baño':servicios[0] ,'tv':servicios[1] ,'ducha':servicios[2],'wifi':servicios[3],'mascota':servicios[4]},#baño,tv,ducha,mascota con 0 y 1
                 "Correo_usu":correo,
+                "Telefono":telefono,
                 "Precio":precio,
                 "Genero":genero# 1 es solo hombres 2 es solo chicas y tres es los dos
                 #"Img":{'img1':img[0],'img2':img[1]}#por el momento dejaremos q sean 2 imagenes para cada cuarto
