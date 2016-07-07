@@ -3,8 +3,12 @@ package com.example.alquiler.alquilercom;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -30,6 +35,7 @@ public class register extends AppCompatActivity implements CompoundButton.OnChec
     Spinner meses;
     private  View scroll;
     private View spinner;
+    private String path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +45,6 @@ public class register extends AppCompatActivity implements CompoundButton.OnChec
         scroll=findViewById(R.id.scrollView2);
         spinner=findViewById(R.id.search_progress2);
 
-        meses=(Spinner) findViewById(R.id.spinner2);
         fono=(EditText) findViewById(R.id.editText2);
         precio=(EditText) findViewById(R.id.editText_precio);
         direc=(EditText) findViewById(R.id.editText_dirr);
@@ -62,7 +67,7 @@ public class register extends AppCompatActivity implements CompoundButton.OnChec
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (ready()) {
+                if (                                                                                                                                                                                                                                                    ready()) {
                     String gen;
                     String[] serv={"0","0","0","0","0"};
                     if (btn_men.isChecked() && btn_woman.isChecked()) {
@@ -100,6 +105,31 @@ public class register extends AppCompatActivity implements CompoundButton.OnChec
                     Toast.makeText(register.this, "Debe llenar todos los campos con información válida.", Toast.LENGTH_SHORT).show();
             }
         });
+
+
+                ImageButton imagen=(ImageButton) findViewById(R.id.imageButton_mapa);
+                imagen.setOnClickListener(new View.OnClickListener() {
+                          @Override
+                        public void onClick(View view) {
+                                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                                //Intent intent = new Intent();
+                                        //intent.setType("image/*");
+                                                //intent.setAction(Intent.ACTION_GET_CONTENT);
+                                                        //startActivityForResult(Intent.createChooser(intent, "Seleccionar imagen"), 1);
+                                                                startActivityForResult(intent,2);
+                             }
+                   });
+            }
+
+                @Override
+        protected void onActivityResult(int requestcode,int resultcode,Intent data){
+
+                        if (data!=null){
+                           Uri selectedimage=data.getData();
+                        Toast.makeText(register.this,selectedimage.toString(),Toast.LENGTH_SHORT).show();
+                        path=selectedimage.toString();
+
+                    }
     }
 
     public Boolean ready(){

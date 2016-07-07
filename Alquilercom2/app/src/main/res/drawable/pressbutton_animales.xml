@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@mipmap/pet_morado" android:state_checked="true" /> <!-- pressed -->
-    <item android:drawable="@mipmap/pet_blanco" android:state_checked="false"/> <!-- default -->
+    <item android:drawable="@mipmap/dogfilled" android:state_checked="true" /> <!-- pressed -->
+    <item android:drawable="@mipmap/dog" android:state_checked="false"/> <!-- default -->
 </selector>

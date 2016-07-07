@@ -177,6 +177,7 @@
                 android:layout_gravity="center_horizontal">
 
                 <ToggleButton
+
                     android:layout_width="50dp"
                     android:layout_margin="10dp"
                     android:layout_height="wrap_content"
@@ -219,7 +220,7 @@
                 android:id="@+id/linearLayout">
 
                 <ToggleButton
-                    android:layout_width="52dp"
+                    android:layout_width="50dp"
                     android:layout_margin="10dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/imageButton_woman"
@@ -235,6 +236,8 @@
                     android:textOn=""
                     android:textOff=""
                     android:background="@drawable/pressbutton_men" />
+
+
 
 
             </LinearLayout>
@@ -256,6 +259,6 @@
         android:layout_margin="@dimen/fab_margin"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:src="@android:drawable/ic_dialog_email" />
+        android:src="@mipmap/plus" />
 
 </RelativeLayout>

@@ -110,7 +110,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/imageButton_mapa"
-                    android:src="@drawable/ic_action_mapa" />
+                    android:background="@mipmap/mapfilled" />
             </LinearLayout>
 
             <TextView
@@ -218,33 +218,6 @@
                     android:textOn=""
                     android:textOff=""
                     android:background="@drawable/pressbutton_woman"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Contrato/min:"
-                    android:id="@+id/textView10" />
-
-                <Spinner
-                    android:layout_width="100px"
-                    android:layout_height="80px"
-                    android:id="@+id/spinner2"
-                    android:entries="@array/tiempo"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="meses"
-                    android:id="@+id/textView11" />
-
             </LinearLayout>
 
             <LinearLayout
