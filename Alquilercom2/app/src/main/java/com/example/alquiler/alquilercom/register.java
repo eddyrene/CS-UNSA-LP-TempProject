@@ -5,6 +5,9 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -67,7 +70,7 @@ public class register extends AppCompatActivity implements CompoundButton.OnChec
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (                                                                                                                                                                                                                                                    ready()) {
+                if (ready()) {
                     String gen;
                     String[] serv={"0","0","0","0","0"};
                     if (btn_men.isChecked() && btn_woman.isChecked()) {
@@ -106,30 +109,80 @@ public class register extends AppCompatActivity implements CompoundButton.OnChec
             }
         });
 
-
-                ImageButton imagen=(ImageButton) findViewById(R.id.imageButton_mapa);
-                imagen.setOnClickListener(new View.OnClickListener() {
-                          @Override
-                        public void onClick(View view) {
-                                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-                                //Intent intent = new Intent();
-                                        //intent.setType("image/*");
-                                                //intent.setAction(Intent.ACTION_GET_CONTENT);
-                                                        //startActivityForResult(Intent.createChooser(intent, "Seleccionar imagen"), 1);
-                                                                startActivityForResult(intent,2);
-                             }
-                   });
+        ImageButton imagen=(ImageButton) findViewById(R.id.imageButton_mapa);
+        imagen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                //Intent intent = new Intent();
+                //intent.setType("image/*");
+                //intent.setAction(Intent.ACTION_GET_CONTENT);
+                //startActivityForResult(Intent.createChooser(intent, "Seleccionar imagen"), 1);
+                startActivityForResult(intent,2);
             }
+        });
+    }
 
-                @Override
-        protected void onActivityResult(int requestcode,int resultcode,Intent data){
+    @Override
+    protected void onActivityResult(int requestcode,int resultcode,Intent data){
 
-                        if (data!=null){
-                           Uri selectedimage=data.getData();
-                        Toast.makeText(register.this,selectedimage.toString(),Toast.LENGTH_SHORT).show();
-                        path=selectedimage.toString();
+        if (data!=null){
+            Uri selectedimage=data.getData();
+            //Toast.makeText(register.this,selectedimage.toString(),Toast.LENGTH_SHORT).show();
+            path=selectedimage.toString();
 
-                    }
+            if (openBitmap(path)==null)
+                Toast.makeText(register.this,"No se pudo cargar la imagen.",Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(register.this,"Imagen cargada con éxito",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private Bitmap scaleBitmap(Bitmap bitmapToScale, float newWidth, float newHeight)
+    {
+        if (bitmapToScale == null)
+            return null;
+        // get the original width and height
+        int width = bitmapToScale.getWidth();
+        int height = bitmapToScale.getHeight();
+        // create a matrix for the manipulation
+        Matrix matrix = new Matrix();
+
+        // resize the bit map
+        matrix.postScale(newWidth / width, newHeight / height);
+
+        // recreate the new Bitmap and set it back
+        return Bitmap.createBitmap(bitmapToScale, 0, 0, bitmapToScale.getWidth(),
+                bitmapToScale.getHeight(), matrix, true);
+    }
+
+    public Bitmap openBitmap(String path)
+    {
+        Bitmap bitmap = null;
+        Log.v("IMAGEN","Scaling");
+        try
+        {
+            //bitmap = BitmapFactory.decodeStream(getApplicationContext().getResources().getAssets().open(path));
+            Log.v("IMAGEN","Scaling");
+            bitmap = BitmapFactory.decodeFile(path);
+            int originalWidth = bitmap.getWidth();
+            int originalHeight = bitmap.getHeight();
+            View u=this.findViewById(R.id.map);
+            int width = u.getMeasuredWidth()/2;
+            int height = u.getMeasuredHeight()/4;
+            Log.v("IMAGEN","Scaling");
+            if (originalWidth > width || originalHeight > height)
+            {
+                // Scale it
+                bitmap = scaleBitmap(bitmap, width, height);
+            }
+        } catch (Exception e)
+        {
+            Log.w("IMAGEN", "Coundn't load a file:" + path);
+            e.printStackTrace();
+        }
+
+        return bitmap;
     }
 
     public Boolean ready(){
