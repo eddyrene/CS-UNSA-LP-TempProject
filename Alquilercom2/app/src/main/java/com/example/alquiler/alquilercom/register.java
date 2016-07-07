@@ -127,6 +127,7 @@ public class register extends AppCompatActivity implements CompoundButton.OnChec
             Uri selectedimage=data.getData();
             Toast.makeText(register.this,selectedimage.toString(),Toast.LENGTH_SHORT).show();
             path=selectedimage.toString();
+            
         }
     }
 
