@@ -5,6 +5,8 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -127,8 +129,26 @@ public class register extends AppCompatActivity implements CompoundButton.OnChec
             Uri selectedimage=data.getData();
             Toast.makeText(register.this,selectedimage.toString(),Toast.LENGTH_SHORT).show();
             path=selectedimage.toString();
-            
+            selectedimage.
         }
+    }
+
+    private Bitmap scaleBitmap(Bitmap bitmapToScale, float newWidth, float newHeight)
+    {
+        if (bitmapToScale == null)
+            return null;
+        // get the original width and height
+        int width = bitmapToScale.getWidth();
+        int height = bitmapToScale.getHeight();
+        // create a matrix for the manipulation
+        Matrix matrix = new Matrix();
+
+        // resize the bit map
+        matrix.postScale(newWidth / width, newHeight / height);
+
+        // recreate the new Bitmap and set it back
+        return Bitmap.createBitmap(bitmapToScale, 0, 0, bitmapToScale.getWidth(),
+                bitmapToScale.getHeight(), matrix, true);
     }
 
     public Boolean ready(){
