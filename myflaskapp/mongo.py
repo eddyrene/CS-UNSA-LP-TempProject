@@ -3,6 +3,7 @@ import re
 import io
 import pymongo
 import PIL
+import os
 from PIL import Image#libreria para reducir
 from pymongo import MongoClient
 import gridfs
@@ -104,15 +105,16 @@ class mongo:
         img.save(nombre_1)
         
         #aqui terminamos el procedimiento de reduccion
-        path_2='C:\Users\Juanjo\Documents\GitHub\CS-UNSA-LP-TempProject\myflaskapp\\'+nombre_1 #nose como funcione en la nube eso del path
+        path_2='C:\Users\Juanjo\Desktop\\'+nombre_1 #nose como funcione en la nube eso del path
         filename = path_2 #este un ejemplo "C:\Users\Juanjo\Desktop\casa.png"
         datafile = open(filename,"rb");
         thedata = datafile.read()
         self.fs.put(thedata, filename=nombre)
         print 'inserto_imagen'
         datafile.close()
+        os.remove(path_2)
     def sacar_imagen(self,nombre,path,nuevo_nombre):#el nombre con el q se guardo en la BD 
-        path=path+"\ "+nuevo_nombre
+        path=path+"\\"+nuevo_nombre
         outputdata =self.fs.get_last_version(nombre).read()
         outfilename = path#donde se guardara la imagen ejemplo "C:\Users\Juanjo\Desktop\casa.png"
         output= open(outfilename,"wb")     
@@ -138,7 +140,7 @@ class mongo:
         except ValueError:
             return False
             print ('No se pudo insertear')
-    def insert_cuarto_usuario(self,nombre_vivienda,direccion,correo,telefono,coord,precio,genero,servicios):#,img,path):en caso el usuario quiera insertar un cuarto sus datos seran acutalizados
+    def insert_cuarto_usuario(self,nombre_vivienda,direccion,correo,telefono,coord,precio,genero,servicios,img):#,img,path):en caso el usuario quiera insertar un cuarto sus datos seran acutalizados
         #self.db_usu.update(self.db_usu.find_one({'Correo':correo}),{'$set':{'Telefono':telefono}})
         vivienda ={
                 "Coord":{'type':"Point",'coordinates': [coord[0],coord[1]]},#es la forma de declara un tipo punto para la el indice 2dsphere
@@ -148,8 +150,9 @@ class mongo:
                 "Correo_usu":correo,
                 "Telefono":telefono,
                 "Precio":precio,
-                "Genero":genero# 1 es solo hombres 2 es solo chicas y tres es los dos
+                "Genero":genero, # 1 es solo hombres 2 es solo chicas y tres es los dos
                 #"Img":{'img1':img[0],'img2':img[1]}#por el momento dejaremos q sean 2 imagenes para cada cuarto
+                "Img":img
                    }
         
         try:
