@@ -355,7 +355,7 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
         public BuscarTask() {
 
         }
-        String im;
+        //String im;
         @Override
         protected String[] doInBackground(String... params) {
 
@@ -371,7 +371,6 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
                     jsonr = new JsonHttpHandler().getJSONfromUrl("http://myflaskapp2-alquiler.rhcloud.com/buscar/" + params[0] + "/" + params[1] + "/" + params[2] + "/" + params[3] + "/" + params[4] + "/" + params[5] + "/" + params[6] + "/" + params[7] + "/" + params[8] + "/" + params[9] + "/" + params[10]);
                     Log.d("WARNING", "http://myflaskapp2-alquiler.rhcloud.com/buscar/" + params[0] + "/" + params[1] + "/" + params[2] + "/" + params[3] + "/" + params[4] + "/" + params[5] + "/" + params[6] + "/" + params[7] + "/" + params[8] + "/" + params[9] + "/" + params[10]);
                 }
-//                Log.d("WARNING", "http://myflaskapp2-alquiler.rhcloud.com/buscar/" + params[0] + "/" + params[1] + "/" + params[2] + "/" + params[3] + "/" + params[4] + "/" + params[5] + "/" + params[6] + "/" + params[7] + "/" + params[8] + "/" + params[9] + "/" + params[10]);
                 if (jsonr == null) {
                     return null;
                 }
@@ -388,8 +387,8 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
                     aux[0]=String.valueOf(rooms.length());
                     for(int m=0;m<rooms.length();++m){
                         JSONObject n=(JSONObject)rooms.get(m);
-                        if(m==14)
-                            im=n.getString("Img");
+                        /*if(m==14)
+                            im=n.getString("Img");*/
                         String co=n.getJSONObject("Coord").getString("coordinates");
                         String replace = co.replace("[","").replace("]","");
                         if (m==0)
@@ -434,15 +433,15 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
 
                 Toast.makeText(Filtros.this, lat + " " + lon, Toast.LENGTH_SHORT).show();
 
-
-                Intent i = new Intent(Filtros.this, Main22Activity.class);
+                Intent i = new Intent(Filtros.this, MapsActivity.class);
+                //Intent i = new Intent(Filtros.this, Main22Activity.class);
                 i.putExtra("param",aux[2]);
                 i.putExtra("pos", aux[1]);
                 i.putExtra("lon", lon);
                 i.putExtra("lat", lat);
                 i.putExtra("radio", Filtros.this.radio_);
 
-                i.putExtra("i",im);
+                //i.putExtra("i",im);
                 startActivity(i);
                 //finish();
             }
