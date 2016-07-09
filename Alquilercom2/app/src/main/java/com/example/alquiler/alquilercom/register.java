@@ -2,19 +2,26 @@ package com.example.alquiler.alquilercom;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -29,16 +36,20 @@ import com.example.alquiler.alquilercom.data.JsonHttpHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 
 public class register extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener{
 
     ToggleButton btn_agua, btn_animales, btn_men, btn_toilet, btn_tv, btn_wifi, btn_woman;
     EditText nombre, precio, direc, fono;
-    Spinner meses;
+
     private  View scroll;
     private View spinner;
-    private String path;
+    //byte[] byteArray;
+    String byteArray="";
+    private Bitmap imagenSca;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,16 +104,19 @@ public class register extends AppCompatActivity implements CompoundButton.OnChec
 
                     showProgress(true);
 
-                    new CreateTask().execute(
-                            nombre.getText().toString().trim(),
-                            direc.getText().toString().trim(),
+                    MyTaskParams par=new MyTaskParams(nombre.getText().toString(),
+                            direc.getText().toString(),
                             getIntent().getExtras().getString("email"),
-                            fono.getText().toString().trim(),
+                            fono.getText().toString(),
                             String.valueOf(getIntent().getExtras().getDouble("lat")),
                             String.valueOf(getIntent().getExtras().getDouble("lon")),
-                            precio.getText().toString().trim(),
+                            precio.getText().toString(),
                             gen,
-                            serv[0],serv[1],serv[2],serv[3],serv[4]);
+                            serv[0],serv[1],serv[2],serv[3],serv[4],
+                            //"aaaa");
+                            byteArray);
+
+                    new CreateTask().execute(par);
                 }
                 else
                     Toast.makeText(register.this, "Debe llenar todos los campos con información válida.", Toast.LENGTH_SHORT).show();
@@ -126,15 +140,19 @@ public class register extends AppCompatActivity implements CompoundButton.OnChec
     @Override
     protected void onActivityResult(int requestcode,int resultcode,Intent data){
 
-        if (data!=null){
-            Uri selectedimage=data.getData();
-            //Toast.makeText(register.this,selectedimage.toString(),Toast.LENGTH_SHORT).show();
-            path=selectedimage.toString();
+        if (data!=null && resultcode==register.RESULT_OK){
 
-            if (openBitmap(path)==null)
-                Toast.makeText(register.this,"No se pudo cargar la imagen.",Toast.LENGTH_SHORT).show();
-            else
-                Toast.makeText(register.this,"Imagen cargada con éxito",Toast.LENGTH_SHORT).show();
+            imagenSca=openBitmap(data.getData());
+            if (imagenSca==null) {
+                Toast.makeText(register.this, "No se pudo cargar la imagen.", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                imagenSca.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+                //byteArray = stream.toByteArray();
+                this.byteArray = Base64.encodeToString(stream.toByteArray(),Base64.URL_SAFE);
+                Toast.makeText(register.this, "Imagen cargada con éxito", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -145,9 +163,16 @@ public class register extends AppCompatActivity implements CompoundButton.OnChec
         // get the original width and height
         int width = bitmapToScale.getWidth();
         int height = bitmapToScale.getHeight();
+        Log.v("BITMAP",String.valueOf(width)+" "+String.valueOf(height));
         // create a matrix for the manipulation
         Matrix matrix = new Matrix();
 
+        //float m=Math.max(newWidth-width,newHeight-height);
+        if (width-newWidth>height-newHeight){
+            newHeight=(newWidth/width)*height;
+        }
+        else
+            newWidth=(newHeight/height)*width;
         // resize the bit map
         matrix.postScale(newWidth / width, newHeight / height);
 
@@ -156,29 +181,30 @@ public class register extends AppCompatActivity implements CompoundButton.OnChec
                 bitmapToScale.getHeight(), matrix, true);
     }
 
-    public Bitmap openBitmap(String path)
+    public Bitmap openBitmap(Uri _path)//String path)
     {
         Bitmap bitmap = null;
-        Log.v("IMAGEN","Scaling");
         try
         {
-            //bitmap = BitmapFactory.decodeStream(getApplicationContext().getResources().getAssets().open(path));
-            Log.v("IMAGEN","Scaling");
-            bitmap = BitmapFactory.decodeFile(path);
+            bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(_path));
             int originalWidth = bitmap.getWidth();
             int originalHeight = bitmap.getHeight();
-            View u=this.findViewById(R.id.map);
-            int width = u.getMeasuredWidth()/2;
-            int height = u.getMeasuredHeight()/4;
-            Log.v("IMAGEN","Scaling");
+            Point size=new Point();
+            Display display = getWindowManager().getDefaultDisplay();
+            display.getSize(size);
+
+            int width =(size.x*9)/10;
+            int height = (size.y*7)/10;
+            Log.v("IMAGEN",String.valueOf(width)+" "+String.valueOf(height));
             if (originalWidth > width || originalHeight > height)
             {
                 // Scale it
                 bitmap = scaleBitmap(bitmap, width, height);
+                Log.v("IMAGEN2",String.valueOf(bitmap.getWidth())+" "+String.valueOf(bitmap.getHeight()));
             }
         } catch (Exception e)
         {
-            Log.w("IMAGEN", "Coundn't load a file:" + path);
+            Log.w("IMAGEN", "Coundn't load a file");
             e.printStackTrace();
         }
 
@@ -189,7 +215,7 @@ public class register extends AppCompatActivity implements CompoundButton.OnChec
         if (nombre.getText().toString().trim().length()==0 || precio.getText().toString().trim().length()==0 ||
                 direc.getText().toString().trim().length()==0 || fono.getText().toString().trim().length()==0 ||
                 nombre.getText().toString().trim().length()<6 || precio.getText().toString().trim().length()==0 ||
-                direc.getText().toString().trim().length()<6 || fono.getText().toString().trim().length()<6)
+                direc.getText().toString().trim().length()<6 || fono.getText().toString().trim().length()<6 || this.byteArray.equals(""))
             return false;
         return true;
     }
@@ -205,46 +231,53 @@ public class register extends AppCompatActivity implements CompoundButton.OnChec
     /*
     Clase para insertar un cuarto
      */
-    private class CreateTask extends AsyncTask<String, Void, Boolean> {
+    private class CreateTask extends AsyncTask<MyTaskParams, Void, Boolean> {
 
         public CreateTask() {
 
         }
         @Override
-        protected Boolean doInBackground(String... params) {
+        protected Boolean doInBackground(MyTaskParams... params) {
             JSONObject json = new JSONObject();
             JSONObject jsonr;
             try {
-                json.accumulate("nombre", params[0]);
-                json.accumulate("direc", params[1]);
-                json.accumulate("email", params[2]);
-                json.accumulate("fono", params[3]);
-                json.accumulate("coord0", params[4]);
-                json.accumulate("coord1", params[5]);
-                json.accumulate("precio", params[6]);
-                json.accumulate("genero", params[7]);
-                json.accumulate("serv0", params[8]);
-                json.accumulate("serv1", params[9]);
-                json.accumulate("serv2", params[10]);
-                json.accumulate("serv3", params[11]);
-                json.accumulate("serv4", params[12]);
+                json.accumulate("nombre", params[0].nombre);
+                json.accumulate("direc", params[0].direc);
+                json.accumulate("email", params[0].email);
+                json.accumulate("fono", params[0].fono);
+                json.accumulate("coord0", params[0].coord0);
+                json.accumulate("coord1", params[0].coord1);
+                json.accumulate("precio", params[0].precio);
+                json.accumulate("genero", params[0].genero);
+                json.accumulate("serv0", params[0].serv0);
+                json.accumulate("serv1", params[0].serv1);
+                json.accumulate("serv2", params[0].serv2);
+                json.accumulate("serv3", params[0].serv3);
+                json.accumulate("serv4", params[0].serv4);
+                json.accumulate("imagen", params[0].imagen);
+
+                //Log.v("IMAGENNNN",params[0].imagen);
 
                 jsonr=new JsonHttpHandler().postJSONfromUrl("https://myflaskapp2-alquiler.rhcloud.com/new/cuarto", json);
+                //jsonr=new JsonHttpHandler().postJSONfromUrl("http://127.0.0.1:8100//new/cuarto", json);
+                //Log.d("WARNINNNNG", json.toString());
 
-                Log.d("WARNINNNNG", json.toString());
-
-                if (jsonr == null){return false;}
+                if (jsonr == null)
+                {
+                    Log.v("ERRRORRRRRR","json null");
+                    return false;}
 
                 if ((jsonr.getString("status")).equals("error"))
                 {
+                    Log.v("ERRRORRRRRR","en el servidor");
                     return false;}
                 else{
                     return true;}
 
-            } catch (IOException e) {
+            }  catch (JSONException e) {
                 e.printStackTrace();
                 return false;
-            } catch (JSONException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
                 return false;
             }
@@ -299,6 +332,57 @@ public class register extends AppCompatActivity implements CompoundButton.OnChec
             // and hide the relevant UI components.
             spinner.setVisibility(show ? View.VISIBLE : View.GONE);
             scroll.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
+    }
+
+    private static class MyTaskParams {
+        String nombre;
+        String direc;
+        String email;
+        String fono;
+        String coord0;
+        String coord1;
+        String precio;
+        String genero;
+        String serv0;
+        String serv1;
+        String serv2;
+        String serv3;
+        String serv4;
+        //byte[] imagen;
+        String imagen;
+
+
+        MyTaskParams(String nombre,
+                String direc,
+                String email,
+                String fono,
+                String coord0,
+                String coord1,
+                String precio,
+                String genero,
+                String serv0,
+                String serv1,
+                String serv2,
+                String serv3,
+                String serv4,
+                //byte[] imagen
+                String imagen) {
+            this.nombre=nombre;
+            this.direc=direc;
+            this.email=email;
+            this.fono=fono;
+            this.coord0=coord0;
+            this.coord1=coord1;
+            this.precio=precio;
+            this.genero=genero;
+            this.serv0=serv0;
+            this.serv1=serv1;
+            this.serv2=serv2;
+            this.serv3=serv3;
+            this.serv4=serv4;
+            //this.imagen=imagen.clone();
+            this.imagen=imagen;
         }
     }
 }

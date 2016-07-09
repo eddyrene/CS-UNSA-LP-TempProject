@@ -78,18 +78,26 @@ def new_cuarto():
 
             except (ValueError, KeyError, TypeError):
                 # Not valid information, bail out and return an error
+                
                 return jsonify({'status': 'error'})
 
             #collection.insert({"name": data['name'], "handle": data['handle'] })
             #print collection.count()
-            if client.insert_cuarto_usuario(str(data['nombre']),str(data['direc']),str(data['email']),int(data['fono']),[float(data['coord0']),float(data['coord1'])],int(data['precio']),str(data['genero']),[int(data['serv0']),int(data['serv1']),int(data['serv2']),int(data['serv3']),int(data['serv4'])])==True:
-
+            if client.insert_cuarto_usuario(str(data['nombre']),str(data['direc']),str(data['email']),int(data['fono']),[float(data['coord0']),float(data['coord1'])],int(data['precio']),str(data['genero']),[int(data['serv0']),int(data['serv1']),int(data['serv2']),int(data['serv3']),int(data['serv4'])],str(data['imagen']))==True:
+                '''ret=jsonify({'status': 'successful'})
+                return Response(response=ret,
+                    status=200,
+                    headers=None,
+                    content_type='application/json',
+                    direct_passthrough=False)'''
                 return jsonify({'status': 'successful'})
-
+            
             return jsonify({'status': 'error'})
         else:
+            
             return jsonify({'status': 'error'})
     else:
+        
         return jsonify({'status': 'error'})
 
 @app.route('/buscar/<string:lon>/<string:lat>/<string:rad>/<string:gen>/<string:toilet>/<string:tv>/<string:agua>/<string:wifi>/<string:pet>/<string:p_min>/<string:p_max>', methods=['GET'])

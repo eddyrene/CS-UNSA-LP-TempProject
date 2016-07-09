@@ -18,6 +18,7 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 
 import android.os.Build;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -354,6 +355,7 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
         public BuscarTask() {
 
         }
+        String im;
         @Override
         protected String[] doInBackground(String... params) {
 
@@ -386,6 +388,8 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
                     aux[0]=String.valueOf(rooms.length());
                     for(int m=0;m<rooms.length();++m){
                         JSONObject n=(JSONObject)rooms.get(m);
+                        if(m==14)
+                            im=n.getString("Img");
                         String co=n.getJSONObject("Coord").getString("coordinates");
                         String replace = co.replace("[","").replace("]","");
                         if (m==0)
@@ -399,10 +403,7 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
                 }
                 return aux;
 
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            } catch (JSONException e) {
+            }catch (JSONException e) {
                 e.printStackTrace();
                 return null;
             } catch (IllegalStateException e) {
@@ -411,6 +412,9 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
             } catch (NullPointerException e) {
                 e.printStackTrace();
                 return null;
+            } catch (IOException e){
+                e.printStackTrace();
+                return  null;
             }
         }
 
@@ -430,13 +434,15 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
 
                 Toast.makeText(Filtros.this, lat + " " + lon, Toast.LENGTH_SHORT).show();
 
-                Intent i = new Intent(Filtros.this, MapsActivity.class);
+
+                Intent i = new Intent(Filtros.this, Main22Activity.class);
                 i.putExtra("param",aux[2]);
                 i.putExtra("pos", aux[1]);
                 i.putExtra("lon", lon);
                 i.putExtra("lat", lat);
                 i.putExtra("radio", Filtros.this.radio_);
 
+                i.putExtra("i",im);
                 startActivity(i);
                 //finish();
             }

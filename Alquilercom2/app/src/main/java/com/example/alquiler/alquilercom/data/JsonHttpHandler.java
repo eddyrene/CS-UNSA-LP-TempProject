@@ -84,6 +84,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
 
+import cz.msebera.android.httpclient.HttpStatus;
+
 public class JsonHttpHandler {
 
     String charset = "UTF-8";
@@ -95,26 +97,26 @@ public class JsonHttpHandler {
     //static JSONObject jObj = new JSONObject();
 
     public JSONObject getJSONfromUrl(String url) throws JSONException, IllegalStateException, IOException, NullPointerException {
-            // request method is GET
+        // request method is GET
 
-            try {
-                urlObj = new URL(url);
+        try {
+            urlObj = new URL(url);
 
-                conn = (HttpURLConnection) urlObj.openConnection();
+            conn = (HttpURLConnection) urlObj.openConnection();
 
-                conn.setDoOutput(false);
+            conn.setDoOutput(false);
 
-                conn.setRequestMethod("GET");
+            conn.setRequestMethod("GET");
 
-                conn.setRequestProperty("Accept-Charset", charset);
+            conn.setRequestProperty("Accept-Charset", charset);
 
-                conn.setConnectTimeout(15000);
+            conn.setConnectTimeout(15000);
 
-                conn.connect();
+            conn.connect();
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         try {
             //Receive the response from the server
@@ -150,40 +152,47 @@ public class JsonHttpHandler {
     public JSONObject postJSONfromUrl(String url, JSONObject data) throws JSONException, IllegalStateException, IOException{
 
 
-            // request method is POST
-            try {
-                urlObj = new URL(url);
-                DataOutputStream wr;
-                conn = (HttpURLConnection) urlObj.openConnection();
+        // request method is POST
+        try {
+            String data_=data.toString();
+            int i=data_.getBytes().length;
+            urlObj = new URL(url);
+            DataOutputStream wr;
+            conn = (HttpURLConnection) urlObj.openConnection();
 
-                conn.setDoOutput(true);
-                conn.setChunkedStreamingMode(0);
-                conn.setRequestProperty("Content-Type", "application/json");
-                conn.setRequestProperty("Accept", "application/json");
-                conn.setRequestMethod("POST");
+            conn.setDoOutput(true);
+            //conn.setChunkedStreamingMode(0);
+            conn.setFixedLengthStreamingMode(i);
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setRequestProperty("Content-Length",String.valueOf(i));
+            conn.setRequestMethod("POST");
 
-                conn.setRequestProperty("Accept-Charset", charset);
+            conn.setRequestProperty("Accept-Charset", charset);
+            Log.v("SOCKET","1");
+            conn.setReadTimeout(15000);
+            conn.setConnectTimeout(25000);
 
-                conn.setReadTimeout(10000);
-                conn.setConnectTimeout(15000);
+            conn.connect();
+            Log.v("SOCKET","2");
+            wr = new DataOutputStream(conn.getOutputStream());
+            //Log.d("WARNINGGGGGGGGGG",data_);
+            wr.writeBytes(data_);
+            Log.v("SOCKET","3");
+            wr.flush();
+            wr.close();
 
-                conn.connect();
-
-                wr = new DataOutputStream(conn.getOutputStream());
-                Log.d("WARNINGGGGGGGGGG",data.toString());
-                wr.writeBytes(data.toString());
-                wr.flush();
-                wr.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
 
         try {
             //Receive the response from the server
+            /*Log.v("SOCKET","4");
             InputStream in = new BufferedInputStream(conn.getInputStream());
+            Log.v("SOCKET","5");
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             result = new StringBuilder();
             String line;
@@ -191,22 +200,39 @@ public class JsonHttpHandler {
                 result.append(line);
             }
 
-            Log.d("JSON Parser", "result: " + result.toString());
+            Log.d("JSON Parser", "result: " + result.toString());*/
+            int status = conn.getResponseCode();
+            Log.v("RESULTADO",String.valueOf(status));
+            if (status==200){
+                Log.v("WARNING","Se pudo subir el archivo");
+                InputStream in = new BufferedInputStream(conn.getInputStream());
+                Log.v("SOCKET","5");
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+                result = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    result.append(line);
+                }
+                jObj = new JSONObject(result.toString());
+            }
+            else if (status> 399)
+            {
+                Log.v("Error","No se pudo subir el archivo");
+                Log.v("ERROR",conn.getErrorStream().toString());
+            }
+            else{
+                Log.v("WARNING","Otro tipo de respuesta");
+            }
+
 
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (RuntimeException e){
-            e.printStackTrace();
+        } catch (JSONException e) {
+            Log.e("JSON Parser", "Error parsing data " + e.toString());
         }
 
         conn.disconnect();
 
-        // try parse the string to a JSON object
-        try {
-            jObj = new JSONObject(result.toString());
-        } catch (JSONException e) {
-            Log.e("JSON Parser", "Error parsing data " + e.toString());
-        }
 
         // return JSON Object
         return jObj;

@@ -221,10 +221,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     return result;
                 }
             }
-            catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            } catch (JSONException e) {
+             catch (JSONException e) {
                 e.printStackTrace();
                 return null;
             } catch (IllegalStateException e) {
@@ -233,6 +230,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             } catch (NullPointerException e) {
                 e.printStackTrace();
                 return null;
+            } catch (IOException e){
+                e.printStackTrace();
+                return  null;
             }
         }
 

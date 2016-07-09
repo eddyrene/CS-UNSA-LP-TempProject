@@ -506,10 +506,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 e.printStackTrace();
                 Log.e("find", "JSON excep");
                 return false;
-            } catch (IOException e) {
+            } catch (IOException e){
                 e.printStackTrace();
-                Log.e("find", "IO excep");
-                return false;
+                return  null;
             }
 
             /*for (String credential : DUMMY_CREDENTIALS) {
