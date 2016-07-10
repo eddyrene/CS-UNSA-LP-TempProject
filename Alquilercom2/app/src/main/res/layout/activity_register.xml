@@ -109,6 +109,12 @@
                 <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/imageButton_imagen"
+                    android:background="@mipmap/mapfilled" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:id="@+id/imageButton_mapa"
                     android:background="@mipmap/mapfilled" />
             </LinearLayout>

@@ -46,8 +46,8 @@
         <activity
             android:name=".Main2Activity"
             android:label="@string/title_activity_main2"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".Filtros"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Filtros" />
         <activity android:name=".register" />
 
         <!--
@@ -64,13 +64,18 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
+            android:label="@string/title_activity_maps" />
         <activity android:name=".RecyclerViewActivity" />
         <activity android:name=".CardViewActivity" />
         <activity
             android:name=".Main22Activity"
             android:label="@string/title_activity_main22"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".gallery"
+            android:label="@string/title_activity_gallery"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".MapsRegisterActivity"></activity>
     </application>
 
 </manifest>

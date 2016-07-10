@@ -50,12 +50,17 @@ public class register extends AppCompatActivity implements CompoundButton.OnChec
     //byte[] byteArray;
     String byteArray="";
     private Bitmap imagenSca;
+    private String email;
+    double plat=0,plon=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        plat=getIntent().getExtras().getDouble("lat");
+        plon=getIntent().getExtras().getDouble("lon");
+        email=getIntent().getExtras().getString("email");
         scroll=findViewById(R.id.scrollView2);
         spinner=findViewById(R.id.search_progress2);
 
@@ -106,10 +111,10 @@ public class register extends AppCompatActivity implements CompoundButton.OnChec
 
                     MyTaskParams par=new MyTaskParams(nombre.getText().toString(),
                             direc.getText().toString(),
-                            getIntent().getExtras().getString("email"),
+                            email,
                             fono.getText().toString(),
-                            String.valueOf(getIntent().getExtras().getDouble("lat")),
-                            String.valueOf(getIntent().getExtras().getDouble("lon")),
+                            String.valueOf(plat),
+                            String.valueOf(plon),
                             precio.getText().toString(),
                             gen,
                             serv[0],serv[1],serv[2],serv[3],serv[4],
@@ -123,7 +128,20 @@ public class register extends AppCompatActivity implements CompoundButton.OnChec
             }
         });
 
-        ImageButton imagen=(ImageButton) findViewById(R.id.imageButton_mapa);
+        ImageButton mapa=(ImageButton) findViewById(R.id.imageButton_mapa);
+        mapa.setOnClickListener(new View.OnClickListener() {
+              @Override
+              public void onClick(View view) {
+                  Intent a=new Intent(register.this,MapsRegisterActivity.class);
+                  a.putExtra("lat",plat);
+                  a.putExtra("lon",plon);
+                  startActivityForResult(a,1);
+
+                  //Toast.makeText(register.this,a.getData().toString(),Toast.LENGTH_SHORT);
+              }
+          });
+
+        ImageButton imagen=(ImageButton) findViewById(R.id.imageButton_imagen);
         imagen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -133,6 +151,7 @@ public class register extends AppCompatActivity implements CompoundButton.OnChec
                 //intent.setAction(Intent.ACTION_GET_CONTENT);
                 //startActivityForResult(Intent.createChooser(intent, "Seleccionar imagen"), 1);
                 startActivityForResult(intent,2);
+
             }
         });
     }
@@ -140,7 +159,7 @@ public class register extends AppCompatActivity implements CompoundButton.OnChec
     @Override
     protected void onActivityResult(int requestcode,int resultcode,Intent data){
 
-        if (data!=null && resultcode==register.RESULT_OK){
+        if (data!=null && resultcode==RESULT_OK && requestcode==2){
 
             imagenSca=openBitmap(data.getData());
             if (imagenSca==null) {
@@ -153,6 +172,13 @@ public class register extends AppCompatActivity implements CompoundButton.OnChec
                 this.byteArray = Base64.encodeToString(stream.toByteArray(),Base64.URL_SAFE);
                 Toast.makeText(register.this, "Imagen cargada con éxito", Toast.LENGTH_SHORT).show();
             }
+        }
+        else if (data!=null && resultcode==RESULT_OK && requestcode==1){
+            plat=data.getExtras().getDouble("lat");
+            plon=data.getExtras().getDouble("lon");
+        }
+        else {
+            Toast.makeText(register.this,"La acción no se pudo realizar con éxito",Toast.LENGTH_SHORT);
         }
     }
 
@@ -215,7 +241,8 @@ public class register extends AppCompatActivity implements CompoundButton.OnChec
         if (nombre.getText().toString().trim().length()==0 || precio.getText().toString().trim().length()==0 ||
                 direc.getText().toString().trim().length()==0 || fono.getText().toString().trim().length()==0 ||
                 nombre.getText().toString().trim().length()<6 || precio.getText().toString().trim().length()==0 ||
-                direc.getText().toString().trim().length()<6 || fono.getText().toString().trim().length()<6 || this.byteArray.equals(""))
+                direc.getText().toString().trim().length()<6 || fono.getText().toString().trim().length()<6 || this.byteArray.equals("")
+                )
             return false;
         return true;
     }

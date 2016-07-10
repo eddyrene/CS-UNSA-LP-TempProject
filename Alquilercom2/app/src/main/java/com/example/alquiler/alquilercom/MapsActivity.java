@@ -21,11 +21,14 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,8 +47,7 @@ import org.json.JSONObject;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
+
         GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap;
@@ -92,11 +94,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        circle = mMap.addCircle(new CircleOptions().center(r).radius(radio*1000).strokeColor(Color.CYAN));
+        circle = mMap.addCircle(new CircleOptions().center(r).radius(radio*1000).strokeColor(Color.BLUE));
         circle.setVisible(true);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(r,zoomLevel(circle)));
         VisibleRegion vr = mMap.getProjection().getVisibleRegion();
-        new QueryWindowTask(param).execute(vr.latLngBounds.southwest.latitude,vr.latLngBounds.southwest.longitude,vr.latLngBounds.northeast.latitude,vr.latLngBounds.northeast.longitude);
+        new QueryWindowTask(param,radio*1000,circle.getCenter()).execute(vr.latLngBounds.southwest.latitude,vr.latLngBounds.southwest.longitude,vr.latLngBounds.northeast.latitude,vr.latLngBounds.northeast.longitude);
 
         googleMap.setOnMarkerClickListener(this);
 
@@ -111,38 +113,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Toast.makeText(MapsActivity.this, "No permission granted", Toast.LENGTH_SHORT).show();
         }
 
-        /*GoogleApiClient mGoogleApiClient;
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-        if (mGoogleApiClient != null)
-            if (mGoogleApiClient.isConnected() || mGoogleApiClient.isConnecting()){
-                mGoogleApiClient.disconnect();
-                mGoogleApiClient.connect();
-            } else if (!mGoogleApiClient.isConnected()){
-                mGoogleApiClient.connect();
-            }
-        Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        LatLng pos = new LatLng( currentLocation.getLatitude(), currentLocation.getLongitude());*/
-
-
-        //mMap.addMarker(new MarkerOptions().position(pos));//.title("Unsa"));
 
     }
-    @Override
-    public void onConnectionSuspended(int i) {
 
-    }
-    @Override
-    public void onConnected(Bundle bundle) {
-
-    }
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-
-    }
     @Override
     public boolean onMarkerClick(Marker marker) {
         this.slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
@@ -182,9 +155,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private class QueryWindowTask extends AsyncTask<Double, Void,List<MarkerOptions> > {
         String paramQ;
-
-        public QueryWindowTask(String param) {
+        LatLng centro;
+        double radio_;
+        public QueryWindowTask(String param, double rad,LatLng cen) {
             paramQ=param;
+            centro=cen;
+            radio_=rad;
         }
 
         @Override
@@ -210,14 +186,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     return null;
                 }
                 else {
+                    float[] results={0};
                     List<MarkerOptions> result=new ArrayList<MarkerOptions>();
+                    Log.v("ENTRANDO","xxxxxx");
                     for (int m = 0; m < rooms.length(); ++m) {
                         JSONObject n = (JSONObject) rooms.get(m);
                         String co1 = n.getJSONObject("Coord").getJSONArray("coordinates").get(0).toString();
                         String co2 = n.getJSONObject("Coord").getJSONArray("coordinates").get(1).toString();
 
-                        result.add(new MarkerOptions().position(new LatLng(Double.parseDouble(co1),Double.parseDouble(co2))));
+                        //google.maps.geometry.spherical.computeDistanceBetween(centro, latLng) <= radio;
+                        Location.distanceBetween(
+                                centro.latitude,
+                                centro.longitude,
+                                Double.parseDouble(co1),
+                                Double.parseDouble(co2),
+                                results);
+                        if(results[0]>radio_){
+
+                            result.add(new MarkerOptions()
+                                    .position(new LatLng(Double.parseDouble(co1),Double.parseDouble(co2)))
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.no)));
+                        }
+                        else{
+                            result.add(new MarkerOptions()
+                                    .position(new LatLng(Double.parseDouble(co1),Double.parseDouble(co2))));
+                        }
+                        //Log.v("RADIO",String.valueOf(results[0]));
                     }
+                    Log.v("SALIENDOOOOOOOO","xxxxxx");
                     return result;
                 }
             }
@@ -239,10 +235,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         @Override
         protected void onPostExecute(List<MarkerOptions> markers) {
             if (markers!=null){
-                for (int i=0;i<markers.size();++i)
+                for (int i=0;i<markers.size();++i){
                     mMap.addMarker(markers.get(i));
+                }
             }
         }
-
     }
 }
