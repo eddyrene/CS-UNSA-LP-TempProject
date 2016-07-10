@@ -19,7 +19,7 @@ public class Main22Activity extends AppCompatActivity {
         setContentView(R.layout.activity_main22);
         ImageView hab_imagen=(ImageView)findViewById(R.id.hab_imagen2);
         String im=getIntent().getExtras().get("i").toString();
-        byte[] decodedBytes = Base64.decode(im,Base64.URL_SAFE);
+        byte[] decodedBytes = Base64.decode(im,Base64.DEFAULT);
         Bitmap b= BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
 
         hab_imagen.setImageBitmap(b);

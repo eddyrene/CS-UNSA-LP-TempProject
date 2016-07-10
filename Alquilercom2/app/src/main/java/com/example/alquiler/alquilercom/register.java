@@ -169,7 +169,7 @@ public class register extends AppCompatActivity implements CompoundButton.OnChec
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 imagenSca.compress(Bitmap.CompressFormat.JPEG, 50, stream);
                 //byteArray = stream.toByteArray();
-                this.byteArray = Base64.encodeToString(stream.toByteArray(),Base64.URL_SAFE);
+                this.byteArray = Base64.encodeToString(stream.toByteArray(),Base64.DEFAULT);
                 Toast.makeText(register.this, "Imagen cargada con éxito", Toast.LENGTH_SHORT).show();
             }
         }
