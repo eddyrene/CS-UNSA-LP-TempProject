@@ -6,6 +6,7 @@ import PIL
 import os
 from PIL import Image#libreria para reducir
 from pymongo import MongoClient
+from bson.objectid import ObjectId
 import gridfs
 
 #bd_url="mongodb://alexandra:alexandra@ds015953.mlab.com:15953/code101"
@@ -82,6 +83,10 @@ class mongo:
             #return result
     def mas_baratos2(self,punto1,punto2,punto3,punto4,genero,servicios,precio_min,precio_max):
         result=self.db.find({ 'Coord': { '$geoWithin': { '$box': [ [punto1,punto2],[punto3,punto4]] } },'Genero':genero,'Servicios.baño':servicios[0],'Servicios.tv':servicios[1],'Servicios.ducha':servicios[2],'Servicios.wifi':servicios[3],'Servicios.mascota':servicios[4],'$and': [{'Precio':{'$gte':precio_min}},{'Precio':{'$lte':precio_max}}]})
+        return result
+
+    def busq_id(self,id_):
+        result=self.db.find({ '_id': ObjectId(id_)})
         return result
              
     #def mostrar_todos(self,punto1,punto2,punto3,punto4):#ESTA FUNCION ES CON UN RECTANGULO
@@ -164,3 +169,15 @@ class mongo:
         except ValueError:
             return False
             print ('No se pudo insertear')
+
+'''def main():
+    c=mongo()
+    d="576b7d05dd2cc014685e4a69"
+    r=c.busq_id(d)
+    if r.count()==0:
+        print "no"
+    else:
+        print "si"
+
+main()'''
+    

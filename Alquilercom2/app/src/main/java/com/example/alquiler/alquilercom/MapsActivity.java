@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.example.alquiler.alquilercom.data.JsonHttpHandler;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.server.converter.StringToIntConverter;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -54,7 +55,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private LatLng r;
 
-    private List<LatLng> resultados;
+    private String pos;
     private int radio;
     private Circle circle;
     private SlidingUpPanelLayout slidingLayout;
@@ -67,7 +68,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         slidingLayout=(SlidingUpPanelLayout)findViewById(R.id.sliding_layout);
         slidingLayout.setAnchorPoint(0.25f);
 
-        String pos=getIntent().getExtras().getString("pos");
+        pos=getIntent().getExtras().getString("pos");
 
         r=new LatLng(getIntent().getExtras().getDouble("lat"),getIntent().getExtras().getDouble("lon"));
         radio=getIntent().getExtras().getInt("radio");
@@ -99,7 +100,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         circle.setVisible(true);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(r,zoomLevel(circle)));
         VisibleRegion vr = mMap.getProjection().getVisibleRegion();
-        new QueryWindowTask(param,radio*1000,circle.getCenter()).execute(vr.latLngBounds.southwest.latitude,vr.latLngBounds.southwest.longitude,vr.latLngBounds.northeast.latitude,vr.latLngBounds.northeast.longitude);
+        new QueryWindowTask(param,radio*1000,circle.getCenter(),pos).execute(vr.latLngBounds.southwest.latitude,vr.latLngBounds.southwest.longitude,vr.latLngBounds.northeast.latitude,vr.latLngBounds.northeast.longitude);
 
         googleMap.setOnMarkerClickListener(this);
 
@@ -120,10 +121,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public boolean onMarkerClick(Marker marker) {
 
-
-        Intent i = new Intent(this, MainActivity_slider.class);
-        startActivity(i);
-        //this.slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
+        Log.v("TITLEEEEEEEEEE",marker.getTitle());
+        new InfoTask().execute(marker.getTitle());
         return  true;
     }
     public float zoomLevel(Circle circle){
@@ -137,35 +136,61 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return zoomLevel - 0.5f ; }
 
     /*
-    Clase para procesar los resultados obtenidos con un radio
+    Clase para mostrar informacion por cada marador
      */
 
-    private class ProcessTask extends AsyncTask<String, Void, Void> {
+    private  class InfoTask extends AsyncTask<String,Void,Boolean>{
+        public InfoTask(){}
 
-        public ProcessTask() {}
         @Override
-        protected Void doInBackground(String... params) {
-            List<String> myList = new ArrayList<String>(Arrays.asList(params[0].split(",")));
-            resultados=new ArrayList<LatLng>(myList.size()/2);
-            for (int i=0;i<myList.size();i=i+2){
-                resultados.add(i/2,new LatLng(Double.parseDouble(myList.get(i)),Double.parseDouble(myList.get(i+1))));
+        protected Boolean doInBackground(String... params){
+            JSONObject json;
+            try{
+                json=new JsonHttpHandler().getJSONfromUrl("http://myflaskapp2-alquiler.rhcloud.com/reg/"+params[0]);
+                if (json==null){
+                    return false;
+                }
+                JSONArray rooms = json.getJSONArray("rooms");
+                if (rooms==null)
+                    return false;
+                if(rooms.length()==0)
+                    return false;
+                return  true;
+            } catch (JSONException e) {
+                e.printStackTrace();
+              return false;
+            } catch (IOException e){
+                e.printStackTrace();
+                return  false;
             }
-            return null;
         }
-
+        @Override
+        protected void onPostExecute(Boolean result){
+            if (!result)
+                Toast.makeText(MapsActivity.this,"No se puede mostrar la información.",Toast.LENGTH_SHORT).show();
+            else {
+                Toast.makeText(MapsActivity.this, "ALL right", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(MapsActivity.this, MainActivity_slider.class);
+                startActivity(i);
+                //this.slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
+            }
+        }
     }
+
     /*
-    Clase para procesar los resultados obtenidos con un radio
+    Clase para procesar los resultados obtenidos con un radio y hacer una consulta rectangular
      */
 
     private class QueryWindowTask extends AsyncTask<Double, Void,List<MarkerOptions> > {
         String paramQ;
         LatLng centro;
         double radio_;
-        public QueryWindowTask(String param, double rad,LatLng cen) {
+        String points;
+        public QueryWindowTask(String param, double rad,LatLng cen,String puntos) {
             paramQ=param;
             centro=cen;
             radio_=rad;
+            points=puntos;
         }
 
         @Override
@@ -173,6 +198,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             JSONObject jsonr;
 
             try {
+                List<LatLng> resultados;
+                List<String> myList = new ArrayList<String>(Arrays.asList(points.split(",")));
+                resultados=new ArrayList<LatLng>(myList.size()/2);
+                for (int i=0;i<myList.size();i=i+2){
+                    resultados.add(i/2,new LatLng(Double.parseDouble(myList.get(i)),Double.parseDouble(myList.get(i+1))));
+                }
                 //- inf izq -- sup der- lat long
                 if (paramQ.equals("n")) {
                     jsonr = new JsonHttpHandler().getJSONfromUrl("http://myflaskapp2-alquiler.rhcloud.com/buscar2/" + String.valueOf(params[0]) + "/" + String.valueOf(params[1]) + "/" + String.valueOf(params[2]) + "/" + String.valueOf(params[3]));
@@ -187,11 +218,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (rooms==null){
                     return null;
                 }
-                else if (rooms.length()==0) {
+                if (rooms.length()==0) {
                     return null;
                 }
                 else {
-                    float[] results={0};
+
                     List<MarkerOptions> result=new ArrayList<MarkerOptions>();
                     Log.v("ENTRANDO","xxxxxx");
                     for (int m = 0; m < rooms.length(); ++m) {
@@ -199,7 +230,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         String co1 = n.getJSONObject("Coord").getJSONArray("coordinates").get(0).toString();
                         String co2 = n.getJSONObject("Coord").getJSONArray("coordinates").get(1).toString();
 
-                        //google.maps.geometry.spherical.computeDistanceBetween(centro, latLng) <= radio;
+                        LatLng aux=new LatLng(Double.parseDouble(co1),Double.parseDouble(co2));
+                        if (resultados.contains(aux)){
+                            result.add(new MarkerOptions()
+                                    .position(aux)
+                                    .title(n.getJSONObject("_id").get("$oid").toString()));
+                        }
+                        else{
+                            result.add(new MarkerOptions()
+                                    .position(aux)
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.no))
+                                    .title(n.getJSONObject("_id").get("$oid").toString()));
+                        }
+                        /*
                         Location.distanceBetween(
                                 centro.latitude,
                                 centro.longitude,
@@ -216,7 +259,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             result.add(new MarkerOptions()
                                     .position(new LatLng(Double.parseDouble(co1),Double.parseDouble(co2))));
                         }
-                        //Log.v("RADIO",String.valueOf(results[0]));
+                        //Log.v("RADIO",String.valueOf(results[0]));*/
                     }
                     Log.v("SALIENDOOOOOOOO","xxxxxx");
                     return result;

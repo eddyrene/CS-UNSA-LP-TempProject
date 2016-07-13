@@ -163,7 +163,17 @@ def buscar2(lon1,lat1,lon2,lat2):
                     headers=None,
                     content_type='application/json',
                     direct_passthrough=False)
-
+        
+@app.route('/reg/<string:id>',methods=['GET'])
+def reg(id):
+    client=mongo()
+    res=client.busq_id(id)
+    ret=json_util.dumps(res, default=json_util.default) 
+    return Response(response=ret,
+                    status=200,
+                    headers=None,
+                    content_type='application/json',
+                    direct_passthrough=False)
 
 if __name__ == '__main__':
     app.run()
