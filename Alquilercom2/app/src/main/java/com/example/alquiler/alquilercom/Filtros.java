@@ -442,8 +442,10 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
                 i.putExtra("radio", Filtros.this.radio_);
 
                 //i.putExtra("i",im);
+
                 startActivity(i);
                 //finish();
+
             }
         }
         @Override

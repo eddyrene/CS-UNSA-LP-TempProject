@@ -136,7 +136,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return zoomLevel - 0.5f ; }
 
     /*
-    Clase para mostrar informacion por cada marador
+    Clase para mostrar informacion por cada marcador
      */
 
     private  class InfoTask extends AsyncTask<String,Void,Boolean>{
@@ -172,6 +172,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Toast.makeText(MapsActivity.this, "ALL right", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(MapsActivity.this, MainActivity_slider.class);
                 startActivity(i);
+                //finish();
                 //this.slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
             }
         }
