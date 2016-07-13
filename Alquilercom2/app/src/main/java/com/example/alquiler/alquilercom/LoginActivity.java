@@ -531,6 +531,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             if (success) {
                 finish();
                 Intent i = new Intent (LoginActivity.this, Filtros.class);
+
                 //Inicia la actividad
                 startActivity(i);
 

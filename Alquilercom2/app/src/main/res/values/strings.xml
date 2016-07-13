@@ -40,4 +40,8 @@
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_main22">Main22Activity</string>
     <string name="title_activity_gallery">gallery</string>
+    <string name="administrator">Administrator #%1$d</string>
+    <string name="skip">Skip</string>
+    <string name="simple_views">Simple Views</string>
+    <string name="fragments">Fragments</string>
 </resources>

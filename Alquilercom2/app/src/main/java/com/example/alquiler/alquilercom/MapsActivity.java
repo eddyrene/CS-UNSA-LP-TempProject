@@ -1,6 +1,7 @@
 package com.example.alquiler.alquilercom;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -118,7 +119,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        this.slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
+
+
+        Intent i = new Intent(this, MainActivity_slider.class);
+        startActivity(i);
+        //this.slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
         return  true;
     }
     public float zoomLevel(Circle circle){

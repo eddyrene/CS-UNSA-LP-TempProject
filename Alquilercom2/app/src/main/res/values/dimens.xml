@@ -6,4 +6,8 @@
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="margin_top">24dp</dimen>
+    <dimen name="page_width">300dp</dimen>
+    <dimen name="page_height">400dp</dimen>
+    <dimen name="pager_indicator_margin">450dp</dimen>
 </resources>

@@ -67,6 +67,8 @@
             android:label="@string/title_activity_maps" />
         <activity android:name=".RecyclerViewActivity" />
         <activity android:name=".CardViewActivity" />
+        <activity android:name=".MainActivity_slider">
+        </activity>
         <activity
             android:name=".Main22Activity"
             android:label="@string/title_activity_main22"
@@ -74,8 +76,9 @@
         <activity
             android:name=".gallery"
             android:label="@string/title_activity_gallery"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".MapsRegisterActivity"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".MapsRegisterActivity" />
+        <activity android:name=".Slider"></activity>
     </application>
 
 </manifest>
