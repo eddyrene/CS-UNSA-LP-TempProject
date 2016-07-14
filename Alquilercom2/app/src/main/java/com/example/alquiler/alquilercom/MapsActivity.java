@@ -1,6 +1,9 @@
 package com.example.alquiler.alquilercom;
 
 import android.Manifest;
+
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -8,10 +11,16 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.renderscript.Double2;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.alquiler.alquilercom.data.JsonHttpHandler;
@@ -170,12 +179,51 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Toast.makeText(MapsActivity.this,"No se puede mostrar la información.",Toast.LENGTH_SHORT).show();
             else {
                 Toast.makeText(MapsActivity.this, "ALL right", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(MapsActivity.this, MainActivity_slider.class);
-                startActivity(i);
+
+
+                MyDialogFragment dialog = new MyDialogFragment();
+                dialog.show(getSupportFragmentManager(), "asdf");
+                /*ImageView image = new ImageView(MapsActivity.this);
+                image.setImageResource(R.drawable.administrator);
+
+                AlertDialog.Builder builder =
+                        new AlertDialog.Builder(MapsActivity.this).
+                                setMessage("Message above the image").
+                                setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                }).
+                                setView(image);
+                builder.create().show();*/
+
+
+
+
+
+                //Intent i = new Intent(MapsActivity.this, MainActivity_slider.class);
+                //startActivity(i);
                 //finish();
                 //this.slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
             }
         }
+    }
+
+    public static class MyDialogFragment extends DialogFragment {
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            //MyDialogFragment2 dialog = new MyDialogFragment2();
+
+            View v = inflater.inflate(R.layout.activity_main_slider, container, false);
+            //getActivity().getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, dialog).commit();
+            //getActivity().getSupportFragmentManager().beginTransaction()
+            getChildFragmentManager().beginTransaction()
+                    .replace(R.id.container, SimpleViewsFragment.instance())
+                    .addToBackStack(null)
+                    .commit();
+            return v;
+        }
+
     }
 
     /*
