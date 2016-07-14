@@ -178,7 +178,7 @@ public class register extends AppCompatActivity implements CompoundButton.OnChec
             plon=data.getExtras().getDouble("lon");
         }
         else {
-            Toast.makeText(register.this,"La acción no se pudo realizar con éxito",Toast.LENGTH_SHORT);
+            Toast.makeText(register.this,"La acción no se pudo realizar con éxito",Toast.LENGTH_SHORT).show();
         }
     }
 

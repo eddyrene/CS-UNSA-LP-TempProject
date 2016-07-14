@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -74,14 +75,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.info);
-        slidingLayout=(SlidingUpPanelLayout)findViewById(R.id.sliding_layout);
+        slidingLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         slidingLayout.setAnchorPoint(0.25f);
 
-        pos=getIntent().getExtras().getString("pos");
+        pos = getIntent().getExtras().getString("pos");
 
-        r=new LatLng(getIntent().getExtras().getDouble("lat"),getIntent().getExtras().getDouble("lon"));
-        radio=getIntent().getExtras().getInt("radio");
-        param=getIntent().getExtras().getString("param");
+        r = new LatLng(getIntent().getExtras().getDouble("lat"), getIntent().getExtras().getDouble("lon"));
+        radio = getIntent().getExtras().getInt("radio");
+        param = getIntent().getExtras().getString("param");
 
         //new ProcessTask().execute(pos);
 
@@ -105,11 +106,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        circle = mMap.addCircle(new CircleOptions().center(r).radius(radio*1000).strokeColor(Color.BLUE));
+        circle = mMap.addCircle(new CircleOptions().center(r).radius(radio * 1000).strokeColor(Color.BLUE));
         circle.setVisible(true);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(r,zoomLevel(circle)));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(r, zoomLevel(circle)));
         VisibleRegion vr = mMap.getProjection().getVisibleRegion();
-        new QueryWindowTask(param,radio*1000,circle.getCenter(),pos).execute(vr.latLngBounds.southwest.latitude,vr.latLngBounds.southwest.longitude,vr.latLngBounds.northeast.latitude,vr.latLngBounds.northeast.longitude);
+        new QueryWindowTask(param, radio * 1000, circle.getCenter(), pos).execute(vr.latLngBounds.southwest.latitude, vr.latLngBounds.southwest.longitude, vr.latLngBounds.northeast.latitude, vr.latLngBounds.northeast.longitude);
 
         googleMap.setOnMarkerClickListener(this);
 
@@ -119,8 +120,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
-        }
-        else{
+        } else {
             Toast.makeText(MapsActivity.this, "No permission granted", Toast.LENGTH_SHORT).show();
         }
 
@@ -130,59 +130,77 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public boolean onMarkerClick(Marker marker) {
 
-        Log.v("TITLEEEEEEEEEE",marker.getTitle());
+        Log.v("TITLEEEEEEEEEE", marker.getTitle());
         new InfoTask().execute(marker.getTitle());
-        return  true;
+        return true;
     }
-    public float zoomLevel(Circle circle){
+
+    public float zoomLevel(Circle circle) {
         float zoomLevel = 15;
-        if (circle != null){
+        if (circle != null) {
             double radius = circle.getRadius();
             double scale = radius / 500;
-            zoomLevel =(float) (16 - Math.log(scale) / Math.log(2));
+            zoomLevel = (float) (16 - Math.log(scale) / Math.log(2));
             //Log.i(TAG, "Zoom level = " + zoomLevel );
         }
-        return zoomLevel - 0.5f ; }
+        return zoomLevel - 0.5f;
+    }
 
     /*
     Clase para mostrar informacion por cada marcador
      */
 
-    private  class InfoTask extends AsyncTask<String,Void,Boolean>{
-        public InfoTask(){}
+    private class InfoTask extends AsyncTask<String, Void, JSONArray> {
+        public InfoTask() {
+        }
+
 
         @Override
-        protected Boolean doInBackground(String... params){
+        protected JSONArray doInBackground(String... params) {
             JSONObject json;
-            try{
-                json=new JsonHttpHandler().getJSONfromUrl("http://myflaskapp2-alquiler.rhcloud.com/reg/"+params[0]);
-                if (json==null){
-                    return false;
+            try {
+                json = new JsonHttpHandler().getJSONfromUrl("http://myflaskapp2-alquiler.rhcloud.com/reg/" + params[0]);
+                if (json == null) {
+                    return null;
                 }
                 JSONArray rooms = json.getJSONArray("rooms");
-                if (rooms==null)
-                    return false;
-                if(rooms.length()==0)
-                    return false;
-                return  true;
+                if (rooms == null)
+                    return null;
+                if (rooms.length() == 0)
+                    return null;
+                return rooms;
             } catch (JSONException e) {
                 e.printStackTrace();
-              return false;
-            } catch (IOException e){
+                return null;
+            } catch (IOException e) {
                 e.printStackTrace();
-                return  false;
+                return null;
             }
         }
+
         @Override
-        protected void onPostExecute(Boolean result){
-            if (!result)
-                Toast.makeText(MapsActivity.this,"No se puede mostrar la información.",Toast.LENGTH_SHORT).show();
+        protected void onPostExecute(JSONArray result) {
+            if (result == null)
+                Toast.makeText(MapsActivity.this, "No se puede mostrar la información.", Toast.LENGTH_SHORT).show();
             else {
-                Toast.makeText(MapsActivity.this, "ALL right", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MapsActivity.this, "ALL right", Toast.LENGTH_SHORT).show();
 
-
-                MyDialogFragment dialog = new MyDialogFragment();
-                dialog.show(getSupportFragmentManager(), "asdf");
+                try {
+                    JSONObject n = (JSONObject) result.get(0);
+                    JSONArray imgs = n.getJSONArray("Img");
+                    ArrayList<String> aux;
+                    List<String> imagenes=new ArrayList<String>();
+                    //=new ArrayList<String>(Arrays.asList(imgs.toString().replace("[","").replace("]","").split(",")));
+                    for (int i = 0; i < imgs.length(); ++i) {
+                        imagenes.add(imgs.get(i).toString());
+                    }
+                    JSONObject s =(JSONObject)n.get("Servicios");
+                    String[] ser={n.getString("Genero"),s.getString("tv"),s.getString("wifi"),s.getString("ducha"),s.getString("mascota"),s.getString("baño")};
+                    List<String> servicios=Arrays.asList(ser);
+                    MyDialogFragment dialog = new MyDialogFragment();
+                    dialog.setArgs(imagenes,n.get("Direccion").toString(),n.get("Nombre").toString(),
+                            n.get("Telefono").toString(),n.get("Precio").toString(),servicios);
+                    dialog.show(getSupportFragmentManager(), "asdf");
                 /*ImageView image = new ImageView(MapsActivity.this);
                 image.setImageResource(R.drawable.administrator);
 
@@ -199,47 +217,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 builder.create().show();*/
 
 
-
-
-
-                //Intent i = new Intent(MapsActivity.this, MainActivity_slider.class);
-                //startActivity(i);
-                //finish();
-                //this.slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
+                    //startActivity(i);
+                    //finish();
+                    //this.slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(MapsActivity.this, "No se puede mostrar la información.", Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
 
-    public static class MyDialogFragment extends DialogFragment {
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            //MyDialogFragment2 dialog = new MyDialogFragment2();
 
-            View v = inflater.inflate(R.layout.activity_main_slider, container, false);
-            //getActivity().getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, dialog).commit();
-            //getActivity().getSupportFragmentManager().beginTransaction()
-            getChildFragmentManager().beginTransaction()
-                    .replace(R.id.container, SimpleViewsFragment.instance())
-                    .addToBackStack(null)
-                    .commit();
-            return v;
-        }
-
-    }
 
     /*
     Clase para procesar los resultados obtenidos con un radio y hacer una consulta rectangular
      */
 
-    private class QueryWindowTask extends AsyncTask<Double, Void,List<MarkerOptions> > {
+    private class QueryWindowTask extends AsyncTask<Double, Void, List<MarkerOptions>> {
         String paramQ;
         LatLng centro;
         double radio_;
         String points;
-        public QueryWindowTask(String param, double rad,LatLng cen,String puntos) {
-            paramQ=param;
-            centro=cen;
-            radio_=rad;
-            points=puntos;
+
+        public QueryWindowTask(String param, double rad, LatLng cen, String puntos) {
+            paramQ = param;
+            centro = cen;
+            radio_ = rad;
+            points = puntos;
         }
 
         @Override
@@ -249,14 +254,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             try {
                 List<LatLng> resultados;
                 List<String> myList = new ArrayList<String>(Arrays.asList(points.split(",")));
-                resultados=new ArrayList<LatLng>(myList.size()/2);
-                for (int i=0;i<myList.size();i=i+2){
-                    resultados.add(i/2,new LatLng(Double.parseDouble(myList.get(i)),Double.parseDouble(myList.get(i+1))));
+                resultados = new ArrayList<LatLng>(myList.size() / 2);
+                for (int i = 0; i < myList.size(); i = i + 2) {
+                    resultados.add(i / 2, new LatLng(Double.parseDouble(myList.get(i)), Double.parseDouble(myList.get(i + 1))));
                 }
                 //- inf izq -- sup der- lat long
                 if (paramQ.equals("n")) {
                     jsonr = new JsonHttpHandler().getJSONfromUrl("http://myflaskapp2-alquiler.rhcloud.com/buscar2/" + String.valueOf(params[0]) + "/" + String.valueOf(params[1]) + "/" + String.valueOf(params[2]) + "/" + String.valueOf(params[3]));
-                    Log.d("URLLLLLL","http://myflaskapp2-alquiler.rhcloud.com/buscar2/" + String.valueOf(params[0]) + "/" + String.valueOf(params[1]) + "/" + String.valueOf(params[2]) + "/" + String.valueOf(params[3]));
+                    Log.d("URLLLLLL", "http://myflaskapp2-alquiler.rhcloud.com/buscar2/" + String.valueOf(params[0]) + "/" + String.valueOf(params[1]) + "/" + String.valueOf(params[2]) + "/" + String.valueOf(params[3]));
                 } else {
                     jsonr = new JsonHttpHandler().getJSONfromUrl("http://myflaskapp2-alquiler.rhcloud.com/buscar2/" + String.valueOf(params[0]) + "/" + String.valueOf(params[1]) + "/" + String.valueOf(params[2]) + "/" + String.valueOf(params[3]) + paramQ);
                 }
@@ -264,57 +269,54 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     return null;
                 }
                 JSONArray rooms = jsonr.getJSONArray("rooms");
-                if (rooms==null){
+                if (rooms == null) {
                     return null;
                 }
-                if (rooms.length()==0) {
+                if (rooms.length() == 0) {
                     return null;
-                }
-                else {
+                } else {
 
-                    List<MarkerOptions> result=new ArrayList<MarkerOptions>();
-                    Log.v("ENTRANDO","xxxxxx");
+                    List<MarkerOptions> result = new ArrayList<MarkerOptions>();
+                    Log.v("ENTRANDO", "xxxxxx");
                     for (int m = 0; m < rooms.length(); ++m) {
                         JSONObject n = (JSONObject) rooms.get(m);
                         String co1 = n.getJSONObject("Coord").getJSONArray("coordinates").get(0).toString();
                         String co2 = n.getJSONObject("Coord").getJSONArray("coordinates").get(1).toString();
 
-                        LatLng aux=new LatLng(Double.parseDouble(co1),Double.parseDouble(co2));
-                        if (resultados.contains(aux)){
+                        LatLng aux = new LatLng(Double.parseDouble(co1), Double.parseDouble(co2));
+                        if (resultados.contains(aux)) {
                             result.add(new MarkerOptions()
                                     .position(aux)
                                     .title(n.getJSONObject("_id").get("$oid").toString()));
-                        }
-                        else{
+                        } else {
                             result.add(new MarkerOptions()
                                     .position(aux)
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.no))
                                     .title(n.getJSONObject("_id").get("$oid").toString()));
                         }
-                        /*
-                        Location.distanceBetween(
-                                centro.latitude,
-                                centro.longitude,
-                                Double.parseDouble(co1),
-                                Double.parseDouble(co2),
-                                results);
-                        if(results[0]>radio_){
+                    /*
+                    Location.distanceBetween(
+                            centro.latitude,
+                            centro.longitude,
+                            Double.parseDouble(co1),
+                            Double.parseDouble(co2),
+                            results);
+                    if(results[0]>radio_){
 
-                            result.add(new MarkerOptions()
-                                    .position(new LatLng(Double.parseDouble(co1),Double.parseDouble(co2)))
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.no)));
-                        }
-                        else{
-                            result.add(new MarkerOptions()
-                                    .position(new LatLng(Double.parseDouble(co1),Double.parseDouble(co2))));
-                        }
-                        //Log.v("RADIO",String.valueOf(results[0]));*/
+                        result.add(new MarkerOptions()
+                                .position(new LatLng(Double.parseDouble(co1),Double.parseDouble(co2)))
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.no)));
                     }
-                    Log.v("SALIENDOOOOOOOO","xxxxxx");
+                    else{
+                        result.add(new MarkerOptions()
+                                .position(new LatLng(Double.parseDouble(co1),Double.parseDouble(co2))));
+                    }
+                    //Log.v("RADIO",String.valueOf(results[0]));*/
+                    }
+                    Log.v("SALIENDOOOOOOOO", "xxxxxx");
                     return result;
                 }
-            }
-             catch (JSONException e) {
+            } catch (JSONException e) {
                 e.printStackTrace();
                 return null;
             } catch (IllegalStateException e) {
@@ -323,19 +325,59 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             } catch (NullPointerException e) {
                 e.printStackTrace();
                 return null;
-            } catch (IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
-                return  null;
+                return null;
             }
         }
 
         @Override
         protected void onPostExecute(List<MarkerOptions> markers) {
-            if (markers!=null){
-                for (int i=0;i<markers.size();++i){
+            if (markers != null) {
+                for (int i = 0; i < markers.size(); ++i) {
                     mMap.addMarker(markers.get(i));
                 }
             }
         }
     }
+
+    public static class MyDialogFragment extends DialogFragment {
+        List<String> im,serv;
+        String lo;
+        String no,tele,prec;
+        public void setArgs(List<String> i, String l,String n,String tel_,String pre_,List<String> serv_){
+            im=new ArrayList<String>(i);
+            lo=l;
+            no=n;
+            tele=tel_;
+            prec=pre_;
+            serv=new ArrayList<>(serv_);
+        }
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+            View v = inflater.inflate(R.layout.activity_main_slider, container, false);
+            /*new AlertDialog.Builder(getActivity())
+                    .setTitle("title")
+                    .setPositiveButton("OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    // do something...
+                                    dialog.dismiss();
+                                }
+                            }
+                    )
+                    .create();*/
+            getChildFragmentManager().beginTransaction()
+                    .replace(R.id.container, SimpleViewsFragment.instance(im,no,lo,tele,prec,serv))
+                    .addToBackStack(null)
+                    .commit();
+            return v;
+        }
+
+
+
+    }
 }
+
+
+
