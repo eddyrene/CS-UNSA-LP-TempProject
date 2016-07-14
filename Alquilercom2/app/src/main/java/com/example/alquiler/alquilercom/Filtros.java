@@ -54,6 +54,7 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
     int radio_;
     private  View scroll;
     private View spinner;
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,7 +171,7 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
         lon=mlocManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER).getLongitude();
         lat=mlocManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER).getLatitude();
         final String email=getIntent().getExtras().getString("email");
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -324,6 +325,14 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
             scroll.setVisibility(show ? View.GONE : View.VISIBLE);
+            fab.setVisibility(show ? View.GONE : View.VISIBLE);
+            fab.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    scroll.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
             scroll.animate().setDuration(shortAnimTime).alpha(
                     show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
                 @Override
@@ -345,6 +354,7 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
             // and hide the relevant UI components.
             spinner.setVisibility(show ? View.VISIBLE : View.GONE);
             scroll.setVisibility(show ? View.GONE : View.VISIBLE);
+            fab.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
     /*

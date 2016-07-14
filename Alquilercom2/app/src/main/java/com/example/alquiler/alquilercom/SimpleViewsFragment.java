@@ -156,9 +156,13 @@ public class SimpleViewsFragment extends Fragment {
             ImageView imageView = (ImageView) view.findViewById(R.id.image);
             TextView loc=(TextView) view.findViewById(R.id.textu);
             TextView due=(TextView) view.findViewById(R.id.textd);
+            TextView ttel=(TextView) view.findViewById(R.id.textt);
+            TextView tpre=(TextView) view.findViewById(R.id.textp);
             loc.setText(this.loc);
             due.setText(this.nom);
-            //imageView.setImageDrawable(ContextCompat.getDrawable(context, drawables[position]));
+            ttel.setText(this.tel);
+            tpre.setText(this.precio);
+
             imageView.setImageBitmap(drawables.get(position));
             Log.v("Settinggggggggggggg","colocando imagen");
             container.addView(view);

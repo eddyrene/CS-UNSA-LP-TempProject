@@ -5,38 +5,49 @@
     android:layout_width="@dimen/page_width"
     android:layout_height="wrap_content"
     >
-
-    <ImageView
-        android:id="@+id/image"
-        android:layout_width="@dimen/page_width"
-        android:layout_height="@dimen/page_height"
-        android:background="#000"
-        android:layout_gravity="center_horizontal"
-        android:scaleType="centerInside"
-        tools:src="@drawable/administrator"
-        />
     <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent" >
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="@dimen/page_width"
+            android:layout_height="@dimen/page_height"
+            android:background="#000"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="centerInside"
+            tools:src="@drawable/administrator"
+        />
+
         <TextView
             android:id="@+id/textd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_margin="16dp"
+            android:layout_margin="10dp"
             />
-    </LinearLayout>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent" >
+
         <TextView
             android:id="@+id/textu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_margin="16dp"
+            android:layout_margin="10dp"
+            />
+        <TextView
+            android:id="@+id/textt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_margin="10dp"
+            />
+        <TextView
+            android:id="@+id/textp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_margin="10dp"
             />
     </LinearLayout>
 

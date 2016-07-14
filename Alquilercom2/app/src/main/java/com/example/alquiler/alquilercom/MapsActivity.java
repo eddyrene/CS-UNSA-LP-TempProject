@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -356,6 +357,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
             View v = inflater.inflate(R.layout.activity_main_slider, container, false);
+            getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
             /*new AlertDialog.Builder(getActivity())
                     .setTitle("title")
                     .setPositiveButton("OK",
