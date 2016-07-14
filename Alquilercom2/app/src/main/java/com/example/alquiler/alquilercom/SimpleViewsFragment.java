@@ -154,6 +154,16 @@ public class SimpleViewsFragment extends Fragment {
         public Object instantiateItem(ViewGroup container, int position) {
             View view = inflater.inflate(R.layout.pager_item_et, container, false);
             ImageView imageView = (ImageView) view.findViewById(R.id.image);
+
+            ImageView ima=(ImageView) view.findViewById(R.id.iman);
+            ImageView iwo=(ImageView) view.findViewById(R.id.iwo);
+            ImageView itv=(ImageView) view.findViewById(R.id.itv);
+            ImageView iwi=(ImageView) view.findViewById(R.id.iwi);
+            ImageView idu=(ImageView) view.findViewById(R.id.idu);
+            ImageView imas=(ImageView) view.findViewById(R.id.imas);
+            ImageView iba=(ImageView) view.findViewById(R.id.iba);
+
+
             TextView loc=(TextView) view.findViewById(R.id.textu);
             TextView due=(TextView) view.findViewById(R.id.textd);
             TextView ttel=(TextView) view.findViewById(R.id.textt);
@@ -161,9 +171,40 @@ public class SimpleViewsFragment extends Fragment {
             loc.setText(this.loc);
             due.setText(this.nom);
             ttel.setText(this.tel);
-            tpre.setText(this.precio);
+            String prec=precio+" soles";
+            tpre.setText(prec);
 
             imageView.setImageBitmap(drawables.get(position));
+            if (servicios.get(0).equals("3")){
+                ima.setImageResource(R.drawable.macon);
+                iwo.setImageResource(R.drawable.wocon);
+            } else if (servicios.get(0).equals("2"))
+                iwo.setImageResource(R.drawable.wocon);
+            else
+                ima.setImageResource(R.drawable.macon);
+
+            for (int i=1;i<servicios.size();++i){
+
+                if (servicios.get(i).equals("1")) {
+                    Log.v("SERVICIOOOOOOOOOOOOOOOS",servicios.get(i));
+                        if(i==1){
+                            Log.v("11111111111111","1111111111");
+                            itv.setImageResource(R.drawable.tvcon);
+                        }
+                        else if (i==2) {
+                            Log.v("2222222222222", "22222222");
+                            iwi.setImageResource(R.drawable.wicon);
+                        }
+                        else if (i==3) {
+                            Log.v("33333333", "1111111111");
+                            idu.setImageResource(R.drawable.hocon);
+                        }
+                        else if (i==4)
+                            imas.setImageResource(R.drawable.docon);
+                       else
+                            iba.setImageResource(R.drawable.tocon);
+                }
+            }
             Log.v("Settinggggggggggggg","colocando imagen");
             container.addView(view);
             return view;
