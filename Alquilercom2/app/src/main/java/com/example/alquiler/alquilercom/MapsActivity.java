@@ -160,7 +160,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         protected JSONArray doInBackground(String... params) {
             JSONObject json;
             try {
-                json = new JsonHttpHandler().getJSONfromUrl("http://myflaskapp2-alquiler.rhcloud.com/reg/" + params[0]);
+                json = new JsonHttpHandler().getJSONfromUrl("http://10.0.2.2:8100/reg/" + params[0]);
                 if (json == null) {
                     return null;
                 }
@@ -261,10 +261,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
                 //- inf izq -- sup der- lat long
                 if (paramQ.equals("n")) {
-                    jsonr = new JsonHttpHandler().getJSONfromUrl("http://myflaskapp2-alquiler.rhcloud.com/buscar2/" + String.valueOf(params[0]) + "/" + String.valueOf(params[1]) + "/" + String.valueOf(params[2]) + "/" + String.valueOf(params[3]));
-                    Log.d("URLLLLLL", "http://myflaskapp2-alquiler.rhcloud.com/buscar2/" + String.valueOf(params[0]) + "/" + String.valueOf(params[1]) + "/" + String.valueOf(params[2]) + "/" + String.valueOf(params[3]));
+                    jsonr = new JsonHttpHandler().getJSONfromUrl("http://10.0.2.2:8100/buscar2/" + String.valueOf(params[0]) + "/" + String.valueOf(params[1]) + "/" + String.valueOf(params[2]) + "/" + String.valueOf(params[3]));
+                    Log.d("URLLLLLL", "http://10.0.2.2:8100/buscar2/" + String.valueOf(params[0]) + "/" + String.valueOf(params[1]) + "/" + String.valueOf(params[2]) + "/" + String.valueOf(params[3]));
                 } else {
-                    jsonr = new JsonHttpHandler().getJSONfromUrl("http://myflaskapp2-alquiler.rhcloud.com/buscar2/" + String.valueOf(params[0]) + "/" + String.valueOf(params[1]) + "/" + String.valueOf(params[2]) + "/" + String.valueOf(params[3]) + paramQ);
+                    jsonr = new JsonHttpHandler().getJSONfromUrl("http://10.0.2.2:8100/buscar2/" + String.valueOf(params[0]) + "/" + String.valueOf(params[1]) + "/" + String.valueOf(params[2]) + "/" + String.valueOf(params[3]) + paramQ);
                 }
                 if (jsonr == null) {
                     return null;
