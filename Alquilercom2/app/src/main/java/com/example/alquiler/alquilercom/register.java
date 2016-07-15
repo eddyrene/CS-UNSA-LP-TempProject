@@ -141,7 +141,7 @@ public class register extends AppCompatActivity implements CompoundButton.OnChec
               }
           });
 
-        ImageButton imagen=(ImageButton) findViewById(R.id.imageButton_imagen);
+        final ImageButton imagen=(ImageButton) findViewById(R.id.imageButton_imagen);
         imagen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -151,6 +151,7 @@ public class register extends AppCompatActivity implements CompoundButton.OnChec
                 //intent.setAction(Intent.ACTION_GET_CONTENT);
                 //startActivityForResult(Intent.createChooser(intent, "Seleccionar imagen"), 1);
                 startActivityForResult(intent,2);
+
 
             }
         });
@@ -171,6 +172,8 @@ public class register extends AppCompatActivity implements CompoundButton.OnChec
                 //byteArray = stream.toByteArray();
                 this.byteArray = Base64.encodeToString(stream.toByteArray(),Base64.DEFAULT);
                 Toast.makeText(register.this, "Imagen cargada con éxito", Toast.LENGTH_SHORT).show();
+                ImageButton imagen=(ImageButton) findViewById(R.id.imageButton_imagen);
+                imagen.setBackgroundResource(R.mipmap.uploadfilled);
             }
         }
         else if (data!=null && resultcode==RESULT_OK && requestcode==1){
