@@ -65,7 +65,7 @@ public class SimpleViewsFragment extends Fragment {
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(register.this,a.getData().toString(),Toast.LENGTH_SHORT);
+                //Toast.makeText(RegisterActivity.this,a.getData().toString(),Toast.LENGTH_SHORT);
             }
         });
         viewPager = (ViewPager) view.findViewById(R.id.view_pager);

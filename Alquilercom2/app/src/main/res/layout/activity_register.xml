@@ -7,7 +7,7 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingTop="16dp"
-    tools:context="com.example.alquiler.alquilercom.register">
+    tools:context=".RegisterActivity">
 
     <!-- Search progress -->
     <ProgressBar

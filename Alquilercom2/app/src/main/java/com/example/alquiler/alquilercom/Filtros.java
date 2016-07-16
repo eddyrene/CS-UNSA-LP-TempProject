@@ -9,16 +9,12 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Criteria;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 
 import android.os.Build;
-import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -39,8 +35,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
 
 public class Filtros extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
 
@@ -175,7 +169,7 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i=new Intent(Filtros.this, register.class);
+                Intent i=new Intent(Filtros.this, RegisterActivity.class);
                 i.putExtra("email",email);
                 i.putExtra("lon",lon);
                 i.putExtra("lat",lat);
@@ -197,7 +191,7 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
                 if (!list.isEmpty()) {
                     Address DirCalle = list.get(0);
 
-                    //Toast.makeText(Filtros.this, "Mi direccion es: \n"+ DirCalle.getAddressLine(0), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(FiltrosActivity.this, "Mi direccion es: \n"+ DirCalle.getAddressLine(0), Toast.LENGTH_SHORT).show();
                 }
 
             } catch (IOException e) {
@@ -253,7 +247,7 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
                 servicios[4] = "1";
 
             showProgress(true);
-            //Toast.makeText(Filtros.this,lon+lat+","+gen+","+p_min+","+p_max+","+servicios[0]+servicios[1]+servicios[2]+servicios[3]+servicios[4], Toast.LENGTH_SHORT).show();
+
             new BuscarTask().execute(String.valueOf(lat), String.valueOf(lon), radio, gen, servicios[4], servicios[2], servicios[3], servicios[0], servicios[1], p_min, p_max);
         }
     }
@@ -263,7 +257,7 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if(!buttonView.isChecked() && (buttonView.getId()==btn_men.getId() || buttonView.getId()==btn_woman.getId() || (buttonView.getId()==filtros.getId())) ) {
-            //Toast.makeText(Filtros.this,"Inactivo", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(FiltrosActivity.this,"Inactivo", Toast.LENGTH_SHORT).show();
             if (buttonView.getId() == btn_men.getId() && !filtros.isChecked()) {
                 btn_woman.setChecked(true);
             } else if (buttonView.getId() == btn_woman.getId() && !filtros.isChecked()) {
@@ -444,7 +438,6 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
                 Toast.makeText(Filtros.this, lat + " " + lon, Toast.LENGTH_SHORT).show();
 
                 Intent i = new Intent(Filtros.this, MapsActivity.class);
-                //Intent i = new Intent(Filtros.this, Main22Activity.class);
                 i.putExtra("param",aux[2]);
                 i.putExtra("pos", aux[1]);
                 i.putExtra("lon", lon);
@@ -488,7 +481,7 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
             //loc.getLatitude();
             //loc.getLongitude();
             //String Text = "Mi ubicacion actual es: " + "\n Lat = "+ loc.getLatitude() + "\n Long = " + loc.getLongitude();
-            //Toast.makeText(Filtros.this, Text, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(FiltrosActivity.this, Text, Toast.LENGTH_SHORT).show();
             this.mainActivity.setLocation(loc);
 
         }
