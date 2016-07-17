@@ -34,7 +34,7 @@ class mongo:
         except ValueError:
             #return False
             print ('error en la conexion')
-    def insert_cuarto(self,coord,servicios,nombre,precio,genero,img):
+    '''def insert_cuarto(self,coord,servicios,nombre,precio,genero,img):
         #ID=self.siguiente_valor('casa')#no existe el indixe incremental en mongo db esta es la forma de hacerlo
         vivienda ={
                 "Coord":{'type':"Point",'coordinates': [coord[0],coord[1]]},#es la forma de declara un tipo punto para la el indice 2dsphere
@@ -49,7 +49,7 @@ class mongo:
             return True
         except ValueError:
             return False
-            print ('No se pudo insertear')
+            print ('No se pudo insertear')'''
     def siguiente_valor(self,name):#funcion nos retorna el id q corresponde a cada vivienda q es insertada
         id_sig=str(self.db.find_and_modify(
         query={'_id':name},
@@ -149,7 +149,7 @@ class mongo:
     def insert_cuarto_usuario(self,nombre_vivienda,direccion,correo,telefono,coord,precio,genero,servicios,img):#,img,path):en caso el usuario quiera insertar un cuarto sus datos seran acutalizados
         #self.db_usu.update(self.db_usu.find_one({'Correo':correo}),{'$set':{'Telefono':telefono}})
         vivienda ={
-                "Coord":{'type':"Point",'coordinates': [coord[0],coord[1]]},#es la forma de declara un tipo punto para la el indice 2dsphere
+                "Coord":[coord[0],coord[1]],#es la forma de declara un tipo punto para la el indice 2dsphere
                 "Nombre":nombre_vivienda,
                 "Direccion":direccion,
                 "Servicios":{'baño':servicios[0] ,'tv':servicios[1] ,'ducha':servicios[2],'wifi':servicios[3],'mascota':servicios[4]},#baño,tv,ducha,mascota con 0 y 1
