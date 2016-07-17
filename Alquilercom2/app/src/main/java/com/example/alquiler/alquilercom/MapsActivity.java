@@ -278,7 +278,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 } else {
 
                     List<MarkerOptions> result = new ArrayList<MarkerOptions>();
-                    Log.v("ENTRANDO", "xxxxxx");
+
                     for (int m = 0; m < rooms.length(); ++m) {
                         JSONObject n = (JSONObject) rooms.get(m);
                         String[] co1 = n.getString("Coord").replace("[","").replace("]","").split(",");
