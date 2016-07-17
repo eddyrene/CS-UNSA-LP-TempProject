@@ -281,7 +281,7 @@ public class RegisterActivity extends AppCompatActivity implements CompoundButto
 
                 //Log.v("IMAGENNNN",params[0].imagen);
 
-                jsonr=new JsonHttpHandler().postJSONfromUrl("http://10.0.2.2:8100/new/cuarto", json);
+                jsonr=new JsonHttpHandler().postJSONfromUrl("http://myflaskapp2-alquiler.rhcloud.com//new/cuarto", json);
                 //jsonr=new JsonHttpHandler().postJSONfromUrl("http://127.0.0.1:8100//new/cuarto", json);
                 //Log.d("WARNINNNNG", json.toString());
 

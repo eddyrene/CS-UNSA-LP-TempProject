@@ -160,7 +160,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         protected JSONArray doInBackground(String... params) {
             JSONObject json;
             try {
-                json = new JsonHttpHandler().getJSONfromUrl("http://10.0.2.2:8100/reg/" + params[0]);
+                json = new JsonHttpHandler().getJSONfromUrl("http://myflaskapp2-alquiler.rhcloud.com//reg/" + params[0]);
                 if (json == null) {
                     return null;
                 }
@@ -261,10 +261,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
                 //- inf izq -- sup der- lat long
                 if (paramQ.equals("n")) {
-                    jsonr = new JsonHttpHandler().getJSONfromUrl("http://10.0.2.2:8100/buscar2/" + String.valueOf(params[0]) + "/" + String.valueOf(params[1]) + "/" + String.valueOf(params[2]) + "/" + String.valueOf(params[3]));
-                    Log.d("URLLLLLL", "http://10.0.2.2:8100/buscar2/" + String.valueOf(params[0]) + "/" + String.valueOf(params[1]) + "/" + String.valueOf(params[2]) + "/" + String.valueOf(params[3]));
+                    jsonr = new JsonHttpHandler().getJSONfromUrl("http://myflaskapp2-alquiler.rhcloud.com//buscar2/" + String.valueOf(params[0]) + "/" + String.valueOf(params[1]) + "/" + String.valueOf(params[2]) + "/" + String.valueOf(params[3]));
+                    Log.d("URLLLLLL", "http://myflaskapp2-alquiler.rhcloud.com//buscar2/" + String.valueOf(params[0]) + "/" + String.valueOf(params[1]) + "/" + String.valueOf(params[2]) + "/" + String.valueOf(params[3]));
                 } else {
-                    jsonr = new JsonHttpHandler().getJSONfromUrl("http://10.0.2.2:8100/buscar2/" + String.valueOf(params[0]) + "/" + String.valueOf(params[1]) + "/" + String.valueOf(params[2]) + "/" + String.valueOf(params[3]) + paramQ);
+                    jsonr = new JsonHttpHandler().getJSONfromUrl("http://myflaskapp2-alquiler.rhcloud.com//buscar2/" + String.valueOf(params[0]) + "/" + String.valueOf(params[1]) + "/" + String.valueOf(params[2]) + "/" + String.valueOf(params[3]) + paramQ);
                 }
                 if (jsonr == null) {
                     return null;
@@ -281,10 +281,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Log.v("ENTRANDO", "xxxxxx");
                     for (int m = 0; m < rooms.length(); ++m) {
                         JSONObject n = (JSONObject) rooms.get(m);
-                        String co1 = n.getJSONObject("Coord").getJSONArray("coordinates").get(0).toString();
-                        String co2 = n.getJSONObject("Coord").getJSONArray("coordinates").get(1).toString();
+                        String[] co1 = n.getString("Coord").replace("[","").replace("]","").split(",");
 
-                        LatLng aux = new LatLng(Double.parseDouble(co1), Double.parseDouble(co2));
+                        LatLng aux = new LatLng(Double.parseDouble(co1[0]), Double.parseDouble(co1[1]));
                         if (resultados.contains(aux)) {
                             result.add(new MarkerOptions()
                                     .position(aux)

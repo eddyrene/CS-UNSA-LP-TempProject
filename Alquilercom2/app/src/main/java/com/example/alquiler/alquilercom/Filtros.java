@@ -367,12 +367,13 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
             try {
 
                 if(params[0].equals("sinfiltros")){
-                    jsonr = new JsonHttpHandler().getJSONfromUrl("http://10.0.2.2:8100/buscar/" + params[1] + "/" + params[2] + "/" + params[3]);
+                    jsonr = new JsonHttpHandler().getJSONfromUrl("http://myflaskapp2-alquiler.rhcloud.com//buscar/" + params[1] + "/" + params[2] + "/" + params[3]);
+                    Log.d("WARNING","http://myflaskapp2-alquiler.rhcloud.com//buscar/" + params[1] + "/" + params[2] + "/" + params[3]);
                 }
                 else {
                     //lon,lat,rad,genero,precio_min,precio_max,servicios
 
-                    jsonr = new JsonHttpHandler().getJSONfromUrl("http://10.0.2.2:8100/buscar/" + params[0] + "/" + params[1] + "/" + params[2] + "/" + params[3] + "/" + params[4] + "/" + params[5] + "/" + params[6] + "/" + params[7] + "/" + params[8] + "/" + params[9] + "/" + params[10]);
+                    jsonr = new JsonHttpHandler().getJSONfromUrl("http://myflaskapp2-alquiler.rhcloud.com//buscar/" + params[0] + "/" + params[1] + "/" + params[2] + "/" + params[3] + "/" + params[4] + "/" + params[5] + "/" + params[6] + "/" + params[7] + "/" + params[8] + "/" + params[9] + "/" + params[10]);
                     Log.d("WARNING", "http://myflaskapp2-alquiler.rhcloud.com/buscar/" + params[0] + "/" + params[1] + "/" + params[2] + "/" + params[3] + "/" + params[4] + "/" + params[5] + "/" + params[6] + "/" + params[7] + "/" + params[8] + "/" + params[9] + "/" + params[10]);
                 }
                 if (jsonr == null) {
@@ -393,7 +394,7 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
                         JSONObject n=(JSONObject)rooms.get(m);
                         /*if(m==14)
                             im=n.getString("Img");*/
-                        String co=n.getJSONObject("Coord").getString("coordinates");
+                        String co=n.getString("Coord");
                         String replace = co.replace("[","").replace("]","");
                         if (m==0)
                             aux[1]+=replace;

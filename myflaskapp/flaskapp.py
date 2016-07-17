@@ -3,14 +3,16 @@ import json
 from bson import json_util
 from pymongo import MongoClient
 from mongo import mongo
+from flask import render_template
 
 app = Flask(__name__)
 app.config.from_pyfile('flaskapp.cfg')
 
 @app.route('/')
 def home():
-    m=mongo()
-    return 'All OKAY!'
+    #m=mongo()
+    #return 'All OKAY!'
+    return render_template('hello.html')
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -124,8 +126,21 @@ def buscar(lon,lat,rad):
             client=mongo()
 
             res=client.mostrar_todos(float(lon),float(lat),float(rad))
-            
-            ret = json_util.dumps({'rooms':  res}, default=json_util.default)            
+            #if res.count()==0:
+            ret = json_util.dumps({'rooms':  res}, default=json_util.default)
+            #else:
+                
+            '''coord=[]
+                for i in range(res.count()):
+                
+                   coor1=str(res[i]['Coord']['coordinates'][0])
+                   coor2=str(res[i]['Coord']['coordinates'][1])
+                   i+=1
+                   aux={'coor':[coor1,coor2]}
+                   coord.append(aux)'''
+                
+            #    ret = json_util.dumps({'rooms':  res}, default=json_util.default)
+                
             return Response(response=ret,
                     status=200,
                     headers=None,
@@ -168,7 +183,7 @@ def buscar2(lon1,lat1,lon2,lat2):
 def reg(id):
     client=mongo()
     res=client.busq_id(id)
-    ret=json_util.dumps(res, default=json_util.default) 
+    ret=json_util.dumps({'rooms':res}, default=json_util.default) 
     return Response(response=ret,
                     status=200,
                     headers=None,
