@@ -109,7 +109,7 @@ def buscar_cuarto(lon,lat,rad,gen,p_min,p_max,wifi,pet,tv,agua,toilet):
             #collection=client.code101.docs101
             client=mongo()
 
-            res=client.mas_baratos(float(lon),float(lat),float(rad),gen,[toilet,tv,agua,wifi,pet],p_min,p_max)
+            res=client.mas_baratos(float(lon),float(lat),float(rad),gen,[toilet,tv,agua,wifi,pet],int(p_min),int(p_max))
             
             ret = json_util.dumps({'rooms':  res}, default=json_util.default)            
             return Response(response=ret,
@@ -154,7 +154,7 @@ def buscar_cuarto2(lon1,lat1,lon2,lat2,gen,p_min,p_max,wifi,pet,tv,agua,toilet):
             #collection=client.code101.docs101
             client=mongo()
 
-            res=client.mas_baratos2(float(lon1),float(lat1),float(lon2),float(lat2),gen,[toilet,tv,agua,wifi,pet],p_min,p_max)
+            res=client.mas_baratos2(float(lon1),float(lat1),float(lon2),float(lat2),gen,[toilet,tv,agua,wifi,pet],int(p_min),int(p_max))
             
             ret = json_util.dumps({'rooms':  res}, default=json_util.default)            
             return Response(response=ret,
