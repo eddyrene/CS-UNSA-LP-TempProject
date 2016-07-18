@@ -204,7 +204,8 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
 
         String radio1 = textViewSeekBar_distancia.getText().toString();
         this.radio_=Integer.parseInt(radio1);
-        float r = Float.parseFloat(radio1) * (0.009f);
+        float r = Float.parseFloat(radio1) * (0.00900012f);
+        //float r = (Float.parseFloat(radio1) * (0.621371f))/3963.2f;
         String radio = String.valueOf(r);
 
         /*if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -434,9 +435,9 @@ public class Filtros extends AppCompatActivity implements CompoundButton.OnCheck
                 Toast.makeText(Filtros.this, "No se han encontrado resultados", Toast.LENGTH_SHORT).show();
             }
             else {
-                Toast.makeText(Filtros.this, aux[0] + " resultado(s)", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Filtros.this, aux[0] + " resultado(s)", Toast.LENGTH_LONG).show();
 
-                Toast.makeText(Filtros.this, lat + " " + lon, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(Filtros.this, lat + " " + lon, Toast.LENGTH_SHORT).show();
 
                 Intent i = new Intent(Filtros.this, MapsActivity.class);
                 i.putExtra("param",aux[2]);

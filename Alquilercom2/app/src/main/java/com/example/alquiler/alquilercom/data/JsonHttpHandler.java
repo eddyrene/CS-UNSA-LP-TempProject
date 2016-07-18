@@ -155,7 +155,7 @@ public class JsonHttpHandler {
         // request method is POST
         try {
             String data_=data.toString();
-            int i=data_.getBytes().length;
+            int i=data_.getBytes("UTF-8").length;
             urlObj = new URL(url);
             DataOutputStream wr;
             conn = (HttpURLConnection) urlObj.openConnection();

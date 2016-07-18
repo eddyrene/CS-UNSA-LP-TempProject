@@ -107,7 +107,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        circle = mMap.addCircle(new CircleOptions().center(r).radius(radio * 1000).strokeColor(Color.BLUE));
+        circle = mMap.addCircle(new CircleOptions().center(r).radius(radio * 990).strokeColor(Color.BLUE));
         circle.setVisible(true);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(r, zoomLevel(circle)));
         VisibleRegion vr = mMap.getProjection().getVisibleRegion();
