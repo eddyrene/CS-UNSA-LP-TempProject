@@ -75,14 +75,11 @@ class mongo:
     def mas_baratos(self,punto1,punto2,radio,genero,servicios,precio_min,precio_max):
     #def mas_baratos(self,punto1,punto2,punto3,punto4,genero,servicios,precio_min,precio_max):#podemos modificarlo para una solo universidad
         #result=self.db.find({ 'Coord': { '$geoWithin': { '$box': [ [punto1,punto2],[punto3,punto4]] } },'Genero':genero,'Servicios.baño':servicios[0],'Servicios.tv':servicios[1],'Servicios.ducha':servicios[2],'Servicios.wifi':servicios[3],'Servicios.mascota':servicios[4],'$and': [{'Precio':{'$gte':precio_min}},{'Precio':{'$lte':precio_max}}]})
-        result=self.db.find({ 'Coord': { '$geoWithin': { '$center': [ [punto1, punto2], radio ]}},'Genero':genero,'Servicios.baño':servicios[0],'Servicios.tv':servicios[1],'Servicios.ducha':servicios[2],'Servicios.wifi':servicios[3],'Servicios.mascota':servicios[4],'$and': [{'Precio':{'$gte':precio_min}},{'Precio':{'$lte':precio_max}}]},{'Img':0})
-
-        #if result.count()==0:
+        result=self.db.find({ 'Coord': { '$geoWithin': { '$center': [ [punto1, punto2], radio ]}},'Genero':genero,'Servicios.baño':servicios[0],'Servicios.tv':servicios[1],'Servicios.ducha':servicios[2],'Servicios.wifi':servicios[3],'Servicios.mascota':servicios[4],'Precio':{'$gte':precio_min,'$lte':precio_max}},{'Img':0})
         return result
-        #else:
-            #return result
+
     def mas_baratos2(self,punto1,punto2,punto3,punto4,genero,servicios,precio_min,precio_max):
-        result=self.db.find({ 'Coord': { '$geoWithin': { '$box': [ [punto1,punto2],[punto3,punto4]] } },'Genero':genero,'Servicios.baño':servicios[0],'Servicios.tv':servicios[1],'Servicios.ducha':servicios[2],'Servicios.wifi':servicios[3],'Servicios.mascota':servicios[4],'$and': [{'Precio':{'$gte':precio_min}},{'Precio':{'$lte':precio_max}}]},{'Img':0})
+        result=self.db.find({ 'Coord': { '$geoWithin': { '$box': [ [punto1,punto2],[punto3,punto4]] } },'Genero':genero,'Servicios.baño':servicios[0],'Servicios.tv':servicios[1],'Servicios.ducha':servicios[2],'Servicios.wifi':servicios[3],'Servicios.mascota':servicios[4],'Precio':{'$gte':precio_min,'$lte':precio_max}},{'Img':0})
         return result
 
     def busq_id(self,id_):
