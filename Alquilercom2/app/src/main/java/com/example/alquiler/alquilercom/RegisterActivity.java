@@ -303,6 +303,9 @@ public class RegisterActivity extends AppCompatActivity implements CompoundButto
             } catch (IOException e) {
                 e.printStackTrace();
                 return false;
+            } catch (IllegalStateException e){
+                e.printStackTrace();
+                return  false;
             }
         }
 

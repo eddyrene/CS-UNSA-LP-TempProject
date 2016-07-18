@@ -229,6 +229,8 @@ public class JsonHttpHandler {
             e.printStackTrace();
         } catch (JSONException e) {
             Log.e("JSON Parser", "Error parsing data " + e.toString());
+        } catch (IllegalStateException e){
+            e.printStackTrace();
         }
 
         conn.disconnect();

@@ -13,6 +13,8 @@ def home():
     #m=mongo()
     #return 'All OKAY!'
     return render_template('hello.html')
+    #ret=json_util.dumps({'rooms':'hello'}, default=json_util.default)            
+    #return Response(response=ret,status=200, headers=None,content_type='application/json',            direct_passthrough=False)
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -40,30 +42,7 @@ def user_search(fname,passw):
         #            direct_passthrough=False)
 
 
-@app.route('/new/user', methods=['POST'])
-def new_user():
 
-    if request.method == 'POST':
-        if request.headers['Content-Type'] == 'application/json':
-
-            client = MongoClient('mongodb://alexandra:alexandra@ds015953.mlab.com:15953/code101')
-
-            collection=client.code101.docs101
-
-
-            try:
-                data = json.loads(request.data)
-                print data
-
-            except (ValueError, KeyError, TypeError):
-                # Not valid information, bail out and return an error
-                return jsonify({'error': 'opps'})
-
-            collection.insert({"name": data['name'], "handle": data['handle'] })
-
-            print collection.count()
-
-            return jsonify({'status': 'successful'})
 
 @app.route('/new/cuarto', methods=['POST'])
 def new_cuarto():
@@ -85,7 +64,7 @@ def new_cuarto():
 
             #collection.insert({"name": data['name'], "handle": data['handle'] })
             #print collection.count()
-            if client.insert_cuarto_usuario(str(data['nombre']),str(data['direc']),str(data['email']),int(data['fono']),[float(data['coord0']),float(data['coord1'])],int(data['precio']),str(data['genero']),[int(data['serv0']),int(data['serv1']),int(data['serv2']),int(data['serv3']),int(data['serv4'])],str(data['imagen']))==True:
+            if client.insert_cuarto_usuario(str(data['nombre']),str(data['direc']),str(data['email']),int(data['fono']),[float(data['coord0']),float(data['coord1'])],int(data['precio']),str(data['genero']),[str(data['serv0']),str(data['serv1']),str(data['serv2']),str(data['serv3']),str(data['serv4'])],str(data['imagen']))==True:
                 '''ret=jsonify({'status': 'successful'})
                 return Response(response=ret,
                     status=200,
