@@ -13,7 +13,7 @@
         android:background="@color/white"
         android:layout_gravity="center_horizontal"
         android:scaleType="centerInside"
-        tools:src="@drawable/administrator"
+        tools:src="@drawable/habitacion1"
         />
 
 </FrameLayout>

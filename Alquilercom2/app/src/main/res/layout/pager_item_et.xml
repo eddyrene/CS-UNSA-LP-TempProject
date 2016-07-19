@@ -13,15 +13,21 @@
 
     <ImageView
         android:id="@+id/image"
-        android:layout_width="@dimen/page_width"
-        android:layout_height="@dimen/page_height"
+        android:layout_width="445dp"
+        android:layout_height="334dp"
         android:background="#000"
         android:layout_gravity="center"
         android:scaleType="centerInside"
-        tools:src="@drawable/administrator"
+        tools:src="@drawable/habitacion1"
         />
 
-    <LinearLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"></LinearLayout>
+
+        <LinearLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
         android:orientation="horizontal"
         android:baselineAligned="true">
 
@@ -33,14 +39,14 @@
             android:layout_marginStart="20dp">
 
 
-
             <TextView
-                android:id="@+id/no_sirve"
+                android:id="@+id/textp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_margin="12dp"
-                />
+                android:layout_margin="9.5dp"
+                android:layout_marginLeft="18dp"
+                android:text="precio" />
+
             <TextView
                 android:id="@+id/textd"
                 android:layout_width="match_parent"
@@ -48,7 +54,7 @@
                 android:layout_gravity="bottom"
                 android:layout_margin="9.5dp"
                 android:layout_marginLeft="18dp"
-                />
+                android:text="nombre" />
 
             <TextView
                 android:id="@+id/textu"
@@ -57,39 +63,25 @@
                 android:layout_gravity="bottom"
                 android:layout_margin="9.5dp"
                 android:layout_marginLeft="18dp"
-                />
+                android:text="direccion" />
+
             <TextView
                 android:id="@+id/textt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_margin="9.5dp"
+                android:layout_margin="1dp"
                 android:layout_marginLeft="18dp"
-                />
-            <TextView
-                android:id="@+id/textp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_margin="9.5dp"
-                android:layout_marginLeft="18dp"
-                />
+                android:text="Telefono" />
         </LinearLayout>
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="0.5"
             android:layout_height="match_parent"
             android:layout_gravity="center">
 
-            <TextView
-                android:id="@+id/no_sirve2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_margin="14dp"
-                />
             <TextView
                 android:id="@+id/textg"
                 android:layout_width="match_parent"
@@ -112,14 +104,14 @@
                     android:layout_height="32dp"
                     android:layout_gravity="center_horizontal"
                     android:scaleType="centerInside"
-                    />
+                    android:src="@mipmap/man" />
                 <ImageView
                     android:id="@+id/iwo"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_gravity="center_horizontal"
                     android:scaleType="centerInside"
-                    />
+                    android:src="@mipmap/woman" />
             </LinearLayout>
             <TextView
                 android:id="@+id/texts"
@@ -142,21 +134,21 @@
                     android:layout_height="32dp"
                     android:layout_gravity="center_horizontal"
                     android:scaleType="centerInside"
-                    />
+                    android:src="@mipmap/tv" />
                 <ImageView
                     android:id="@+id/iwi"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_gravity="center_horizontal"
                     android:scaleType="centerInside"
-                    />
+                    android:src="@mipmap/wifi" />
                 <ImageView
                     android:id="@+id/idu"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_gravity="center_horizontal"
                     android:scaleType="centerInside"
-                    />
+                    android:src="@mipmap/hotshower" />
 
             </LinearLayout>
             <LinearLayout
@@ -170,14 +162,14 @@
                     android:layout_height="32dp"
                     android:layout_gravity="center_horizontal"
                     android:scaleType="centerInside"
-                    />
+                    android:src="@mipmap/dog" />
                 <ImageView
                     android:id="@+id/iba"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_gravity="center_horizontal"
                     android:scaleType="centerInside"
-                    />
+                    android:src="@mipmap/toilet" />
             </LinearLayout>
 
         </LinearLayout>
