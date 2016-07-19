@@ -260,7 +260,7 @@
         android:layout_margin="@dimen/fab_margin"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:src="@mipmap/plus100"
+        android:src="@mipmap/plusfilled100"
         android:scaleType="center"
         app:backgroundTint="@color/white"/>
 

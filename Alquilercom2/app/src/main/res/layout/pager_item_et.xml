@@ -15,8 +15,8 @@
     <ImageView
         android:id="@+id/image"
         android:layout_width="445dp"
-        android:layout_height="334dp"
-        android:background="@color/colorPrimary"
+        android:layout_height="290dp"
+        android:background="@color/colorPrimaryDark"
         android:layout_gravity="center"
         android:scaleType="centerInside"
         tools:src="@drawable/habitacion1"
@@ -41,18 +41,25 @@
 
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:id="@+id/textView16" />
+
+            <TextView
                 android:id="@+id/textp"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="9.5dp"
                 android:layout_marginLeft="18dp"
-                android:text="precio" />
+                android:text="precio"
+                android:layout_gravity="left" />
 
             <TextView
                 android:id="@+id/textd"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
+                android:layout_gravity="left"
                 android:layout_margin="9.5dp"
                 android:layout_marginLeft="18dp"
                 android:text="nombre" />
@@ -68,10 +75,10 @@
 
             <TextView
                 android:id="@+id/textt"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_margin="1dp"
+                android:layout_gravity="left"
+                android:layout_margin="9.5dp"
                 android:layout_marginLeft="18dp"
                 android:text="Telefono" />
         </LinearLayout>
@@ -79,9 +86,15 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:id="@+id/textView17" />
 
             <TextView
                 android:id="@+id/textg"
@@ -89,7 +102,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_marginBottom="0dp"
-                android:layout_marginTop="5.5dp"
+                android:layout_marginTop="9.5dp"
                 android:layout_marginLeft="0dp"
                 android:text="Género(s)"
                 />
