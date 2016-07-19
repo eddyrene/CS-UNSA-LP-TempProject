@@ -198,25 +198,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     JSONObject s =(JSONObject)n.get("Servicios");
                     String[] ser={n.getString("Genero"),s.getString("tv"),s.getString("wifi"),s.getString("ducha"),s.getString("mascota"),s.getString("baño")};
                     List<String> servicios=Arrays.asList(ser);
+
+
                     MyDialogFragment dialog = new MyDialogFragment();
                     dialog.setArgs(imagenes,n.get("Direccion").toString(),n.get("Nombre").toString(),
                             n.get("Telefono").toString(),n.get("Precio").toString(),servicios);
                     dialog.show(getSupportFragmentManager(), "asdf");
-                /*ImageView image = new ImageView(MapsActivity.this);
-                image.setImageResource(R.drawable.administrator);
-
-                AlertDialog.Builder builder =
-                        new AlertDialog.Builder(MapsActivity.this).
-                                setMessage("Message above the image").
-                                setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                }).
-                                setView(image);
-                builder.create().show();*/
-
 
                     //startActivity(i);
                     //finish();
@@ -341,43 +328,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    public static class MyDialogFragment extends DialogFragment {
-        List<String> im,serv;
-        String lo;
-        String no,tele,prec;
-        public void setArgs(List<String> i, String l,String n,String tel_,String pre_,List<String> serv_){
-            im=new ArrayList<String>(i);
-            lo=l;
-            no=n;
-            tele=tel_;
-            prec=pre_;
-            serv=new ArrayList<>(serv_);
-        }
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-            View v = inflater.inflate(R.layout.activity_main_slider, container, false);
-            getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-            /*new AlertDialog.Builder(getActivity())
-                    .setTitle("title")
-                    .setPositiveButton("OK",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    // do something...
-                                    dialog.dismiss();
-                                }
-                            }
-                    )
-                    .create();*/
-            getChildFragmentManager().beginTransaction()
-                    .replace(R.id.container, SimpleViewsFragment.instance(im,no,lo,tele,prec,serv))
-                    .addToBackStack(null)
-                    .commit();
-            return v;
-        }
-
-
-
-    }
 }
 
 
