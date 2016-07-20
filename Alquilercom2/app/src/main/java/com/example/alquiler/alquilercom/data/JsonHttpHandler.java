@@ -110,7 +110,7 @@ public class JsonHttpHandler {
 
             conn.setRequestProperty("Accept-Charset", charset);
 
-            conn.setConnectTimeout(35000);
+            conn.setConnectTimeout(20000);
 
             conn.connect();
 

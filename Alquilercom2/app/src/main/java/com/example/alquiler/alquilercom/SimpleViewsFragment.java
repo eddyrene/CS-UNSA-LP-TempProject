@@ -57,9 +57,29 @@ public class SimpleViewsFragment extends Fragment {
         serv=new ArrayList<>(s);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle b){
+        b.putStringArrayList("img",new ArrayList<String>(imgs));
+        b.putString("log",loc);
+        b.putString("nog",nom);
+        b.putString("teleg",tele);
+        b.putString("precg",prec);
+        b.putStringArrayList("servg",new ArrayList<String>(serv));
+        super.onSaveInstanceState(b);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
+        super.onCreateView(inflater,container,savedInstanceState);
+        if( savedInstanceState != null ) {
+            imgs=savedInstanceState.getStringArrayList("img");
+            nom=savedInstanceState.getString("nog");
+            loc=savedInstanceState.getString("log");
+            tele=savedInstanceState.getString("teleg");
+            prec=savedInstanceState.getString("precg");
+            serv=savedInstanceState.getStringArrayList("servg");
+        }
         View view = inflater.inflate(R.layout.fragment_view_pager, container, false);
         Button ok=(Button)view.findViewById(R.id.botonok);
         ok.setOnClickListener(new View.OnClickListener() {
@@ -86,6 +106,7 @@ public class SimpleViewsFragment extends Fragment {
                 .build();
         viewPager.setAdapter(wrapper);
         viewPager.setPageTransformer(false, wrapper);
+
         indicator.initializeWith(viewPager);
     }
 

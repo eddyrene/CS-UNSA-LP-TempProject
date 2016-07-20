@@ -66,7 +66,8 @@ ATTENTION: This was auto-generated to add Google Play services to your project f
             android:name=".Main2Activity"
             android:label="@string/title_activity_main2"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Filtros" />
+        <activity android:name=".Filtros"
+            android:label="Búsqueda"/>
         <activity android:name=".RegisterActivity" />
 
         <!--
@@ -84,17 +85,13 @@ ATTENTION: This was auto-generated to add Google Play services to your project f
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".RecyclerViewActivity" />
-        <activity android:name=".CardViewActivity" />
-        <activity
-            android:name=".Main22Activity"
-            android:label="@string/title_activity_main22"
-            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".gallery"
             android:label="@string/title_activity_gallery"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".MapsRegisterActivity" />
+        <activity android:name=".MapsRegisterActivity"
+            android:label="Registro de cuarto"/>
         <activity android:name=".Slider"></activity>
     </application>
 

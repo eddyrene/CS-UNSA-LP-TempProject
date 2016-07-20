@@ -3,19 +3,27 @@ package com.example.alquiler.alquilercom;
 import android.Manifest;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.renderscript.Double2;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,8 +31,11 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cleveroad.splittransformation.SquareViewPagerIndicator;
+import com.cleveroad.splittransformation.TransformationAdapterWrapper;
 import com.example.alquiler.alquilercom.data.JsonHttpHandler;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -327,6 +338,64 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
+
+    public static class MyDialogFragment extends DialogFragment {
+        List<String> im,serv;
+        String lo;
+        String no,tele,prec;
+
+        public void setArgs(List<String> i, String l,String n,String tel_,String pre_,List<String> serv_){
+            im=new ArrayList<String>(i);
+            lo=l;
+            no=n;
+            tele=tel_;
+            prec=pre_;
+            serv=new ArrayList<>(serv_);
+
+        }
+        @Override
+        public void onSaveInstanceState(Bundle b){
+            b.putStringArrayList("img",new ArrayList<String>(im));
+            b.putString("log",lo);
+            b.putString("nog",no);
+            b.putString("teleg",tele);
+            b.putString("precg",prec);
+            b.putStringArrayList("servg",new ArrayList<String>(serv));
+            super.onSaveInstanceState(b);
+        }
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+            super.onCreateView(inflater,container,savedInstanceState);
+            if( savedInstanceState != null ) {
+                im=savedInstanceState.getStringArrayList("img");
+                no=savedInstanceState.getString("nog");
+                lo=savedInstanceState.getString("log");
+                tele=savedInstanceState.getString("teleg");
+                prec=savedInstanceState.getString("precg");
+                serv=savedInstanceState.getStringArrayList("servg");
+            }
+            View v = inflater.inflate(R.layout.activity_main_slider, container, false);
+            getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+
+            getChildFragmentManager().beginTransaction()
+                    .replace(R.id.container, SimpleViewsFragment.instance(im,no,lo,tele,prec,serv))
+                    .addToBackStack(null)
+                    .commit();
+            return v;
+        }
+        @Override
+        public void onDestroyView() {
+            if (getDialog() != null && getRetainInstance())
+                getDialog().setOnDismissListener(null);
+            super.onDestroyView();
+        }
+
+
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView((View) object);
+        }
+    }
+
 
 
 }
