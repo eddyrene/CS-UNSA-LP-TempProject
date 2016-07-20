@@ -58,7 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/seekBar_distancia"
-                android:max="20"
+                android:max="14"
                 android:progress="1"
                 android:indeterminate="false"
                 android:visibility="visible"
