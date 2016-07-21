@@ -166,7 +166,7 @@ public class RegisterActivity extends AppCompatActivity implements CompoundButto
                 this.byteArray = Base64.encodeToString(stream.toByteArray(),Base64.DEFAULT);
                 Toast.makeText(RegisterActivity.this, "Imagen cargada con éxito", Toast.LENGTH_SHORT).show();
                 ImageButton imagen=(ImageButton) findViewById(R.id.imageButton_imagen);
-                imagen.setBackgroundResource(R.mipmap.uploadfilled);
+                imagen.setBackgroundResource(R.mipmap.verde_uploadfilled);
             }
         }
         else if (data!=null && resultcode==RESULT_OK && requestcode==1){

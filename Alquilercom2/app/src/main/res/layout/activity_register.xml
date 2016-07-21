@@ -44,7 +44,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Nombre:"
+                    android:text="Contacto:"
                     android:id="@+id/textView15" />
 
                 <EditText
@@ -66,7 +66,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Precio:"
+                    android:text="Precio:  S./"
                     android:id="@+id/textView2" />
 
                 <EditText
@@ -121,12 +121,12 @@
                     android:layout_weight="0.0" />
 
                 <ImageButton
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/botton_margin"
                     android:layout_marginRight="30dp"
                     android:layout_marginLeft="15dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/botton_margin"
                     android:id="@+id/imageButton_imagen"
-                    android:background="@mipmap/upload"
+                    android:background="@mipmap/naranja_upload"
                     android:layout_weight="0.0">
 
                 </ImageButton>
@@ -140,11 +140,11 @@
                     android:layout_weight="0.0" />
 
                 <ImageButton
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/botton_margin"
                     android:layout_marginLeft="15dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/botton_margin"
                     android:id="@+id/imageButton_mapa"
-                    android:background="@mipmap/mapmarker"
+                    android:background="@mipmap/naranja_mapmarker"
                     android:layout_weight="0.0" />
             </LinearLayout>
 
@@ -164,9 +164,9 @@
                 android:layout_weight="1">
 
                 <ToggleButton
-                    android:layout_width="50dp"
+                    android:layout_width="@dimen/botton_margin"
                     android:layout_margin="10dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/botton_margin"
                     android:text="New ToggleButton"
                     android:id="@+id/toggleButton_wifi"
                     android:checked="false"
@@ -175,9 +175,9 @@
                     android:background="@drawable/pressbutton_wifi"/>
 
                 <ToggleButton
-                    android:layout_width="50dp"
+                    android:layout_width="@dimen/botton_margin"
                     android:layout_margin="10dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/botton_margin"
                     android:text="New ToggleButton"
                     android:id="@+id/toggleButton_mascota"
                     android:textOn=""
@@ -186,9 +186,9 @@
                     android:checked="false" />
 
                 <ToggleButton
-                    android:layout_width="50dp"
+                    android:layout_width="@dimen/botton_margin"
                     android:layout_margin="10dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/botton_margin"
                     android:text="New ToggleButton"
                     android:id="@+id/toggleButton_tv"
                     android:checked="false"
@@ -205,9 +205,9 @@
                 android:layout_weight="1">
 
                 <ToggleButton
-                    android:layout_width="50dp"
+                    android:layout_width="@dimen/botton_margin"
                     android:layout_margin="10dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/botton_margin"
                     android:text="New ToggleButton"
                     android:id="@+id/toggleButton_agua"
                     android:textOn=""
@@ -215,9 +215,9 @@
                     android:background="@drawable/pressbutton_agua"/>
 
                 <ToggleButton
-                    android:layout_width="50dp"
+                    android:layout_width="@dimen/botton_margin"
                     android:layout_margin="10dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/botton_margin"
                     android:text="New ToggleButton"
                     android:id="@+id/toggleButton_toilet"
                     android:textOn=""
@@ -240,9 +240,9 @@
                 android:layout_weight="1">
 
                 <ToggleButton
-                    android:layout_width="50dp"
+                    android:layout_width="@dimen/botton_margin"
                     android:layout_margin="10dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/botton_margin"
                     android:text="New ToggleButton"
                     android:id="@+id/toggleButton_man"
                     android:textOn=""
@@ -250,9 +250,9 @@
                     android:background="@drawable/pressbutton_men"/>
 
                 <ToggleButton
-                    android:layout_width="50dp"
+                    android:layout_width="@dimen/botton_margin"
                     android:layout_margin="10dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/botton_margin"
                     android:text="New ToggleButton"
                     android:id="@+id/toggleButton_woman"
                     android:textOn=""

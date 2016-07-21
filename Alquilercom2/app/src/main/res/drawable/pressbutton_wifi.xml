@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@mipmap/wififilled" android:state_checked="true" /> <!-- pressed -->
-    <item android:drawable="@mipmap/wifi" android:state_checked="false"/> <!-- default -->
+    <item android:drawable="@mipmap/verde_wififilled" android:state_checked="true" /> <!-- pressed -->
+    <item android:drawable="@mipmap/naranja_wifi" android:state_checked="false"/> <!-- default -->
 </selector>

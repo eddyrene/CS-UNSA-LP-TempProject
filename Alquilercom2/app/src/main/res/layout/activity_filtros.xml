@@ -140,9 +140,9 @@
                 android:layout_gravity="center_horizontal">
 
                 <ToggleButton
-                    android:layout_width="50dp"
+                    android:layout_width="@dimen/botton_margin"
                     android:layout_margin="10dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/botton_margin"
                     android:id="@+id/imageButton_wifi"
                     android:textOn=""
                     android:textOff=""
@@ -150,9 +150,9 @@
                     android:background="@drawable/pressbutton_wifi"/>
 
                 <ToggleButton
-                    android:layout_width="50dp"
+                    android:layout_width="@dimen/botton_margin"
                     android:layout_margin="10dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/botton_margin"
                     android:id="@+id/imageButton_animales"
                     android:textOn=""
                     android:textOff=""
@@ -160,9 +160,9 @@
                     android:checked="false" />
 
                 <ToggleButton
-                    android:layout_width="50dp"
+                    android:layout_width="@dimen/botton_margin"
                     android:layout_margin="10dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/botton_margin"
                     android:id="@+id/imageButton_tv"
                     android:textOn=""
                     android:textOff=""
@@ -179,9 +179,9 @@
 
                 <ToggleButton
 
-                    android:layout_width="50dp"
+                    android:layout_width="@dimen/botton_margin"
                     android:layout_margin="10dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/botton_margin"
                     android:id="@+id/imageButton_toilet"
                     android:textOn=""
                     android:textOff=""
@@ -191,9 +191,9 @@
                     android:layout_marginEnd="36dp" />
 
                 <ToggleButton
-                    android:layout_width="50dp"
+                    android:layout_width="@dimen/botton_margin"
                     android:layout_margin="10dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/botton_margin"
                     android:id="@+id/imageButton_agua"
                     android:textOn=""
                     android:textOff=""
@@ -221,18 +221,18 @@
                 android:id="@+id/linearLayout">
 
                 <ToggleButton
-                    android:layout_width="50dp"
+                    android:layout_width="@dimen/botton_margin"
                     android:layout_margin="10dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/botton_margin"
                     android:id="@+id/imageButton_woman"
                     android:textOn=""
                     android:textOff=""
                     android:background="@drawable/pressbutton_woman" />
 
                 <ToggleButton
-                    android:layout_width="50dp"
+                    android:layout_width="@dimen/botton_margin"
                     android:layout_margin="10dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/botton_margin"
                     android:id="@+id/imageButton_men"
                     android:textOn=""
                     android:textOff=""
@@ -260,7 +260,7 @@
         android:layout_margin="@dimen/fab_margin"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:src="@mipmap/plusfilled100"
+        android:src="@mipmap/naranja_plusfilled"
         android:scaleType="center"
         app:backgroundTint="@color/white"/>
 

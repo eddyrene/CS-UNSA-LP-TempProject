@@ -197,12 +197,12 @@ public class SimpleViewsFragment extends Fragment {
 
             imageView.setImageBitmap(drawables.get(position));
             if (servicios.get(0).equals("3")){
-                ima.setImageResource(R.drawable.macon);
-                iwo.setImageResource(R.drawable.wocon);
+                ima.setImageResource(R.mipmap.verde_standingmanfilled);
+                iwo.setImageResource(R.mipmap.verde_standingwomanfilled);
             } else if (servicios.get(0).equals("2"))
-                iwo.setImageResource(R.drawable.wocon);
+                iwo.setImageResource(R.mipmap.verde_standingwomanfilled);
             else
-                ima.setImageResource(R.drawable.macon);
+                ima.setImageResource(R.mipmap.verde_standingmanfilled);
 
             for (int i=1;i<servicios.size();++i){
 
@@ -210,20 +210,20 @@ public class SimpleViewsFragment extends Fragment {
                     Log.v("SERVICIOOOOOOOOOOOOOOOS",servicios.get(i));
                         if(i==1){
                             Log.v("11111111111111","1111111111");
-                            itv.setImageResource(R.drawable.tvcon);
+                            itv.setImageResource(R.mipmap.verde_retrotvfilled);
                         }
                         else if (i==2) {
                             Log.v("2222222222222", "22222222");
-                            iwi.setImageResource(R.drawable.wicon);
+                            iwi.setImageResource(R.mipmap.verde_wififilled);
                         }
                         else if (i==3) {
                             Log.v("33333333", "1111111111");
-                            idu.setImageResource(R.drawable.hocon);
+                            idu.setImageResource(R.mipmap.verde_showerandtubfilled);
                         }
                         else if (i==4)
-                            imas.setImageResource(R.drawable.docon);
+                            imas.setImageResource(R.mipmap.verde_dogfilled);
                        else
-                            iba.setImageResource(R.drawable.tocon);
+                            iba.setImageResource(R.mipmap.verde_toiletbowlfilled);
                 }
             }
             Log.v("Settinggggggggggggg","colocando imagen");
