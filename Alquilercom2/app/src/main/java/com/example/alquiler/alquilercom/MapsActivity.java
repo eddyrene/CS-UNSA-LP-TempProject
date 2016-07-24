@@ -23,7 +23,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
+
+import java.util.ArrayList;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,6 +71,8 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import it.moondroid.coverflow.components.ui.containers.FeatureCoverFlow;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
@@ -142,8 +147,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public boolean onMarkerClick(Marker marker) {
 
-        Log.v("TITLEEEEEEEEEE", marker.getTitle());
-        new InfoTask().execute(marker.getTitle());
+        //Log.v("TITLEEEEEEEEEE", marker.getTitle());
+        Intent i=new Intent(MapsActivity.this, MainActivityt.class);
+        startActivity(i);
+
+        //new InfoTask().execute(marker.getTitle());
         return true;
     }
 
@@ -192,28 +200,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         @Override
         protected void onPostExecute(JSONArray result) {
+
             if (result == null)
                 Toast.makeText(MapsActivity.this, "No se puede mostrar la información.", Toast.LENGTH_SHORT).show();
+
+
             else {
+
                 //Toast.makeText(MapsActivity.this, "ALL right", Toast.LENGTH_SHORT).show();
 
                 try {
                     JSONObject n = (JSONObject) result.get(0);
                     JSONArray imgs = n.getJSONArray("Img");
                     ArrayList<String> aux;
-                    List<String> imagenes=new ArrayList<String>();
+                    List<String> imagenes = new ArrayList<String>();
                     //=new ArrayList<String>(Arrays.asList(imgs.toString().replace("[","").replace("]","").split(",")));
                     for (int i = 0; i < imgs.length(); ++i) {
                         imagenes.add(imgs.get(i).toString());
                     }
-                    JSONObject s =(JSONObject)n.get("Servicios");
-                    String[] ser={n.getString("Genero"),s.getString("tv"),s.getString("wifi"),s.getString("ducha"),s.getString("mascota"),s.getString("baño")};
-                    List<String> servicios=Arrays.asList(ser);
+                    JSONObject s = (JSONObject) n.get("Servicios");
+                    String[] ser = {n.getString("Genero"), s.getString("tv"), s.getString("wifi"), s.getString("ducha"), s.getString("mascota"), s.getString("baño")};
+                    List<String> servicios = Arrays.asList(ser);
 
 
                     MyDialogFragment dialog = new MyDialogFragment();
-                    dialog.setArgs(imagenes,n.get("Direccion").toString(),n.get("Nombre").toString(),
-                            n.get("Telefono").toString(),n.get("Precio").toString(),servicios);
+                    dialog.setArgs(imagenes, n.get("Direccion").toString(), n.get("Nombre").toString(),
+                            n.get("Telefono").toString(), n.get("Precio").toString(), servicios);
                     dialog.show(getSupportFragmentManager(), "asdf");
 
                     //startActivity(i);
@@ -340,7 +352,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public static class MyDialogFragment extends DialogFragment {
-        List<String> im,serv;
+
+   List<String> im,serv;
         String lo;
         String no,tele,prec;
 
