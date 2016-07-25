@@ -3,6 +3,7 @@ package com.example.alquiler.alquilercom;
 import android.Manifest;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -87,7 +88,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Circle circle;
     private SlidingUpPanelLayout slidingLayout;
     private String param;
-
+    ProgressDialog progress;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,10 +149,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public boolean onMarkerClick(Marker marker) {
 
         //Log.v("TITLEEEEEEEEEE", marker.getTitle());
-        Intent i=new Intent(MapsActivity.this, MainActivityt.class);
-        startActivity(i);
-
-        //new InfoTask().execute(marker.getTitle());
+        //Intent i=new Intent(MapsActivity.this, MainActivityt.class);
+        //startActivity(i);
+        progress = ProgressDialog.show(this, "",
+                "Espere un momento...", true);
+        new InfoTask().execute(marker.getTitle());
         return true;
     }
 
@@ -179,7 +181,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         protected JSONArray doInBackground(String... params) {
             JSONObject json;
             try {
-                json = new JsonHttpHandler().getJSONfromUrl("http://myflaskapp2-alquiler.rhcloud.com//reg/" + params[0]);
+                json = new JsonHttpHandler().getJSONfromUrl("http://myflaskapp2-alquiler.rhcloud.com/reg/" + params[0]);
                 if (json == null) {
                     return null;
                 }
@@ -222,10 +224,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     String[] ser = {n.getString("Genero"), s.getString("tv"), s.getString("wifi"), s.getString("ducha"), s.getString("mascota"), s.getString("baño")};
                     List<String> servicios = Arrays.asList(ser);
 
+                    String[] co1 = n.getString("Coord").replace("[","").replace("]","").split(",");
+                    Location locationA = new Location("a");
+
+                    locationA.setLatitude(r.latitude);
+                    locationA.setLongitude(r.longitude);
+
+                    Location locationB = new Location("b");
+
+                    locationB.setLatitude(Double.parseDouble(co1[0]));
+                    locationB.setLongitude(Double.parseDouble(co1[1]));
+
+                    String distance = String.valueOf((Math.round((locationA.distanceTo(locationB))*100)/100)/1000f)+" km";
 
                     MyDialogFragment dialog = new MyDialogFragment();
                     dialog.setArgs(imagenes, n.get("Direccion").toString(), n.get("Nombre").toString(),
-                            n.get("Telefono").toString(), n.get("Precio").toString(), servicios);
+                            n.get("Telefono").toString(), n.get("Precio").toString(), servicios,distance);
+                    progress.dismiss();
                     dialog.show(getSupportFragmentManager(), "asdf");
 
                     //startActivity(i);
@@ -355,16 +370,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
    List<String> im,serv;
         String lo;
-        String no,tele,prec;
+        String no,tele,prec,dist;
 
-        public void setArgs(List<String> i, String l,String n,String tel_,String pre_,List<String> serv_){
+        public void setArgs(List<String> i, String l,String n,String tel_,String pre_,List<String> serv_,String dist_){
             im=new ArrayList<String>(i);
             lo=l;
             no=n;
             tele=tel_;
             prec=pre_;
             serv=new ArrayList<>(serv_);
-
+            dist=dist_;
         }
         @Override
         public void onSaveInstanceState(Bundle b){
@@ -373,6 +388,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             b.putString("nog",no);
             b.putString("teleg",tele);
             b.putString("precg",prec);
+            b.putString("distg",dist);
             b.putStringArrayList("servg",new ArrayList<String>(serv));
             super.onSaveInstanceState(b);
         }
@@ -386,12 +402,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 tele=savedInstanceState.getString("teleg");
                 prec=savedInstanceState.getString("precg");
                 serv=savedInstanceState.getStringArrayList("servg");
+                dist=savedInstanceState.getString("distg");
             }
             View v = inflater.inflate(R.layout.activity_main_slider, container, false);
             getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
             getChildFragmentManager().beginTransaction()
-                    .replace(R.id.container, SimpleViewsFragment.instance(im,no,lo,tele,prec,serv))
+                    .replace(R.id.container, SimpleViewsFragment.instance(im,no,lo,tele,prec,serv,dist))
                     .addToBackStack(null)
                     .commit();
             return v;

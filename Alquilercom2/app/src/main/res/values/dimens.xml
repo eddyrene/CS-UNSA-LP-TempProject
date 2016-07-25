@@ -11,5 +11,7 @@
     <dimen name="page_height">300dp</dimen>
     <dimen name="botton_margin">50dp</dimen>
     <dimen name="icon_margin">32dp</dimen>
+    <dimen name="icon_marginh">38dp</dimen>
+    <dimen name="icon_margin2">15dp</dimen>
     <dimen name="pager_indicator_margin">300dp</dimen>
 </resources>

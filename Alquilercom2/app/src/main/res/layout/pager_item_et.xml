@@ -16,15 +16,54 @@
         android:orientation="vertical"
         >
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryDark"
+                android:layout_gravity="center_horizontal"
+
+                android:id="@+id/prev" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:layout_gravity="center_horizontal"
+
+            android:id="@+id/next" />
+            </LinearLayout>
+
+    </LinearLayout>
+
     <ImageView
         android:id="@+id/image"
         android:layout_width="445dp"
-        android:layout_height="290dp"
+        android:layout_height="250dp"
         android:background="@color/colorPrimaryDark"
         android:layout_gravity="center"
         android:scaleType="centerInside"
         tools:src="@drawable/habitacion1"
         />
+
+
 
         <LinearLayout
             android:orientation="vertical"
@@ -51,11 +90,21 @@
                 android:id="@+id/textView16" />
 
             <TextView
+                android:id="@+id/dist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_margin="7.5dp"
+                android:layout_marginLeft="18dp"
+                android:text="dist" />
+
+
+            <TextView
                 android:id="@+id/textd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
-                android:layout_margin="9.5dp"
+                android:layout_margin="7.5dp"
                 android:layout_marginLeft="18dp"
                 android:text="contacto" />
 
@@ -64,45 +113,49 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_margin="9.5dp"
+                android:layout_margin="7.5dp"
                 android:layout_marginLeft="18dp"
                 android:text="direccion" />
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom">
 
                 <ImageView
-                    android:layout_width="@dimen/icon_margin"
-                    android:layout_height="@dimen/icon_margin"
+                    android:layout_width="@dimen/icon_margin2"
+                    android:layout_height="@dimen/icon_margin2"
                     android:src="@mipmap/verde_coins"
+                    android:layout_margin="6dp"
                     android:id="@+id/imageView2" />
 
                 <TextView
                     android:id="@+id/textp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="9.5dp"
+                    android:layout_margin="7.5dp"
                     android:text="precio" />
             </LinearLayout>
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom">
 
                 <ImageView
-                    android:layout_width="@dimen/icon_margin"
-                    android:layout_height="@dimen/icon_margin"
+                    android:layout_width="@dimen/icon_margin2"
+                    android:layout_height="@dimen/icon_margin2"
                     android:src="@mipmap/verde_cellphonefilled"
+                    android:layout_margin="6dp"
                     android:id="@+id/imageView3" />
 
                 <TextView
                     android:id="@+id/textt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="9.5dp"
+                    android:layout_margin="7.5dp"
                     android:text="Telefono" />
             </LinearLayout>
 
@@ -140,14 +193,14 @@
                 <ImageView
                     android:id="@+id/iman"
                     android:layout_width="@dimen/icon_margin"
-                    android:layout_height="@dimen/icon_margin"
+                    android:layout_height="@dimen/icon_marginh"
                     android:layout_gravity="center_horizontal"
                     android:scaleType="centerInside"
                     android:src="@mipmap/naranja_standingman" />
                 <ImageView
                     android:id="@+id/iwo"
                     android:layout_width="@dimen/icon_margin"
-                    android:layout_height="@dimen/icon_margin"
+                    android:layout_height="@dimen/icon_marginh"
                     android:layout_gravity="center_horizontal"
                     android:scaleType="centerInside"
                     android:src="@mipmap/naranja_standingwoman" />
@@ -170,21 +223,21 @@
                 <ImageView
                     android:id="@+id/itv"
                     android:layout_width="@dimen/icon_margin"
-                    android:layout_height="@dimen/icon_margin"
+                    android:layout_height="@dimen/icon_marginh"
                     android:layout_gravity="center_horizontal"
                     android:scaleType="centerInside"
                     android:src="@mipmap/naranja_retrotv" />
                 <ImageView
                     android:id="@+id/iwi"
                     android:layout_width="@dimen/icon_margin"
-                    android:layout_height="@dimen/icon_margin"
+                    android:layout_height="@dimen/icon_marginh"
                     android:layout_gravity="center_horizontal"
                     android:scaleType="centerInside"
                     android:src="@mipmap/naranja_wifi" />
                 <ImageView
                     android:id="@+id/idu"
                     android:layout_width="@dimen/icon_margin"
-                    android:layout_height="@dimen/icon_margin"
+                    android:layout_height="@dimen/icon_marginh"
                     android:layout_gravity="center_horizontal"
                     android:scaleType="centerInside"
                     android:src="@mipmap/naranja_showerandtub" />
@@ -198,14 +251,14 @@
                 <ImageView
                     android:id="@+id/imas"
                     android:layout_width="@dimen/icon_margin"
-                    android:layout_height="@dimen/icon_margin"
+                    android:layout_height="@dimen/icon_marginh"
                     android:layout_gravity="center_horizontal"
                     android:scaleType="centerInside"
                     android:src="@mipmap/naranja_dog" />
                 <ImageView
                     android:id="@+id/iba"
                     android:layout_width="@dimen/icon_margin"
-                    android:layout_height="@dimen/icon_margin"
+                    android:layout_height="@dimen/icon_marginh"
                     android:layout_gravity="center_horizontal"
                     android:scaleType="centerInside"
                     android:src="@mipmap/naranja_toiletbowl" />

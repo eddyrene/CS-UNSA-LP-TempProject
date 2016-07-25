@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.cleveroad.splittransformation.SquareViewPagerIndicator;
 import com.cleveroad.splittransformation.TransformationAdapterWrapper;
 import com.example.alquiler.alquilercom.R;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
 
 import java.util.ArrayList;
@@ -38,22 +39,23 @@ public class SimpleViewsFragment extends Fragment {
     List<String> imgs;
     String nom;
     String loc;
-    String tele,prec;
+    String tele,prec,dist;
     List<String> serv;
 
-    public static SimpleViewsFragment instance(List<String> img, String nom, String loc,String t, String p,List<String> s) {
+    public static SimpleViewsFragment instance(List<String> img, String nom, String loc,String t, String p,List<String> s,String d) {
         //Log.v("IMAGENNNNNNNNNNNN",img.get(0));
         SimpleViewsFragment nuevo=new SimpleViewsFragment();
-        nuevo.setArgs(img,nom,loc,t,p,s);
+        nuevo.setArgs(img,nom,loc,t,p,s,d);
         return  nuevo;
     }
 
-    public void setArgs(List<String> img,String nom_,String loc_,String t,String p,List<String> s){
+    public void setArgs(List<String> img,String nom_,String loc_,String t,String p,List<String> s,String d){
         imgs = new ArrayList<String>(img);
         nom=nom_;
         loc=loc_;
         tele=t;
         prec=p;
+        dist=d;
         serv=new ArrayList<>(s);
     }
 
@@ -64,6 +66,7 @@ public class SimpleViewsFragment extends Fragment {
         b.putString("nog",nom);
         b.putString("teleg",tele);
         b.putString("precg",prec);
+        b.putString("distg",dist);
         b.putStringArrayList("servg",new ArrayList<String>(serv));
         super.onSaveInstanceState(b);
     }
@@ -78,6 +81,7 @@ public class SimpleViewsFragment extends Fragment {
             loc=savedInstanceState.getString("log");
             tele=savedInstanceState.getString("teleg");
             prec=savedInstanceState.getString("precg");
+            dist=savedInstanceState.getString("distg");
             serv=savedInstanceState.getStringArrayList("servg");
         }
         View view = inflater.inflate(R.layout.fragment_view_pager, container, false);
@@ -96,7 +100,7 @@ public class SimpleViewsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        SimplePagerAdapter adapter = new SimplePagerAdapter(getContext(),imgs,loc,nom,tele,prec,serv);
+        SimplePagerAdapter adapter = new SimplePagerAdapter(getContext(),imgs,loc,nom,tele,prec,serv,dist);
         TransformationAdapterWrapper wrapper = TransformationAdapterWrapper
                 .wrap(getContext(), adapter)
                 .rows(10)
@@ -138,19 +142,20 @@ public class SimpleViewsFragment extends Fragment {
         };*/
 
         private List<Bitmap> drawables=new ArrayList<Bitmap>();
-        private String loc,nom,tel,precio;
+        private String loc,nom,tel,precio,dist;
         List<String> servicios;//=new ArrayList<>();
 
         private final Context context;
         private final LayoutInflater inflater;
 
-        public SimplePagerAdapter(Context context,List<String> img,String loc_,String nom_,String tel_,String prec_,List<String> serv_) {
+        public SimplePagerAdapter(Context context,List<String> img,String loc_,String nom_,String tel_,String prec_,List<String> serv_,String d) {
             this.context = context;
             this.inflater = LayoutInflater.from(context);
             this.loc=loc_;
             this.nom=nom_;
             this.tel=tel_;
             this.precio=prec_;
+            this.dist=d;
             this.servicios=new ArrayList<>(serv_);
             //this.drawables =new ArrayList<String>(img);
             for (int i=0;i<img.size();++i){
@@ -176,6 +181,9 @@ public class SimpleViewsFragment extends Fragment {
             View view = inflater.inflate(R.layout.pager_item_et, container, false);
             ImageView imageView = (ImageView) view.findViewById(R.id.image);
 
+            ImageView prev=(ImageView) view.findViewById(R.id.prev);
+            ImageView next=(ImageView) view.findViewById(R.id.next);
+
             ImageView ima=(ImageView) view.findViewById(R.id.iman);
             ImageView iwo=(ImageView) view.findViewById(R.id.iwo);
             ImageView itv=(ImageView) view.findViewById(R.id.itv);
@@ -184,7 +192,7 @@ public class SimpleViewsFragment extends Fragment {
             ImageView imas=(ImageView) view.findViewById(R.id.imas);
             ImageView iba=(ImageView) view.findViewById(R.id.iba);
 
-
+            TextView di=(TextView) view.findViewById(R.id.dist);
             TextView loc=(TextView) view.findViewById(R.id.textu);
             TextView due=(TextView) view.findViewById(R.id.textd);
             TextView ttel=(TextView) view.findViewById(R.id.textt);
@@ -192,10 +200,32 @@ public class SimpleViewsFragment extends Fragment {
             loc.setText(this.loc);
             due.setText(this.nom);
             ttel.setText(this.tel);
+            di.setText(this.dist);
             String prec=precio+" soles";
             tpre.setText(prec);
 
+
+            if (drawables.size()==2){
+                prev.setImageBitmap(drawables.get(0));
+                next.setImageBitmap(drawables.get(1));
+                if (position==0){
+                    next.setAlpha(0.5f);
+                }
+                else
+                    prev.setAlpha(0.5f);
+            }
+            else{
+                prev.setImageBitmap(drawables.get(position));
+                /*Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
+                        R.drawable.b);
+                next.setImageBitmap(icon);*/
+                //next.setVisibility(View.GONE);
+                /*ViewGroup.LayoutParams params =imageView.getLayoutParams();
+                params.height=290;
+                imageView.setLayoutParams(params);*/
+            }
             imageView.setImageBitmap(drawables.get(position));
+
             if (servicios.get(0).equals("3")){
                 ima.setImageResource(R.mipmap.verde_standingmanfilled);
                 iwo.setImageResource(R.mipmap.verde_standingwomanfilled);
