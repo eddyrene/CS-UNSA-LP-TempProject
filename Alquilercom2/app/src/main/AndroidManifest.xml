@@ -58,6 +58,7 @@ ATTENTION: This was auto-generated to add Google Play services to your project f
     -->
 
         <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivityt"></activity>
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -86,13 +87,10 @@ ATTENTION: This was auto-generated to add Google Play services to your project f
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
 
-        <activity
-            android:name=".gallery"
-            android:label="@string/title_activity_gallery"
-            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity android:name=".MapsRegisterActivity"
             android:label="Registro de cuarto"/>
-        <activity android:name=".Slider"></activity>
+
     </application>
 
 </manifest>
