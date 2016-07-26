@@ -89,33 +89,63 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:id="@+id/textView16" />
 
-            <TextView
-                android:id="@+id/dist"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_margin="7.5dp"
-                android:layout_marginLeft="18dp"
-                android:text="dist" />
-
-
-            <TextView
-                android:id="@+id/textd"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_margin="7.5dp"
-                android:layout_marginLeft="18dp"
-                android:text="contacto" />
-
-            <TextView
-                android:id="@+id/textu"
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_margin="7.5dp"
-                android:layout_marginLeft="18dp"
-                android:text="direccion" />
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="@dimen/icon_margin2"
+                    android:layout_height="@dimen/icon_margin2"
+                    android:src="@mipmap/verde_geofencefilled"
+                    android:layout_margin="6dp"
+                    android:id="@+id/imageView4" />
+                <TextView
+                    android:id="@+id/dist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="7.5dp"
+                    android:layout_marginLeft="18dp"
+                    android:text="dist" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="@dimen/icon_margin2"
+                    android:layout_height="@dimen/icon_margin2"
+                    android:src="@mipmap/verde_contactsfilled"
+                    android:layout_margin="6dp"
+                    android:id="@+id/imageView5" />
+                <TextView
+                    android:id="@+id/textd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="7.5dp"
+                    android:layout_marginLeft="18dp"
+                    android:text="contacto" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="@dimen/icon_margin2"
+                    android:layout_height="@dimen/icon_margin2"
+                    android:src="@mipmap/verde_signpostfilled"
+                    android:layout_margin="6dp"
+                    android:id="@+id/imageView6" />
+                <TextView
+                    android:id="@+id/textu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="7.5dp"
+                    android:layout_marginLeft="18dp"
+                    android:text="direccion" />
+            </LinearLayout>
 
             <LinearLayout
                 android:orientation="horizontal"
